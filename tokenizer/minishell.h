@@ -43,3 +43,5 @@ char **tokenizer(char *str_to_tokenize);
 int get_num_of_tokens(char *str);
 int ft_isspace(char char_to_check);
 int ft_issymbol(char char_to_check);
+int check_symbols(char *str_tocheck, int *iterator);
+char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);

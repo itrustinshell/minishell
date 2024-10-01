@@ -1,5 +1,5 @@
 #include "minishell.h"
-
+// get_tokens_number
 /*
 AAA quando dopo < metto solo una lettera ad es <d
 non riconosce la d come token separato da <
@@ -30,7 +30,7 @@ int	ft_issymbol(char char_to_check)
 		return (IS_SYMBOL);
 	else if (char_to_check == DOLLAR_SIGN)
 		return (IS_SYMBOL);
-	else if (char_to_check == SINGLE_QUOTE)
+	else if (char_to_check == '\'')
 		return (IS_SYMBOL);
 	else if (char_to_check == DOUBLE_QUOTE)
 		return (IS_SYMBOL);
@@ -38,19 +38,22 @@ int	ft_issymbol(char char_to_check)
 }
 
 
-void symbol_iteration(char *str, int *iterator, int token)
+int symbol_iteration(char *str, int *iterator, char token)
 {
 	int	todo; //da cancellare in futuro
 	int i;
 	
 	i = *iterator;
-	if (token == SINGLE_QUOTE || token == DOUBLE_QUOTE)
+	if (token == '\'' || token == DOUBLE_QUOTE)
 	{
 		i++; //mi sposo a destra dell'apice di apertura
 		while (str[i] && str[i] != token)
 			i++; //quando esce dovrebbe essere sull'apice di chiusura a meno che non esista
-		if (str[i] != token)
-			todo = 1;//TODO: gestisci quando le virgolette non si chiudono
+		if (str[i] != token) //quando le virgolette non si chiudono
+		{
+			write(1,"Error message: unclosed quotes.\n", 32);
+			return (-1);
+		}
 	}
 	else if (token == DOLLAR_SIGN)
 	{
@@ -64,6 +67,7 @@ void symbol_iteration(char *str, int *iterator, int token)
 		}
 	}
 	*iterator = i;
+	return (1);
 }
 
 /*trova un simbolo e aggiorna l'indice lungo la stringa da tokenizzare ritornando il numero di tokens*/
@@ -76,21 +80,27 @@ int	check_symbols(char *str_tocheck, int *iterator)
 	i = *iterator;
 	n_tokens = 0;
 	padlock = UNLOCKED;
-	if (str_tocheck[i] && ft_issymbol(str_tocheck[i]))
+	if (ft_issymbol(str_tocheck[i]))
 	{
 		n_tokens += 1;
-		if (str_tocheck[i] == SINGLE_QUOTE)
-			symbol_iteration(str_tocheck, &i, SINGLE_QUOTE);	
+		if (str_tocheck[i] == '\'')
+		{
+			if(symbol_iteration(str_tocheck, &i, '\'') < 0)
+				return (-1);
+		}
 		else if (str_tocheck[i] == DOUBLE_QUOTE)
-			symbol_iteration(str_tocheck, &i, DOUBLE_QUOTE); //AAA manage solo quando c'è il dollar sign
+		{
+			if (symbol_iteration(str_tocheck, &i, DOUBLE_QUOTE) < 0)//AAA manage solo quando c'è il dollar sign
+				return (-1);
+		}
 		else if (str_tocheck[i] == DOLLAR_SIGN)
 			symbol_iteration(str_tocheck, &i, DOLLAR_SIGN);
 		else if (str_tocheck[i] == INPUT_REDIRECTION && str_tocheck[i + 1] == INPUT_REDIRECTION)
-			i += 2;
+			i += 1;
 		else if (str_tocheck[i] == OUTPUT_REDIRECTION && str_tocheck[i + 1] == OUTPUT_REDIRECTION)
-			i += 2;
-		else
-			i++;
+			i += 1;
+		//else
+		//	i++;
 	}
 	*iterator = i;
 	return (n_tokens);
@@ -102,12 +112,13 @@ int get_num_of_tokens(char *str_to_tokenize)
 	int n_tokens;
 	int padlock;
 	int i;
+	int is_symbol;
 
 	n_tokens = 0;
-	i = 0;
-	while (str_to_tokenize[i])
+	i = -1;
+	while (str_to_tokenize[++i])
 	{
-		while (str_to_tokenize[i] && ft_isspace(str_to_tokenize[i]))
+		while (ft_isspace(str_to_tokenize[i]))
 			i++;
 		padlock = UNLOCKED;
 		while (str_to_tokenize[i] && !ft_isspace(str_to_tokenize[i]) && !ft_issymbol(str_to_tokenize[i]))
@@ -119,8 +130,10 @@ int get_num_of_tokens(char *str_to_tokenize)
 			}
 			i++;
 		}
-		n_tokens += check_symbols(str_to_tokenize, &i);
-		i++;
+		if ((is_symbol = check_symbols(str_to_tokenize, &i)) >= 0)
+			n_tokens += is_symbol;
+		else if (is_symbol < 0)
+			return (-55);				
 	}
 	return (n_tokens);
 }
