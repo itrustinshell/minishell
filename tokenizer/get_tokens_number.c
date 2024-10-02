@@ -113,6 +113,9 @@ int get_num_of_tokens(char *str_to_tokenize)
 	int padlock;
 	int i;
 	int is_symbol;
+	t_token *token_list;
+
+	token_list = NULL;
 
 	n_tokens = 0;
 	i = -1;

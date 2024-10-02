@@ -7,6 +7,7 @@ char **tokenizer(char *str_to_tokenize)
 {
 	char **tokens_matrix;
 	int n_tokens;
+	int i;
 
 	if (!str_to_tokenize)
 		return (NULL);
@@ -15,6 +16,8 @@ char **tokenizer(char *str_to_tokenize)
 	if (n_tokens < 0)
 		return (NULL);
 	tokens_matrix = create_tokenmatrix(str_to_tokenize, n_tokens);
+	if (tokens_matrix == NULL)
+		return (NULL);
 	return (tokens_matrix);
 }
 
@@ -39,6 +42,13 @@ int main(int argc, char **argv)
 		printf("%s\n", matrix[i]);
 		i++;
 	}
+	i = 0;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
 	free(str);
 }
 

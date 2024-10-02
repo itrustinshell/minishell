@@ -30,6 +30,7 @@
 
 typedef struct s_token
 {
+
 	char	*str;
 	struct s_token *next;
 	struct s_token *prev;
