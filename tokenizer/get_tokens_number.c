@@ -30,74 +30,112 @@ int	ft_issymbol(char char_to_check)
 		return (IS_SYMBOL);
 	else if (char_to_check == DOLLAR_SIGN)
 		return (IS_SYMBOL);
-	else if (char_to_check == '\'')
+	else if (char_to_check == SINGLE_QUOTE)
 		return (IS_SYMBOL);
 	else if (char_to_check == DOUBLE_QUOTE)
 		return (IS_SYMBOL);
 	return (IS_NOT_SYMBOL);
 }
 
-
-int symbol_iteration(char *str, int *iterator, char token)
+int singlequote_iteration(char *inputstr, int *iterator, char symbol)
 {
-	int	todo; //da cancellare in futuro
 	int i;
-	
+
 	i = *iterator;
-	if (token == '\'' || token == DOUBLE_QUOTE)
+	i++; //mi sposo a destra dell'apice di apertura
+	while (inputstr[i] && inputstr[i] != symbol)
+		i++; //quando esce dovrebbe essere sull'apice di chiusura a meno che non esista
+	if (inputstr[i] != symbol) //quando le virgolette non si chiudono
 	{
-		i++; //mi sposo a destra dell'apice di apertura
-		while (str[i] && str[i] != token)
-			i++; //quando esce dovrebbe essere sull'apice di chiusura a meno che non esista
-		if (str[i] != token) //quando le virgolette non si chiudono
-		{
-			write(1,"Error message: unclosed quotes.\n", 32);
-			return (-1);
-		}
-	}
-	else if (token == DOLLAR_SIGN)
-	{
-		if (str[i] == DOLLAR_SIGN && !ft_isspace(str[i + 1]))
-		{
-			i++; //mi sposto a destra del simbolo di dollaro (aaa stiamo parlanod di variabili)
-			while (str[i] && !ft_isspace(str[i]) && !ft_issymbol(str[i]))
-				i++;
-			if (ft_issymbol(str[i]))
-				i--; //quando esce dal hilw si trova su un simbolo o su uno spazio
-		}
+		write(1,"Error message: unclosed quotes.\n", 32);
+		return (-1);
 	}
 	*iterator = i;
 	return (1);
 }
 
+int doublequote_iteration(char *inputstr, int *iterator, char symbol)
+{
+	int i;
+
+	i = *iterator;
+	i++; //mi sposo a destra dell'apice di apertura
+	while (inputstr[i] && inputstr[i] != symbol)
+		i++; //quando esce dovrebbe essere sull'apice di chiusura a meno che non esista
+	if (inputstr[i] != symbol) //quando le virgolette non si chiudono
+	{
+		write(1,"Error message: unclosed quotes.\n", 32);
+		return (-1);
+	}
+	*iterator = i;
+	return (1);
+}
+
+int dollarsign_iteration(char *inputstr, int *iterator, char symbol)
+{
+	int i;
+
+	i = *iterator;
+	if (inputstr[i] == symbol && !ft_isspace(inputstr[i + 1]))
+	{
+		i++; //mi sposto a destra del simbolo di dollaro (aaa stiamo parlanod di variabili)
+		while (inputstr[i] && !ft_isspace(inputstr[i]) && !ft_issymbol(inputstr[i]))
+			i++;
+		if (ft_issymbol(inputstr[i]))
+			i--; //quando esce dal while si trova su un simbolo o su uno spazio
+	}
+	*iterator = i;
+}
+
+
+int symbol_iteration(char *inputstr, int *iterator, char symbol)
+{
+	int i;
+	
+	i = *iterator;
+	if (symbol == SINGLE_QUOTE)
+	{
+		if (singlequote_iteration(inputstr, &i, symbol) < 0)
+			return (-1);
+	}
+	else if (symbol == DOUBLE_QUOTE)
+	{
+		if (doublequote_iteration(inputstr, &i, symbol) < 0)
+			return (-1);
+	}
+	else if (symbol == DOLLAR_SIGN)
+		dollarsign_iteration(inputstr, &i, symbol);
+	*iterator = i;
+	return (1);
+}
+
+
 /*trova un simbolo e aggiorna l'indice lungo la stringa da tokenizzare ritornando il numero di tokens*/
-int	check_symbols(char *str_tocheck, int *iterator)
+int	check_symbols(char *inputstr, int *iterator)
 {
 	int n_tokens;
-	int padlock;
 	int i;
 
 	i = *iterator;
 	n_tokens = 0;
-	padlock = UNLOCKED;
-	if (ft_issymbol(str_tocheck[i]))
+	if (ft_issymbol(inputstr[i]))
 	{
 		n_tokens += 1;
-		if (str_tocheck[i] == '\'')
+		if (inputstr[i] == SINGLE_QUOTE)
 		{
-			if(symbol_iteration(str_tocheck, &i, '\'') < 0)
+			if(symbol_iteration(inputstr, &i, SINGLE_QUOTE) < 0)
 				return (-1);
 		}
-		else if (str_tocheck[i] == DOUBLE_QUOTE)
+		else if (inputstr[i] == DOUBLE_QUOTE)
 		{
-			if (symbol_iteration(str_tocheck, &i, DOUBLE_QUOTE) < 0)//AAA manage solo quando c'è il dollar sign
+			if (symbol_iteration(inputstr, &i, DOUBLE_QUOTE) < 0)//AAA manage solo quando c'è il dollar sign
 				return (-1);
 		}
-		else if (str_tocheck[i] == DOLLAR_SIGN)
-			symbol_iteration(str_tocheck, &i, DOLLAR_SIGN);
-		else if (str_tocheck[i] == INPUT_REDIRECTION && str_tocheck[i + 1] == INPUT_REDIRECTION)
+		else if (inputstr[i] == DOLLAR_SIGN)
+			symbol_iteration(inputstr, &i, DOLLAR_SIGN);
+		else if (inputstr[i] == INPUT_REDIRECTION && inputstr[i + 1] == INPUT_REDIRECTION)
 			i += 1;
-		else if (str_tocheck[i] == OUTPUT_REDIRECTION && str_tocheck[i + 1] == OUTPUT_REDIRECTION)
+		else if (inputstr[i] == OUTPUT_REDIRECTION && inputstr[i + 1] == OUTPUT_REDIRECTION)
 			i += 1;
 		//else
 		//	i++;

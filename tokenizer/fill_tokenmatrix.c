@@ -82,22 +82,27 @@ int  malloc_if_token_is_symbol(char **tokens_matrix, int *t_index, char *str_to_
 	int i;
 	int t;
 	int len;
-	int tmp;
+	int starting_index;
 
 	i = *iterator;
 	t = *t_index;
-	tmp = i;
-	if (check_symbols(str_to_tokenize, &i) > 0)
+	starting_index = i;
+	if (check_symbols(str_to_tokenize, &i) > 0) //if a symbol was find
 	{	
-		len = i - tmp;//nota 33
-		tmp = i - len;//nota 66
-		if (str_to_tokenize[tmp] == DOUBLE_QUOTE || str_to_tokenize[tmp] == SINGLE_QUOTE)
+		len = i - starting_index;//nota 33
+		//starting_index = i - len;//nota 66
+		/*if (str_to_tokenize[starting_index] == DOUBLE_QUOTE || str_to_tokenize[starting_index] == SINGLE_QUOTE || str_to_tokenize[starting_index] == DOLLAR_SIGN || str_to_tokenize[starting_index] == INPUT_REDIRECTION || str_to_tokenize[starting_index] == OUTPUT_REDIRECTION)
 			len = len + 1; //nota XXX
-		if(str_to_tokenize[tmp] == INPUT_REDIRECTION || str_to_tokenize[tmp] == OUTPUT_REDIRECTION)
-			len = len + 1;//nota 44
-		if (len == 0)
-			len = 1; //nota 88
-		tokens_matrix[t] = create_token(str_to_tokenize, tmp, len);
+			*/
+		/*if (str_to_tokenize[starting_index] == DOLLAR_SIGN)
+			len = len + 1;
+		if(str_to_tokenize[starting_index] == INPUT_REDIRECTION || str_to_tokenize[starting_index] == OUTPUT_REDIRECTION)
+			len = len + 1;//nota 44*/
+		if (ft_issymbol(str_to_tokenize[starting_index])) 
+			len = len + 1;
+	//	if (len == 0)
+	//		len = 1; //nota 88
+		tokens_matrix[t] = create_token(str_to_tokenize, starting_index, len);
 		//todo return -1
 		t++;
 	}
