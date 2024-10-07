@@ -2,7 +2,9 @@
 
 //fill token
 /*
-TODO: 'rrr'rrrr deve essere riconosciuto come un unico token...
+AAA quando dopo < metto solo una lettera ad es <d
+non riconosce la d come token separato da <
+
  */
 char **matrixalloc(int n_tokens)
 {
@@ -75,24 +77,33 @@ int malloc_if_token_is_str(char **tokens_matrix, int *t_index, char *str_to_toke
 		return (1);
 }
 
-int  malloc_if_token_is_symbol(char **tokens_matrix, int *t_index, char *inputstr, int *iterator)
+int  malloc_if_token_is_symbol(char **tokens_matrix, int *t_index, char *str_to_tokenize, int *iterator)
 {
 	int i;
 	int t;
 	int len;
 	int starting_index;
-	int is_symbol;
 
 	i = *iterator;
 	t = *t_index;
 	starting_index = i;
-	is_symbol = check_symbols(inputstr, &i);
-	if (is_symbol)
+	if (check_symbols(str_to_tokenize, &i) > 0) //if a symbol was find
 	{	
 		len = i - starting_index;//nota 33
-	//	if (ft_issymbol(str_to_tokenize[starting_index])) 
+		//starting_index = i - len;//nota 66
+		/*if (str_to_tokenize[starting_index] == DOUBLE_QUOTE || str_to_tokenize[starting_index] == SINGLE_QUOTE || str_to_tokenize[starting_index] == DOLLAR_SIGN || str_to_tokenize[starting_index] == INPUT_REDIRECTION || str_to_tokenize[starting_index] == OUTPUT_REDIRECTION)
+			len = len + 1; //nota XXX
+			*/
+		/*if (str_to_tokenize[starting_index] == DOLLAR_SIGN)
 			len = len + 1;
-		tokens_matrix[t] = create_token(inputstr, starting_index, len);
+		if(str_to_tokenize[starting_index] == INPUT_REDIRECTION || str_to_tokenize[starting_index] == OUTPUT_REDIRECTION)
+			len = len + 1;//nota 44*/
+		if (ft_issymbol(str_to_tokenize[starting_index])) 
+			len = len + 1;
+	//	if (len == 0)
+	//		len = 1; //nota 88
+		tokens_matrix[t] = create_token(str_to_tokenize, starting_index, len);
+		//todo return -1
 		t++;
 	}
 	*iterator = i;
