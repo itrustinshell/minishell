@@ -15,7 +15,7 @@ char **matrixalloc(int n_tokens)
 	return (matrix_to_ret);
 }
 
-char *tokenalloc(char *inputstr, int index, int len)
+char *create_token(char *str, int i, int len)
 {
 	char *token;
 	int t;
@@ -26,7 +26,7 @@ char *tokenalloc(char *inputstr, int index, int len)
 	t = 0;
 	while (t < len)
 	{
-		token[t] = inputstr[index + t];
+		token[t] = str[i + t];
 		t++;
 	}
 	token[t] = '\0';
@@ -34,89 +34,99 @@ char *tokenalloc(char *inputstr, int index, int len)
 	return (token);
 }
 
-void free_matrix(char **tokenmatrix)
+void free_matrix(char **tokens_matrix)
 {
 	int t;
 
 	t = 0;
-	while (tokenmatrix[t])
+	while (tokens_matrix[t])
 	{
-		free(tokenmatrix[t]);
+		free(tokens_matrix[t]);
 			t++;
 	}
-	free(tokenmatrix);
+	free(tokens_matrix);
 }
 
-char *create_token_wordled(char *inputstr, int *iterator)
+int malloc_if_token_is_str(char **tokens_matrix, int *t_index, char *str_to_tokenize, int *iterator)
 {
 		int i;
+		int t;
 		int len;
-		char *token;
-
+		
 		i = *iterator;
+		t = *t_index;
 		len = 0;
-		while (
-			inputstr[i + len] &&
-			!ft_isspace(inputstr[i + len]) &&
-			!ft_issymbol(inputstr[i + len])
-		)
+		while (str_to_tokenize[i + len] && !ft_isspace(str_to_tokenize[i + len]) && !ft_issymbol(str_to_tokenize[i + len]))
 			len++;
-		if (len)
+
+		if (len > 0)
 		{
-			token = tokenalloc(inputstr, i, len);
-			if (token == NULL)
-				return (NULL);
+			tokens_matrix[t] = create_token(str_to_tokenize, i, len);
+			if (tokens_matrix[t] == NULL)
+			{
+				free_matrix(tokens_matrix);
+				return (-1);
+			}
 			i = i + len;
+			t++;
 		}
 		*iterator = i;
-		return (token);
+		*t_index = t;
+		return (1);
 }
 
-char *create_token_symbolled(char *inputstr, int *iterator)
+int  malloc_if_token_is_symbol(char **tokens_matrix, int *t_index, char *inputstr, int *iterator)
 {
-	char *token;
 	int i;
+	int t;
 	int len;
 	int starting_index;
 	int is_symbol;
 
 	i = *iterator;
+	t = *t_index;
 	starting_index = i;
 	is_symbol = check_symbols(inputstr, &i);
 	if (is_symbol)
 	{	
-		len = i - starting_index + 1;//nota 33
-		token = tokenalloc(inputstr, starting_index, len);
+		len = i - starting_index;//nota 33
+	//	if (ft_issymbol(str_to_tokenize[starting_index])) 
+			len = len + 1;
+		tokens_matrix[t] = create_token(inputstr, starting_index, len);
+		t++;
 	}
 	*iterator = i;
-	return (token);
+	*t_index = t;
+	return (1);
 }
 
 
 /*given a string, it calculates how many words it is composed of*/
-char **create_tokenmatrix(char *inputstr, int n_tokens)
+char **create_tokenmatrix(char *str_to_tokenize, int n_tokens)
 {
-	char **tokenmatrix;
+	char **tokens_matrix;
+	int tmp;
 	int i;
 	int t;
+	int len;
 
-	tokenmatrix = matrixalloc(n_tokens);
-	if (!tokenmatrix)
+	tokens_matrix = matrixalloc(n_tokens);
+	if (!tokens_matrix)
 		return (NULL);
 	t = 0;
 	i = 0;
 	while (t < n_tokens)
 	{
-		while (ft_isspace(inputstr[i]))
+		while (ft_isspace(str_to_tokenize[i]))
 			i++;
-		if (inputstr[i] && !ft_issymbol(inputstr[i]))
-			tokenmatrix[t++] = create_token_wordled(inputstr, &i);
-		if (ft_issymbol(inputstr[i]))
-			tokenmatrix[t++] = create_token_symbolled(inputstr, &i);
-		i++; //si finisce sempre sul carattere che precede un token ...
+		if (malloc_if_token_is_str(tokens_matrix, &t, str_to_tokenize, &i) < 0)
+			return (NULL);
+		malloc_if_token_is_symbol(tokens_matrix, &t, str_to_tokenize, &i); 
+		//TODO anche qui gestisci una eventual mancata malloccamento
+		i++;
 	}
-	tokenmatrix[t] = NULL;
-	return tokenmatrix;
+	tokens_matrix[t] = NULL;
+	return tokens_matrix;
 }
 
 // nota 33 la i potenzialmente è andata avanti in chec_symbol. La sua precedente posizione è salvata in tmp prima di eseguire check_symbol. se la i non è andata avanti il risultato di questa len sarà quello che deve eessere ovvero 0. Significa che non vi erano simboli
