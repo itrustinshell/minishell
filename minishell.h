@@ -24,9 +24,27 @@
 #define IS_SYMBOL 1
 #define IS_NOT_SYMBOL 0
 /*-------------split--------------------------------------------*/
+
+/*-----------pipe_logic----*/
+#define THERE_IS_A_PIPE 1
+#define THERE_IS_NOT_A_PIPE 0
+
+
+
+
+/**/
+
 #define LOCKED 1
 #define UNLOCKED 0
 
+
+typedef struct s_command
+{
+	char *cmd;
+	char **args;
+	struct s_command *next;
+	struct s_command *prev;
+} t_command;
 
 typedef struct s_token
 {
@@ -46,3 +64,7 @@ int ft_isspace(char char_to_check);
 int ft_issymbol(char char_to_check);
 int check_symbols(char *str_tocheck, int *iterator);
 char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
+
+/*-----pipe---------*/
+int check_if_there_is_at_least_one_pipe(char **tokenmatrix);
+void pipe_management(char **matrix);

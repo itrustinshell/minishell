@@ -1,0 +1,40 @@
+pipe e built-in
+
+COMANDO:
+ls -a | grep “ciao”
+
+ANALISI
+Questo comando utilizza una pipe. Pertanto l'output del comando a sinistra della pipe viene passato come input al comando a destra della pipe.
+In particolare i comandi in questione sono: ls e grep.
+Se abbiamo una pipe (ovvero una sorta di tubo) ebbene avremo un buffer di memoria associato a quella pipe. In qusto buffer di memoria avvengono le due operaizoni di scrittura e lettura.
+Quando generiamo un pipe, abbiamo come valore di ritorno un array di due int. 
+Questi due int sono i file-descriptor che utilizzeremo per le funzioni write() e read(). 
+Pertanto nello scenario prospettato la lista che si genera con ls non è visualizzata sullo schermo immediatamente ma è passata a questo buffer ( write() ).
+Succesivamente sull'area di memoria scritta nel buffer, viene applicato poi il comando grep per il successivo filtraggio che mette in luce  le parole ciao.
+
+Ls ha come output una matrice di stringhe ? No.
+Ha come file un unica stringa? Sì.
+un stringa con tanti \n? Sì.
+ed un unico \0 ? Sì.
+
+Questa stringa è passata alla pipe nel fd 1 per la scrittura nel buffer della pipe? Sì.
+
+Poi è letta e scritta in un apposio buffer (che non è della pipe) da read() co fd 0 ? Sì.
+
+Questo buffer nuovo rappresenta quindi lo stesso identica stringa? Sì.
+
+Su questa stringa si applica il comando grep? Sì.
+
+Grep è un comando builtin ? No.
+
+Quindi qui apbbiamo un pipe che gestirà due comandi esterni ovvero due programmi? Sì.
+
+Questi due programmi in quanto esterni a bash saranno eseguiti con execve? Sì.
+
+Ora io so che se facio execve il processo che avvia execve va a sostituire completamente a fesss ra sor del processo precedente. Giusto ? Sì.
+
+Quindi quando avvio un comando esterno dovrei prima effettuare un fork prima? Sì.
+
+Effettuando un firk io mantengo una copia del processo padre ? Sì.
+
+E in pratica il comando che dovevo eseguire con execve sarà seguito nell’ambito del processo figlio? Sì.

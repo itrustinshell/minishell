@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 // get_tokens_number
 /*
 AAA quando dopo < metto solo una lettera ad es <d

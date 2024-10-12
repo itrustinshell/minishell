@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "../minishell.h"
 
 /*it create just the structure of matrix, with empty elements.
  In other words it allocates al the memory ofr each element.*/
@@ -35,13 +35,14 @@ int main(int argc, char **argv)
 
 	matrix = tokenizer(str);
 	int i = 0;
-		
 
 	while(matrix[i])
 	{
 		printf("%s\n", matrix[i]);
 		i++;
 	}
+	if (check_if_there_is_at_least_one_pipe(matrix) == THERE_IS_A_PIPE)
+		pipe_management(matrix);
 	i = 0;
 	while (matrix[i])
 	{
@@ -50,6 +51,7 @@ int main(int argc, char **argv)
 	}
 	free(matrix);
 	free(str);
+
 }
 
 
