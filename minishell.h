@@ -55,7 +55,8 @@ typedef struct s_token
 
 } t_token;
 
-
+/*-----tests---------*/
+void test_stampa_args(t_command *commandlist);
 
 /*-----tokenizer------*/
 char **tokenizer(char *str_to_tokenize);

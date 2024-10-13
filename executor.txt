@@ -1,6 +1,0 @@
-Executor:
-
-take input
-eliminate \n
-subsitute \n with \0
-
