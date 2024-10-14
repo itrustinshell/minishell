@@ -6,7 +6,10 @@ CC = gcc
 
 SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tokenizer.c \
 		pipe/ft_pipe.c \
-		test/pipe_test.c \
+		test/pipe_test.c test/printmatrix.c\
+		utils/ft_split.c utils/list_utils.c utils/ft_isspace.c utils/strjoin.c utils/ft_strlen.c \
+		cmd/external_cmd.c \
+		main.c \
 
 OBJ = $(SRC:.c=.o)
 

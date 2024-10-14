@@ -3,7 +3,7 @@
 #include <readline/readline.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <fcntl.h>
 
 
 
@@ -57,7 +57,8 @@ typedef struct s_token
 
 /*-----tests---------*/
 void test_stampa_args(t_command *commandlist);
-
+void print_matrix_of_char(char **matrix);
+void print_matrix_of_int(int **matrix, int limit_row, int limit_column);
 /*-----tokenizer------*/
 char **tokenizer(char *str_to_tokenize);
 int get_num_of_tokens(char *str);
@@ -68,4 +69,15 @@ char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 /*-----pipe---------*/
 int check_if_there_is_at_least_one_pipe(char **tokenmatrix);
-void pipe_management(char **matrix);
+t_command *pipe_management(char **matrix);
+int **generate_array_of_pipes_with_fd(int num_of_cmd);
+
+/*------cmd------*/
+char *find_external_cmd(char *cmd);	
+
+/*----utils-----*/
+char **ft_split(char *str, char separator);
+int ft_isspace(char char_to_check);
+char *strjoin(char *str, char *separator);
+int number_of_nodes_in_a_list(t_command *list);
+int ft_strlen(char *str);

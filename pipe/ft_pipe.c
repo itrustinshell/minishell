@@ -1,40 +1,26 @@
 #include "../minishell.h"
 #include <string.h>
 
-int ft_strlen(char *str)
+int **generate_array_of_pipes_with_fd(int num_of_cmd)
 {
 	int i;
-	
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
+	int **pipe_array;
 
-char *strjoin(char *str, char *str_toadd)
-{
-	int lenstr;
-	int len_strtoadd;
-	char *str_toret;
-	int i;
-	int j;
-
-	lenstr = ft_strlen(str);
-	len_strtoadd = ft_strlen(str_toadd);
-	str_toret = (char *)malloc((lenstr + len_strtoadd + 1) * sizeof(char));
+	pipe_array = (int **)malloc((num_of_cmd - 1) * sizeof(int *)); 
 	i = 0;
-	while(str[i])
-	{	
-		str_toret[i] = str[i];
-		i++;
-	}
-	j = 0;
-	while(str_toadd[j])
+	while (i < num_of_cmd - 1)
 	{
-		str_toret[i + j] = str_toadd[j];
-		j++;
+		pipe_array[i] = (int *)malloc(2 * sizeof(int));
+		i++;
 	}
-	return str_toret;
+	i = 0;
+	while (i < num_of_cmd)
+	{
+		pipe(pipe_array[i]);
+		i++;
+	}
+
+	return (pipe_array);
 }
 
 int check_if_there_is_at_least_one_pipe(char **tokenmatrix)
@@ -116,7 +102,7 @@ void commandlist_generation(char **tokenmatrix, int *pipeindex, int *generictoke
 }
 
 /*va a generare una lista di comandi quando ci sono le pipe*/
-void pipe_management(char **tokenmatrix)
+t_command *pipe_management(char **tokenmatrix)
 {
 	int pipe_index;
 	int generictoken_index;
@@ -141,6 +127,7 @@ void pipe_management(char **tokenmatrix)
 			break;
 		}
 	}
-	test_stampa_args(commandlist);
+//	test_stampa_args(commandlist);
+	return commandlist;
 }
 

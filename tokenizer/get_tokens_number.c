@@ -7,18 +7,6 @@ non riconosce la d come token separato da <
  */
 
 
-/*given a char it checks if it is a space*/
-int	ft_isspace(char char_to_check)
-{
-	if (char_to_check == SPACE)
-		return (IS_SPACE);
-	else if(char_to_check == TABULATION)
-		return (IS_SPACE);
-	else if (char_to_check == NEW_LINE)
-		return (IS_SPACE);
-	return (IS_NOT_SPACE);
-}
-
 /*given a char it checks if it is a given symbol*/
 int	ft_issymbol(char char_to_check)
 {

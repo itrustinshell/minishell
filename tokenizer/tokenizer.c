@@ -1,8 +1,6 @@
 
 #include "../minishell.h"
 
-/*it create just the structure of matrix, with empty elements.
- In other words it allocates al the memory ofr each element.*/
 char **tokenizer(char *str_to_tokenize)
 {
 	char **tokens_matrix;
@@ -20,38 +18,4 @@ char **tokenizer(char *str_to_tokenize)
 		return (NULL);
 	return (tokens_matrix);
 }
-
-
-int main(int argc, char **argv)
-{
-	char *str;
-	size_t len;
-	char **matrix;
-
-	str = NULL;
-	len = 0;
-
-	getline(&str, &len, stdin);
-
-	matrix = tokenizer(str);
-	int i = 0;
-
-	while(matrix[i])
-	{
-		printf("%s\n", matrix[i]);
-		i++;
-	}
-	if (check_if_there_is_at_least_one_pipe(matrix) == THERE_IS_A_PIPE)
-		pipe_management(matrix);
-	i = 0;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
-	free(str);
-
-}
-
 

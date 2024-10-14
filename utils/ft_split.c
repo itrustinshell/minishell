@@ -1,142 +1,90 @@
+#include "../minishell.h"
 
-#include "minishell.h"
 
-/*given a char it checks if it is a space or not*/
-int	ft_isspace(char char_to_check)
+int countwords(char *str, char separator)
 {
-	if (char_to_check == SPACE)
-		return (IS_SPACE);
-	else if(char_to_check == TABULATION)
-		return (IS_SPACE);
-	else if (char_to_check == NEW_LINE)
-		return (IS_SPACE);
-	return (IS_NOT_SPACE);
-}
-
-/*it fills the matrix elements with appropriate values*/
-char **fill_matrix_elements(char *str, char **matrix)
-{
-	int x;
-	int j;
-	int k;
-
-	x = 0;
-	j = 0;
-	while (matrix[x])
-	{	
-		while (str[j] && ft_isspace(str[j]))
-			j++;
-		k = 0;
-		while (str[j] && !ft_isspace(str[j]))
-		{
-			matrix[x][k] = str[j];
-			k++;
-			j++;
-		}
-		x++;	
-	}
-	return (matrix);
-}
-
-/*given a string, it calculates how many words it is composed of.*/
-int number_of_matrix_elements(char *str)
-{
-	int n_elements;
-	int counter_padlock;
+	int n_word;
+	int padlock;
 	int i;
-
-	n_elements = 0;
+	//se vuota restiruisci zero
+	n_word = 0;
 	i = 0;
 	while (str[i])
 	{
-		while (str[i] && ft_isspace(str[i]))
+		while (str[i] == separator)
 			i++;
-		counter_padlock = UNLOCKED;
-		while (str[i] && !ft_isspace(str[i]))
+		padlock = 1;
+		while (str[i] && str[i] != separator)
 		{
-			if (counter_padlock == UNLOCKED)
+			if (padlock == 1)
 			{
-				n_elements += 1;
-				counter_padlock = LOCKED;
+				n_word += 1;
+				padlock = 0;
 			}
 			i++;
-		}	
-	}
-	return (n_elements);
-}
-
-int calculate_element_len(char *str)
-{
-	static int i;
-	int element_len;
-
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	element_len = 0;
-	while (str[i] && !ft_isspace(str[i]))
-	{	
-		element_len++;
-		i++;
-	}
-	return (element_len);
-}
-
-/*it just allocate memory for matrix element.
- It doesn't fill the elements with values.
- It word_len > 0 means that there is an element to insert*/
-char **allocate_memory_for_elements(char *str, char **matrix, int n_elements)
-{	
-	int x;
-	int element_len;
-
-	x = 0;
-	while (x < n_elements)
-	{	
-		element_len = calculate_element_len(str);
-		if (element_len > 0)
-		{	
-			matrix[x] = (char *)calloc((element_len + 1), sizeof(char));
-			if (!matrix[x])
-				return (NULL);
-			matrix[x][element_len] = '\0';
-			x++;
 		}
-		else
-			break;
 	}
-	return (matrix);
+	return n_word;
 }
 
-/*it create just the structure of matrix, with empty elements.
- In other words it allocates al the memory ofr each element.*/
-char **build_matrix_structure(int n_elements, char *str)
+char **ft_split(char *str, char separator)
 {
+	int n_words;
+	char **matrix;
+	int i;
+
+	n_words = countwords(str, separator);
+	printf("number of word: %d\n", n_words);
+	matrix = (char **)malloc((n_words + 1) * sizeof(char *));
+	
+	i = 0;
+	int j = 0;
+	int k;
+	while (i < n_words)
+	{
+		while (str[j] == separator)
+			j++;
+		k = 0;
+		while (str[j + k] && str[j + k] != separator)
+			k++;
+		matrix[i] = (char *)malloc((k + 1) * sizeof(char));
+		k = 0;
+		while (str[j + k] && str[j + k] != separator)
+		{
+			matrix[i][k] = str[j + k];
+			k++;
+		}
+		j = j + k;
+		i++;
+	}
+	matrix[i] = NULL;
+	return matrix;	
+}
+
+/*
+void test_print_matrix(char **matrix)
+{
+	int i;
+
+
+	i = 0;
+
+
+	while (matrix[i])
+	{
+		printf("%s\n", matrix[i]);
+		i++;
+	}
+}
+
+int main(void)
+{
+	char *str;
 	char **matrix;
 
-	matrix = NULL;
-	matrix = (char **)calloc((n_elements + 1), sizeof(char *));
-	if (!matrix)
-		return (NULL);
-	matrix[n_elements] = NULL;
-	matrix = allocate_memory_for_elements(str, matrix, n_elements);
-	return (matrix);
+	str = " s:ciao:come:stai:io:sono:un:ragazzo:";	
+	matrix = ft_split(str, ':');
+	test_print_matrix(matrix);
+	return (0);
 }
-
-char **ft_split(char *str_to_split)
-{
-	char **matrix;
-	int n_elements;
-
-	if (!str_to_split)
-		return (NULL);
-	matrix = NULL;
-	n_elements = number_of_matrix_elements(str_to_split);
-	matrix = build_matrix_structure(n_elements, str_to_split);
-	if (!matrix)
-		return (NULL); //check for free
-	matrix = fill_matrix_elements(str_to_split, matrix);
-	if (!matrix)
-		return (NULL);
-	return (matrix);
-}
-
+*/

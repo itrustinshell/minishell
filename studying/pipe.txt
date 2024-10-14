@@ -37,4 +37,20 @@ Quindi quando avvio un comando esterno dovrei prima effettuare un fork prima? S�
 
 Effettuando un firk io mantengo una copia del processo padre ? Sì.
 
-E in pratica il comando che dovevo eseguire con execve sarà seguito nell’ambito del processo figlio? Sì.
+E in pratica il comando che dovevo eseguire con execve sarà seguito nell’ambito del processo figlio? Sì
+
+
+
+Sequenza di Operazioni
+
+Ecco una sequenza generale di operazioni per configurare una pipe tra due processi:
+
+    Creare la Pipe: Usa pipe(int pipefd[2]) per creare una pipe. pipefd[0] sarà utilizzato per leggere, e pipefd[1] sarà utilizzato per scrivere.
+
+	    Fork del Processo: Usa fork() per creare un processo figlio. La logica della comunicazione tra i processi è tipicamente implementata nei processi genitore e figlio.
+
+		    Dup2: Utilizza dup2() per reindirizzare l'input/output standard verso la pipe. Questo è cruciale per far sì che l'output di un processo venga inviato come input all'altro.
+
+			    Execve: Chiamare execve() nel processo figlio per eseguire il programma desiderato.
+
+				    Chiusura dei Descrittori di File: Chiudi i descrittori di file della pipe non utilizzati per evitare perdite di memoria e garantire che i processi si chiudano correttamente.

@@ -1,0 +1,9 @@
+FORK:
+
+signature:
+
+pid_t fork(void);
+
+retituisce il pid del figlio (pid del child process)
+
+
