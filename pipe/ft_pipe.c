@@ -18,7 +18,7 @@ int **generate_array_of_pipes_with_fd(int num_of_cmd)
 	{
 		pipe(pipe_array[i]);
 		i++;
-	}
+}
 
 	return (pipe_array);
 }
@@ -44,11 +44,24 @@ t_command *create_commandnode_for_pipe(char **tokenmatrix, int pipe_index, int g
 	int cmd_index;
 	t_command *commandnode;
 
+	/*create command node*/
 	commandnode = (t_command *)malloc(sizeof(t_command));
+	/*assign cmd*/
 	cmd_index = pipe_index - generictoken_index;
 	commandnode -> cmd = strdup(tokenmatrix[cmd_index]);
+	/*assaign argument arguments: pipe_index - cmd_index + 1 becouse arguments to pass to 
+	 execve function have as first element the name of cmd (I put also a NULL to better
+	 iterate later)..so if before pipe there are 4
+	 elements, the first is the command the other 3 are arguments.
+	 
+	index:   0    1    2    3    4    5   6     7 
+	tokens: cmd1 arg1 arg2 arg3  |   cmd2 arg1 arg2
+	whll pipe_index = 4
+	cmd_index = 0
+	how much arguments to pass to execve: 4 - 0 + 1 = 5
 	
-	/*arguments*/
+	So if commandnode-args have a null terminator and include as first element the cmq itself
+	 */
 	commandnode -> args = (char **)malloc((pipe_index - cmd_index + 1) * sizeof(char*));
 	i = -1;
 	while ((cmd_index + (++i)) < pipe_index)
@@ -61,44 +74,19 @@ t_command *create_commandnode_for_pipe(char **tokenmatrix, int pipe_index, int g
 }
 
 
-t_command *find_last_commandnode(t_command *commandlist)
-{
-	t_command *current;
-	
-	current = commandlist;
-	while (current -> next != NULL)
-		current = current -> next;
-	return (current);
-}
-
-
-void append_to_commandlist(t_command *commandnode, t_command **commandlist)
-{
-	t_command *last_commandnode;
-	if (*commandlist == NULL)
-		*commandlist = commandnode;
-	else
-	{
-		last_commandnode = find_last_commandnode(*commandlist);
-		commandnode -> prev = last_commandnode;
-		last_commandnode -> next = commandnode;
-		commandnode -> next = NULL;
-	}
-}
-
-void commandlist_generation(char **tokenmatrix, int *pipeindex, int *generictokenindex, t_command **commandlist)
+/*becouse of norm i got this function
+the function is void so it modify something inside that reflects in the code (that is the list).
+Thi function create a new command node.
+Then the function append this newcreated commandnode to the list.
+It updates the pipe_index passed byreference, to allow the next iteration to start from there.
+ */
+void commandnode_management(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist)
 {
 	t_command *commandnode;
-	int pipe_index;
-	int generictoken_index;
 
-	pipe_index = *pipeindex;
-	generictoken_index = *generictokenindex;
-	pipe_index = pipe_index + generictoken_index;
-	commandnode = create_commandnode_for_pipe(tokenmatrix, pipe_index, generictoken_index);
+	*pipe_index = *pipe_index + *generictoken_index;
+	commandnode = create_commandnode_for_pipe(tokenmatrix, *pipe_index, *generictoken_index);
 	append_to_commandlist(commandnode, commandlist);
-	*pipeindex = pipe_index;
-	*generictokenindex = generictoken_index;
 }
 
 /*va a generare una lista di comandi quando ci sono le pipe*/
@@ -117,13 +105,13 @@ t_command *pipe_management(char **tokenmatrix)
 			generictoken_index++;
 		if (tokenmatrix[pipe_index + generictoken_index] && tokenmatrix[pipe_index + generictoken_index][0] == PIPE)
 		{
-			commandlist_generation(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
+			commandnode_management(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
 			generictoken_index = 0;
 			continue;
 		}
 		else
 		{
-			commandlist_generation(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
+			commandnode_management(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
 			break;
 		}
 	}

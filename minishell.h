@@ -81,3 +81,6 @@ int ft_isspace(char char_to_check);
 char *strjoin(char *str, char *separator);
 int number_of_nodes_in_a_list(t_command *list);
 int ft_strlen(char *str);
+
+//utils_lists
+void append_to_commandlist(t_command *commandnode, t_command **commandlist);
