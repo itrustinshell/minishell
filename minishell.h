@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/types.h>  // For pid_t
+#include <sys/wait.h>   // For wait()
 
 
 

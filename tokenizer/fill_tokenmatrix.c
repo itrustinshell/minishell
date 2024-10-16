@@ -85,7 +85,13 @@ char *create_token_symbolled(char *inputstr, int *iterator)
 	is_symbol = check_symbols(inputstr, &i);
 	if (is_symbol)
 	{	
+		
 		len = i - starting_index + 1;//nota 33
+		if (inputstr[i] == DOUBLE_QUOTE)
+		{
+			starting_index += 1;
+			len = i - starting_index;
+		}
 		token = tokenalloc(inputstr, starting_index, len);
 	}
 	*iterator = i;
