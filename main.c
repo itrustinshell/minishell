@@ -16,9 +16,10 @@ int main(int argc, char **argv)
 	t_command *cmd;
 	t_command	*cmdlist;
 	int			cmdlist_len;
-	int			**pipesarray;
+	int			**pipematrix;
 	char *buffer = NULL;
 
+	
 	while (1)
 	{	
 		len = 0;
@@ -40,16 +41,17 @@ int main(int argc, char **argv)
 		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
 		{
 			cmdlist = commandlist_for_pipe(matrix); //se c'è almeno una pipe, viene costruita una lista di comandi
-			cmdlist_len = number_of_nodes_in_a_list(cmdlist);
-			pipesarray = create_pipesarray(cmdlist_len);
-			general_pipe_management(cmdlist, cmdlist_len, pipesarray);
+			cmdlist_len = listlen(cmdlist);
+			pipematrix = pipematrix_malloc(cmdlist_len);
+			pipex(cmdlist, cmdlist_len, pipematrix);
 		}
 		else
 		{
 			cmd = create_cmd(matrix);
-			execute_cmd(cmd); //al momento senza redirections
+			single_cmd_ex(cmd); //al momento senza redirections
 		}
-		//printf("main: libero la matrix\n");	
+
+		/***************************************final part******************************************************************************/
 		i = 0;
 		while (matrix[i])
 		{

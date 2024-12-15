@@ -19,29 +19,28 @@
 Ora, se vediamo bene, il numero di pipe è sempre uguale al numero dei comandi meno uno.Se hai due comandi 
 infatti avrai appunto una pipe, ovvero 2 - 1 = 1.
   */
-int **create_pipesarray(int cmdlist_len)
+int **pipematrix_malloc(int cmdlist_len)
 {
 	int	i;
-	int	**pipesarray;
+	int	**pipematrix;
 	int	num_of_pipes;
 
 	num_of_pipes = cmdlist_len - 1;
-	pipesarray = (int **)malloc((num_of_pipes) * sizeof(int *));
+	pipematrix = (int **)malloc((num_of_pipes) * sizeof(int *));
 	i = 0;
 	while (i < num_of_pipes)
 	{
-		pipesarray[i] = (int *)malloc(2 * sizeof(int));
+		pipematrix[i] = (int *)malloc(2 * sizeof(int));
 		i++;
 	}
 	i = 0;
 	while (i < num_of_pipes)
 	{
-		pipe(pipesarray[i]);
+		pipe(pipematrix[i]);
 		i++;
 	}
-	return (pipesarray);
+	return (pipematrix);
 }
-
 
 int check_pipe_symbol(char **tokenmatrix)
 {
@@ -54,7 +53,7 @@ int check_pipe_symbol(char **tokenmatrix)
 			i++;
 		else
 		{
-			printf("there is a pipe\n");
+			//printf("there is a pipe\n");
 			return (THERE_IS_A_PIPE);
 		}
 	}
@@ -69,12 +68,12 @@ t_command *create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_inde
 
 	commandnode = (t_command *)malloc(sizeof(t_command));
 	cmd_index = current_pipe_index - n_tokens_fm_cmd_to_pipe;
-	commandnode -> cmd = strdup(tokenmatrix[cmd_index]); 
-	commandnode -> args = (char **)malloc((n_tokens_fm_cmd_to_pipe + 1) * sizeof(char*));
+	commandnode->cmd = strdup(tokenmatrix[cmd_index]); 
+	commandnode->args = (char **)malloc((n_tokens_fm_cmd_to_pipe + 1) * sizeof(char*));
 	i = 0;
 	while ((cmd_index + i) < current_pipe_index)
 	{
-		commandnode -> args[i] = strdup(tokenmatrix[cmd_index + i]);	
+		commandnode->args[i] = strdup(tokenmatrix[cmd_index + i]);	
 		i++;
 	}
 	commandnode->args[i] = NULL;
@@ -136,7 +135,7 @@ t_command *commandlist_for_pipe(char **tokenmatrix)
 	}
 //	test_stampa_args(commandlist);
 	
-	print_list(commandlist);
+	//print_list(commandlist);
 	return commandlist;
 }
 

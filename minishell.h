@@ -86,10 +86,10 @@ char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 /*-----pipe---------*/
 t_command *commandlist_for_pipe(char **matrix);
 int **generate_array_of_pipes_with_fd(int num_of_cmd);
-int general_pipe_management(t_command *cmdlist, int cmdlist_len, int **pipesarray);
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray);
 
 /*-----pipe's utils--------*/
-int **create_pipesarray(int cmdlist_len);
+int **pipematrix_malloc(int cmdlist_len);
 int check_pipe_symbol(char **matrix);
 t_command *create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 t_command *commandlist_for_pipe(char **tokenmatrix);
@@ -98,13 +98,14 @@ void commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *g
 /*------cmd------*/
 char *find_external_cmd(char *cmd);	
 t_command *create_cmd(char **matrix);
-void execute_cmd(t_command *cmd);
+void single_cmd_ex(t_command *cmd);
+char *get_cmdpath(char *cmd);
 
 /*----utils-----*/
 char **ft_split(char *str, char separator);
 int ft_isspace(char char_to_check);
 char *strjoin(char *str, char *separator);
-int number_of_nodes_in_a_list(t_command *list);
+int listlen(t_command *list);
 int ft_strlen(char *str);
 
 //utils_lists

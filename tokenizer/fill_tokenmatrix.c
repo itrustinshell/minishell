@@ -30,7 +30,7 @@ char *tokenalloc(char *inputstr, int index, int len)
 		t++;
 	}
 	token[t] = '\0';
-	printf("token_len: %d\n",t);
+	//printf("token_len: %d\n",t);
 	return (token);
 }
 

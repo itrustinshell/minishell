@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int number_of_nodes_in_a_list(t_command *list)
+int listlen(t_command *list)
 {
 	int i;
 	t_command *current;

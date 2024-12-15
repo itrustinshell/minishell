@@ -9,11 +9,8 @@ char *find_external_cmd(char *cmd)
 	int access_result;
 
 	path = getenv("PATH");
-	
-	//printf("i m in path: i print the entire path: %s\n", path);
 	splitted_path = ft_split(path, ':');
 
-   //print_matrix_of_char(splitted_path);	
 	i = 0;
 	while (splitted_path[i])
 	{
@@ -21,14 +18,20 @@ char *find_external_cmd(char *cmd)
 		finalpath = strjoin(finalpath, cmd);
 		access_result = access(finalpath, X_OK);
 		if (access_result == 0)
-		{
-			printf("command found\n");
-			printf("%s\n",finalpath);
 			return (finalpath);
-		}
 		//qui dovresti metter un else free l'attuale path creato con strjoin perchè strjoin malloca
 		i++;
 	}
 	printf("command not found\n");
 	return (NULL);
+}
+
+char *get_cmdpath(char *cmd) {
+    if (strcmp(cmd, "echo") == 0)
+        return "/home/ubuntu/mine/minishell/builtins/myecho";
+    if (strcmp(cmd, "pwd") == 0)
+        return "/home/ubuntu/mine/minishell/builtins/mypwd";
+    if (strcmp(cmd, "cd") == 0)
+        return "/home/ubuntu/mine/minishell/builtins/mycd";
+    return find_external_cmd(cmd);
 }
