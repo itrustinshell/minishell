@@ -38,14 +38,14 @@ t_command *create_cmd(char **matrix)
 	cmd->args[i] = NULL;
 	cmd->prev = NULL;
 	cmd->next = NULL;
-	printf("created singe node for execution without pipe\n");
+	//printf("created singe node for execution without pipe\n");
 	return (cmd);
 }
 
 void	execute_cmd(t_command *cmd)
 {
 	pid_t		pid;
-	printf("sono appena entrato nella gestione del singolo comando\n");	
+	//printf("sono appena entrato nella gestione del singolo comando\n");	
 		if (strcmp(cmd->cmd, "echo") == 0)
 			cmd->path = "/home/ubuntu/mine/minishell/builtins/myecho";
 		else if (strcmp(cmd->cmd, "pwd") == 0)
@@ -59,8 +59,8 @@ void	execute_cmd(t_command *cmd)
 	if (pid == CHILD_PID0) //child
 	{
 		int pidpid = getpid();
-		printf("sono nel child dopo il fork il nel child è: %d\n", pid);
-		printf("sono nel child (pidpid: %d) del single command management e sto per eseguire execve\n", pidpid);
+		//printf("sono nel child dopo il fork il nel child è: %d\n", pid);
+		//printf("sono nel child (pidpid: %d) del single command management e sto per eseguire execve\n", pidpid);
 		
 		execve(cmd->path, cmd->args, NULL);
 		
@@ -70,16 +70,16 @@ void	execute_cmd(t_command *cmd)
 		int status;
         pid_t child_pid = waitpid(pid, &status, 0); // Attendi il processo figlio
 
-		printf("single cmd: father is waiting\n");
-		printf("sono nel father, dopo il fork il pid nel father è: %d\n", pid);
+		//printf("single cmd: father is waiting\n");
+		//printf("sono nel father, dopo il fork il pid nel father è: %d\n", pid);
 		if (WIFEXITED(status)) 
 		{
-			printf("Il figlio %d è terminato con codice %d\n", child_pid, WEXITSTATUS(status));
+			//printf("Il figlio %d è terminato con codice %d\n", child_pid, WEXITSTATUS(status));
         } else if (WIFSIGNALED(status))
 		{
-			printf("Il figlio %d è terminato a causa del segnale %d\n", child_pid, WTERMSIG(status));
+			//printf("Il figlio %d è terminato a causa del segnale %d\n", child_pid, WTERMSIG(status));
 		}
-		printf("maibe is not waiting\n");
+		//printf("maibe is not waiting\n");
 	}
 }
 
