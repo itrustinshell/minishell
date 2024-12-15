@@ -6,11 +6,15 @@ ls -a | grep “ciao”
 ANALISI
 Questo comando utilizza una pipe. Pertanto l'output del comando a sinistra della pipe viene passato come input al comando a destra della pipe.
 In particolare i comandi in questione sono: ls e grep.
-Se abbiamo una pipe (ovvero una sorta di tubo) ebbene avremo un buffer di memoria associato a quella pipe. In qusto buffer di memoria avvengono le due operaizoni di scrittura e lettura.
+Se abbiamo una pipe (ovvero una sorta di tubo) ebbene avremo un buffer di memoria associato a quella pipe. 
+In qusto buffer di memoria avvengono le due operaizoni di scrittura e lettura.
+
 Quando generiamo un pipe, abbiamo come valore di ritorno un array di due int. 
 Questi due int sono i file-descriptor che utilizzeremo per le funzioni write() e read(). 
 Pertanto nello scenario prospettato la lista che si genera con ls non è visualizzata sullo schermo immediatamente ma è passata a questo buffer ( write() ).
+
 Succesivamente sull'area di memoria scritta nel buffer, viene applicato poi il comando grep per il successivo filtraggio che mette in luce  le parole ciao.
+
 
 Ls ha come output una matrice di stringhe ? No.
 Ha come file un unica stringa? Sì.
@@ -56,7 +60,10 @@ AAA: attenzione quqnaod crei pipe() l'array ha entrambi i suoi FD aperti...quind
 
 				    Chiusura dei Descrittori di File: Chiudi i descrittori di file della pipe non utilizzati per evitare perdite di memoria e garantire che i processi si chiudano correttamente.
 			
-			
+
+AAA: Ogni processo ha la sua pipe copiata. Se vhiudi il fd ad una non si chiude automaticamente nlel'altra. Devi
+farlo tu esplicitamente.
+
 io vorrei capire una cosa.
 se io uso pipe()
 ottengo una zona di buffer ocn due fd che puntano alla stessa zona di buffer. Dimmi si o no solo di o no 

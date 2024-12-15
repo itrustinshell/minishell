@@ -1,88 +1,65 @@
 #include "minishell.h"
+#include "string.h"
+#include "unistd.h"
+#include "stdlib.h"
+#include "stdio.h"
+
 
 
 int main(int argc, char **argv)
 {
-	char *str;
+	char *inputstr;
+	char *cwdpath;
 	size_t len;
 	char **matrix;
 	int i;
-	int num_of_nodes;
-	t_command *commandlist;
-	int **array_pipe;
-	char buffer[100];
+	t_command *cmd;
+	t_command	*cmdlist;
+	int			cmdlist_len;
+	int			**pipesarray;
+	char *buffer = NULL;
 
-	str = NULL;
-	len = 0;
-
-	getline(&str, &len, stdin);
-
-	matrix = tokenizer(str);
-	print_matrix_of_char(matrix);
-	if (check_if_there_is_at_least_one_pipe(matrix) == THERE_IS_A_PIPE)
-	{
+	while (1)
+	{	
+		len = 0;
+		inputstr = NULL;
 	
-		commandlist = pipe_management(matrix);
-		
-		t_command *current;
-		int a;
+		cwdpath = getcwd(NULL, 0);
+		printf("%s: ", cwdpath);
+		getline(&inputstr, &len, stdin);
+		matrix = tokenizer(inputstr);
+		//print_matrix_of_char(matrix);
 
-		printf("i'm printing command list\n");
-		current = commandlist;
-		a = 0;
-		while (current)
+		if (strcmp(matrix[0], "pwd") == 0)
 		{
-			printf("cmd %d: %s\n", a, current->cmd);
-			current = current->next;
-			a++;
+			buffer = getcwd(NULL, 0);
+			printf("%s\n", buffer);
+			//free(buffer);
+			return (0);
 		}
-
-		
-		
-		num_of_nodes = number_of_nodes_in_a_list(commandlist);
-		array_pipe = generate_array_of_pipes_with_fd(num_of_nodes);
-		print_matrix_of_int(array_pipe, (num_of_nodes - 1), 2);
-		//ora ho un processo figlio
-		pid_t pid = fork();
-		if (pid == 0)
+		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
 		{
-			printf("yes, i'm the child process\n");
-			char *ext_cmd =  find_external_cmd(commandlist->cmd);
-			//lavoro sugli stream
-			close(array_pipe[0][0]);
-			dup2(array_pipe[0][1],1);
-			close(array_pipe[0][1]);
-			//fine lavoro sugli stream...ora vierrò rediretto lo stdout nella pipe
-			
-			execve(ext_cmd, commandlist->args, NULL);
-			_exit(0);
+			cmdlist = commandlist_for_pipe(matrix); //se c'è almeno una pipe, viene costruita una lista di comandi
+			cmdlist_len = number_of_nodes_in_a_list(cmdlist);
+			pipesarray = create_pipesarray(cmdlist_len);
+			general_pipe_management(cmdlist, cmdlist_len, pipesarray);
 		}
-		pid = fork();
-		if(pid == 0)
+		else
 		{
-			close(array_pipe[0][1]);
-			printf("I'm the second child  process\n");
-			char *ext_cmd_two = find_external_cmd(commandlist->next->cmd);
-			printf("i'm passing this command: %s\n", commandlist->next->cmd);
-			dup2(array_pipe[0][0], 0);
-			close(array_pipe[0][0]);
-			execve(ext_cmd_two, commandlist->next->args, NULL);
-		//	read(0, buffer, sizeof(buffer));
-		//	printf("here the buffer:\n%s\n", buffer);
-			_exit(0);
+			cmd = create_cmd(matrix);
+			execute_cmd(cmd); //al momento senza redirections
 		}
-		close(array_pipe[0][0]);
-		close(array_pipe[0][1]);
-		wait(NULL);
-		wait(NULL);
-	}	
-	i = 0;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
+		printf("main: libero la matrix\n");	
+		i = 0;
+		while (matrix[i])
+		{
+			free(matrix[i]);
+			matrix[i] = NULL;
+			i++;
+		}
+		free(matrix);
+		matrix = NULL;
+		free(inputstr);
 	}
-	free(matrix);
-//	free(str);
 	return (0);
 }

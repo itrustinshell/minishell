@@ -10,10 +10,10 @@ char *find_external_cmd(char *cmd)
 
 	path = getenv("PATH");
 	
-	printf("i m in path: i print the entire path: %s\n", path);
+	//printf("i m in path: i print the entire path: %s\n", path);
 	splitted_path = ft_split(path, ':');
 
-   print_matrix_of_char(splitted_path);	
+   //print_matrix_of_char(splitted_path);	
 	i = 0;
 	while (splitted_path[i])
 	{
@@ -26,6 +26,7 @@ char *find_external_cmd(char *cmd)
 			printf("%s\n",finalpath);
 			return (finalpath);
 		}
+		//qui dovresti metter un else free l'attuale path creato con strjoin perchè strjoin malloca
 		i++;
 	}
 	printf("command not found\n");

@@ -7,7 +7,15 @@
 #include <sys/types.h>  // For pid_t
 #include <sys/wait.h>   // For wait()
 
-
+/*----colori-----*/
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
 
 /*-------------is_space (these are the ASCII values)..............*/
 #define SAPCE 32
@@ -30,9 +38,9 @@
 /*-----------pipe_logic----*/
 #define THERE_IS_A_PIPE 1
 #define THERE_IS_NOT_A_PIPE 0
-
-
-
+#define READ_HERE_STDIN 0
+#define WRITE_HERE_STDOUT 1
+#define CHILD_PID0 0
 
 /**/
 
@@ -42,10 +50,11 @@
 
 typedef struct s_command
 {
-	char *cmd;
-	char **args;
-	struct s_command *next;
-	struct s_command *prev;
+	char	*cmd;
+	char	**args;
+	char	*path;
+	struct	s_command *next;
+	struct	s_command *prev;
 } t_command;
 
 typedef struct s_token
@@ -61,6 +70,8 @@ typedef struct s_token
 void test_stampa_args(t_command *commandlist);
 void print_matrix_of_char(char **matrix);
 void print_matrix_of_int(int **matrix, int limit_row, int limit_column);
+void print_list(t_command *commandlist);
+
 /*-----tokenizer------*/
 char **tokenizer(char *str_to_tokenize);
 int get_num_of_tokens(char *str);
@@ -70,12 +81,21 @@ int check_symbols(char *str_tocheck, int *iterator);
 char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 /*-----pipe---------*/
-int check_if_there_is_at_least_one_pipe(char **tokenmatrix);
-t_command *pipe_management(char **matrix);
+t_command *commandlist_for_pipe(char **matrix);
 int **generate_array_of_pipes_with_fd(int num_of_cmd);
+int general_pipe_management(t_command *cmdlist, int cmdlist_len, int **pipesarray);
+
+/*-----pipe's utils--------*/
+int **create_pipesarray(int cmdlist_len);
+int check_pipe_symbol(char **matrix);
+t_command *create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
+t_command *commandlist_for_pipe(char **tokenmatrix);
+void commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
 
 /*------cmd------*/
 char *find_external_cmd(char *cmd);	
+t_command *create_cmd(char **matrix);
+void execute_cmd(t_command *cmd);
 
 /*----utils-----*/
 char **ft_split(char *str, char separator);

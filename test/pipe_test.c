@@ -25,3 +25,20 @@ void test_stampa_args(t_command *commandlist)
 	printf ("it was already null\n");
 }
 
+
+void print_list(t_command *commandlist)
+{
+
+	t_command *current;
+		int a;
+		printf("i'm printing command list\n");
+		current = commandlist;
+		a = 0;
+		while (current)
+		{
+			printf("cmd %d: %s\n", a, current->cmd);
+			current = current->next;
+			a++;
+		}
+
+}

@@ -15,3 +15,5 @@ pipe(array_pipe)
 In tal caso il mio dup2() sarà:
 dup2(array_pipe[1], STDOUT_FILENO)
 
+
+
