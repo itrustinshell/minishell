@@ -10,10 +10,14 @@
   Questo canale di comunicazione ha due endpoint: uno per la lettura [0], e uno per la scrittura [1]. 
   pipe() restituisce un array di due int. Questi due int sono i file descriptor di questi due endpoint.
   Ora nella funzione che segue è come se io volessi avere un elenco di tuti questi canali presenti. 
-  Ad esempio se esistono 3 pipe nella mia stringa di inpt allora voglio che ci siano 3 pipe(), ovvero 3 canali di comunicazione, ovvero 3 array di 2 int. 
-  Questo elenco di questi array pertanto è un array di array. Il primoelemento è il primo array di due int, il secondo elemento è il secondo array di due int (la seconda pipe()), il terzo elemento è il terzo array di due int (la terza pipe della mia stringa).
+  Ad esempio se esistono 3 pipe nella mia stringa di inpt allora voglio che ci siano 3 pipe(), 
+  ovvero 3 canali di comunicazione, ovvero 3 array di 2 int. 
+  Questo elenco di questi array pertanto è un array di array. Il primoelemento è il primo array di due int, 
+  il secondo elemento è il secondo array di due int (la seconda pipe()), il terzo elemento è il terzo array 
+  di due int (la terza pipe della mia stringa).
   Cosi facendo io posso a ceddere a questi array di due int attraverso un array più grande che li racchiude.
-Ora, se vediamo bene, il numero di pipe è sempre uguale al numero dei comandi meno uno.Se hai due comandi infatti avrai appunto una pipe, ovvero 2 - 1 = 1.
+Ora, se vediamo bene, il numero di pipe è sempre uguale al numero dei comandi meno uno.Se hai due comandi 
+infatti avrai appunto una pipe, ovvero 2 - 1 = 1.
   */
 int **create_pipesarray(int cmdlist_len)
 {
@@ -118,8 +122,11 @@ t_command *commandlist_for_pipe(char **tokenmatrix)
 		}
 		else
 		{
-			/*qui entri sostanzialmente quando sei arrivato alla fine della matrice: non ci osno piu pipe ma il null. A questo punto esegui il command managemente per la creazione e l'append della parte a destra della pipe
-	infatti fino ad adesso man mano che proseguivi riempivi i comandi e argomenti a sinistra dlela pipe...ora è arrivato il turno dell'ultimo. La logica non cambia e anche se sei sul NULL, il programma eseguirà tutte le  operazioni con il pipe_index proprio sul null.
+			/*qui entri sostanzialmente quando sei arrivato alla fine della matrice: non ci osno piu pipe ma il null. 
+			A questo punto esegui il command managemente per la creazione e l'append della parte a destra della pipe
+			infatti fino ad adesso man mano che proseguivi riempivi i comandi e argomenti a sinistra dlela pipe...
+			ora è arrivato il turno dell'ultimo. La logica non cambia e anche se sei sul NULL, il programma eseguirà tutte 
+			le  operazioni con il pipe_index proprio sul null.
 			 */	
 			
 			pipe_index = pipe_index + generictoken_index;
@@ -131,23 +138,5 @@ t_command *commandlist_for_pipe(char **tokenmatrix)
 	
 	print_list(commandlist);
 	return commandlist;
-}
-
-void pipedbg(int i, int read_write, char status)
-{
-	if (status == 'c')
-	{
-		if (read_write == 1)
-			printf(GREEN"pipe %d: write closed"RESET"\n", i);
-		else
-			printf(GREEN"pipe %d: read closed"RESET"\n", i);
-	}
-	else if (status == 'd')
-	{
-		if(read_write == 1)
-			printf(YELLOW"pipe %d: write duplicated"RESET"\n", i);
-		else
-			printf(YELLOW"pipe %d: read duplicated"RESET"\n", i);
-	}
 }
 

@@ -73,6 +73,7 @@ int dollarsign_iteration(char *inputstr, int *iterator, char symbol)
 			i--; //quando esce dal while si trova su un simbolo o su uno spazio
 	}
 	*iterator = i;
+	return i;
 }
 
 

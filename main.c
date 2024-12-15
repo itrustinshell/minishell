@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 			cmd = create_cmd(matrix);
 			execute_cmd(cmd); //al momento senza redirections
 		}
-		printf("main: libero la matrix\n");	
+		//printf("main: libero la matrix\n");	
 		i = 0;
 		while (matrix[i])
 		{
