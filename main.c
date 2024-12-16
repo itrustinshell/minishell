@@ -3,7 +3,70 @@
 #include "unistd.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include <sys/wait.h>
+#include <sys/types.h>
 
+int check_redirection_symbol(char **tokenmatrix)
+{
+	int	i;
+
+	i = 0;
+	while (tokenmatrix[i])
+	{
+		if (tokenmatrix[i][0] != OUTPUT_REDIRECTION)
+			i++;
+		else
+		{
+			//printf("there is a pipe\n");
+			return (THERE_IS_A_REDIRECTION);
+
+		}
+	}
+	return (THERE_IS_NOT_A_REDIRECTION);
+}
+
+void cmd_before_single_outredirection(char **matrix)
+{
+	t_command	*cmd;
+	int			i;
+	int			fd;
+
+	cmd = (t_command *)malloc(sizeof(t_command));
+	
+	cmd->cmd = strdup(matrix[0]);
+	cmd->path = get_cmdpath(cmd->cmd);
+	i = 0;
+	while (matrix[i][0] != OUTPUT_REDIRECTION)
+		i++;
+	cmd->args = (char **)malloc((i + 1) * sizeof(char *));
+	i = 0;
+	while (matrix[i][0] != OUTPUT_REDIRECTION)
+	{
+		cmd->args[i] = strdup(matrix[i]);
+		i++;
+	}
+	cmd->args[i] = NULL;
+	i++;
+	fd = open(matrix[i], O_WRONLY | O_CREAT | O_TRUNC, 0466); //TODO aprire il file dato in path assoluto e relativo
+	
+	int pid = fork();
+
+	if (pid == 0)
+	{
+		
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		execve(cmd->path, cmd->args, NULL);
+	}
+	else
+	{
+		close(fd);
+		wait(NULL);
+
+	}	
+	
+		
+}
 
 
 int main(int argc, char **argv)
@@ -44,6 +107,14 @@ int main(int argc, char **argv)
 			cmdlist_len = listlen(cmdlist);
 			pipematrix = pipematrix_malloc(cmdlist_len);
 			pipex(cmdlist, cmdlist_len, pipematrix);
+		}
+		else if (check_redirection_symbol(matrix) == THERE_IS_A_REDIRECTION)
+		{
+			
+			printf("there is a redirection\n");
+			cmd_before_single_outredirection(matrix);
+
+
 		}
 		else
 		{
