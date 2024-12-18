@@ -82,59 +82,83 @@ t_command *create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_inde
 	return (commandnode);
 }
 
-
-/*becouse of norm i got this function
-the function is void so it modify something inside that reflects in the code (that is the list).
-Thi function create a new command node.
-Then the function append this newcreated commandnode to the list.
-It updates the pipe_index passed byreference, to allow the next iteration to start from there.
- */
 void commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist)
 {
 	t_command *commandnode;
-	//pipex_index è sempre uguale a se stesso più il generictoken_index. Perchè ? allora inzialmente sono entrami zero. Aumenta slo il generic_token_index. Quando viene trovato un pipe allora il generic token è su quel pipe. Ecco queindi che per aggiornare il pipeindex si fa pipexindex + zero; Ora pipeindex punta appunto al pipe (è infandi l'indiec del pipe)...per le iterazioni successive pipe_index + generic_index inizia da qui....e ovviamente generic_index sarà reimpostato a zero. In questo modo se viene incontrata una nuova pipe....allora si farà dinuovo valore della pipe veccia piu valore corrente di generic_token
 	commandnode = create_commandnode_for_pipe(tokenmatrix, *pipe_index, *generictoken_index);
-	append_to_commandlist(commandnode, commandlist);
+	listappend_command(commandnode, commandlist);
+}
+
+/*redirectionscheck verifica la presenza di pipe se si restituisce il numero di pipe
+possibili implementazioi ulteriori poitrebbe indicare il token, la sua posizione e quanti ce ne sono
+al momento è implementato per riconoscere un unico token che si ripete piu volte
+*/
+
+t_redir *redirections_check(char **tokenmatrix, int token_index)
+{
+	t_redir	*redirlist;
+	int		i;
+	t_redir	*node;
+
+	i = token_index;
+	redirlist = NULL;
+	while (tokenmatrix[i] && tokenmatrix[i][0] != PIPE)
+	{
+		printf("hehehehe\n");
+		if (strcmp(tokenmatrix[i], ">") == 0) //estendibile anche alle altre redirection
+		{
+			printf("trovato >\n");
+			node = (t_redir *)malloc(sizeof(t_redir));
+			//TODO funzione che freea tutti i nodi se c'è un errore ad esempio alla creaizone del terzo
+			node->outredir_file = strdup(tokenmatrix[i++]); //se fosse stato altra redirezione deve essere implementata
+			
+			node->next = NULL;
+			printf("dajeeee\n");
+			listappend_redir(node, &redirlist);
+			printf("aaaaaaa\n");
+		}
+		i++;
+	}
+	printf("me ne esco\n");
+	return (redirlist);
 }
 
 /*va a generare una lista di comandi quando ci sono le pipe*/
 t_command *commandlist_for_pipe(char **tokenmatrix)
 {
 	int			pipe_index;
-	int			generictoken_index;
+	int			current_token;
 	t_command	*commandlist;
+	t_redir		*redirlist;
 
 	commandlist = NULL;
 	pipe_index = -1;
-	generictoken_index = 0;
-	while (tokenmatrix[++pipe_index + (generictoken_index)] != NULL)
+	current_token = 0;
+	while (tokenmatrix[++pipe_index + (current_token)] != NULL)
 	{
-		while (tokenmatrix[pipe_index + (generictoken_index)] && tokenmatrix[pipe_index + generictoken_index][0] != PIPE)
-			generictoken_index++; //auementa lungo la matrice di token fino a che non incontri pipe
-		//se è stata incontrata una pipe allora si procede al commandnode_managment che genra un nodo per un comando e lo inserisce nella lista
-		if (tokenmatrix[pipe_index + generictoken_index] && tokenmatrix[pipe_index + generictoken_index][0] == PIPE)
+		redirlist = redirections_check(tokenmatrix, pipe_index + current_token);	
+		while (tokenmatrix[pipe_index + current_token] && tokenmatrix[pipe_index + current_token][0] != PIPE)
 		{
-				pipe_index = pipe_index + generictoken_index;
-			commandnode_management_for_pipe(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
-			generictoken_index = 0;
+
+			current_token++;	
+		}
+		if (tokenmatrix[pipe_index + current_token] && tokenmatrix[pipe_index + current_token][0] == PIPE)
+		{
+			pipe_index = pipe_index + current_token;
+			commandnode_management_for_pipe(tokenmatrix, &pipe_index, &current_token, &commandlist);
+			commandlist->redirlist = redirlist;
+			current_token = 0;
 			continue;
 		}
 		else
 		{
-			/*qui entri sostanzialmente quando sei arrivato alla fine della matrice: non ci osno piu pipe ma il null. 
-			A questo punto esegui il command managemente per la creazione e l'append della parte a destra della pipe
-			infatti fino ad adesso man mano che proseguivi riempivi i comandi e argomenti a sinistra dlela pipe...
-			ora è arrivato il turno dell'ultimo. La logica non cambia e anche se sei sul NULL, il programma eseguirà tutte 
-			le  operazioni con il pipe_index proprio sul null.
-			 */	
-			
-			pipe_index = pipe_index + generictoken_index;
-			commandnode_management_for_pipe(tokenmatrix, &pipe_index, &generictoken_index, &commandlist);
+			pipe_index = pipe_index + current_token;
+			commandnode_management_for_pipe(tokenmatrix, &pipe_index, &current_token, &commandlist);
+			commandlist->redirlist = redirlist;
 			break;
 		}
 	}
-//	test_stampa_args(commandlist);
-	
+	//test_stampa_args(commandlist);
 	//print_list(commandlist);
 	return commandlist;
 }

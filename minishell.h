@@ -55,14 +55,30 @@
 #define LOCKED 1
 #define UNLOCKED 0
 
+/*****type:f:Redir*****/
+
+#define OUT_REDIR 1
+#define INPUT_REDIR 2
+#define APPEND_REDIR 3
+#define OTHER 4
+
+typedef struct s_redir
+{
+	int type_of_redir; //vedi le macro
+	char *outredir_file;
+	//TODO inserire altri campi per le specificità delle altre redir
+	struct	s_redir	*prev;
+	struct 	s_redir *next;
+} t_redir;
 
 typedef struct s_command
 {
-	char	*cmd;
-	char	**args;
-	char	*path;
-	struct	s_command *next;
-	struct	s_command *prev;
+	char				*cmd;
+	char				**args;
+	char				*path;
+	struct s_command	*next;
+	struct s_command	*prev;
+	t_redir		*redirlist;
 } t_command;
 
 typedef struct s_token
@@ -73,6 +89,9 @@ typedef struct s_token
 	struct s_token *prev;
 
 } t_token;
+
+
+
 
 /*-----tests---------*/
 void test_stampa_args(t_command *commandlist);
@@ -114,4 +133,5 @@ int listlen(t_command *list);
 int ft_strlen(char *str);
 
 //utils_lists
-void append_to_commandlist(t_command *commandnode, t_command **commandlist);
+void listappend_command(t_command *node, t_command **list);
+void listappend_redir(t_redir *node, t_redir **list);
