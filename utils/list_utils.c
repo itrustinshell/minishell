@@ -51,25 +51,33 @@ t_redir *find_last_commandnode_redir(t_redir *commandlist)
 	t_redir *current;
 	
 	current = commandlist;
-	while (current -> next != NULL)
-		current = current -> next;
+	while (current->next != NULL)
+		current = current->next;
 	return (current);
 }
 
 void listappend_command(t_command *node, t_command **list)
 {
 	t_command *last_node;
+
 	if (*list == NULL)
+	{
+		printf("Yes it is null now\n");
 		*list = node;
+		(*list)->next = NULL;
+		printf("hahaha: %s\n", (*list)->cmd);
+	}
 	else
 	{
+		printf("it is no more null\n");
 		last_node = find_last_commandnode(*list);
+		printf("i found last node: %s\n", last_node->cmd);
 		node->prev = last_node;
 		last_node->next = node;
 		node->next = NULL;
+		printf("hehehe: %s\n", (*list)->cmd);
 	}
 }
-
 
 void listappend_redir(t_redir *node, t_redir **list)
 {

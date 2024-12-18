@@ -108,9 +108,16 @@ int check_symbols(char *str_tocheck, int *iterator);
 char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 /*-----pipe---------*/
-t_command *commandlist_for_pipe(char **matrix);
+//t_command *commandlist_for_pipe(char **matrix);
 int **generate_array_of_pipes_with_fd(int num_of_cmd);
 int pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray);
+t_command *	commandlist_for_pipe(char **matrix);
+
+
+/*---------redir----------*/
+t_redir *redirlist_for_pipe(char **tokenmatrix, int token_index);
+
+
 
 /*-----pipe's utils--------*/
 int **pipematrix_malloc(int cmdlist_len);
@@ -135,3 +142,4 @@ int ft_strlen(char *str);
 //utils_lists
 void listappend_command(t_command *node, t_command **list);
 void listappend_redir(t_redir *node, t_redir **list);
+t_command *find_last_commandnode(t_command *commandlist);

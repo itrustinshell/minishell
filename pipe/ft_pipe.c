@@ -12,6 +12,20 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) {
     int i = 0;
     pid_t pid;
 
+
+printf("vediamo sta lista;\n");
+
+while (cmdlist)
+{
+    printf("%s\n", cmdlist->cmd);
+    cmdlist = cmdlist->next;
+}
+
+
+if (cmdlist)
+    printf("la lista esiste\n");
+
+
     while (cmdlist) 
 	{
         pid = fork();

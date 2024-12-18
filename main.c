@@ -104,17 +104,16 @@ int main(int argc, char **argv)
 		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
 		{
 			cmdlist = commandlist_for_pipe(matrix); //se c'è almeno una pipe, viene costruita una lista di comandi
+			//redirlists_for_pipe(matrix); 
+			//commandlist_for_pipe(matrix);
 			cmdlist_len = listlen(cmdlist);
 			pipematrix = pipematrix_malloc(cmdlist_len);
 			pipex(cmdlist, cmdlist_len, pipematrix);
 		}
 		else if (check_redirection_symbol(matrix) == THERE_IS_A_REDIRECTION)
 		{
-			
 			printf("there is a redirection\n");
 			cmd_before_single_outredirection(matrix);
-
-
 		}
 		else
 		{
