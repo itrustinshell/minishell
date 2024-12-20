@@ -36,7 +36,7 @@ int listlenredir(t_redir *list)
 	return (i);
 }
 
-t_command *find_last_commandnode(t_command *commandlist)
+t_command *last_cmdnode(t_command *commandlist)
 {
 	t_command *current;
 	
@@ -62,20 +62,20 @@ void listappend_command(t_command *node, t_command **list)
 
 	if (*list == NULL)
 	{
-		printf("Yes it is null now\n");
+		//printf("Yes it is null now\n");
 		*list = node;
 		(*list)->next = NULL;
-		printf("hahaha: %s\n", (*list)->cmd);
+		//printf("hahaha: %s\n", (*list)->cmd);
 	}
 	else
 	{
-		printf("it is no more null\n");
-		last_node = find_last_commandnode(*list);
-		printf("i found last node: %s\n", last_node->cmd);
+		//printf("it is no more null\n");
+		last_node = last_cmdnode(*list);
+		//printf("i found last node: %s\n", last_node->cmd);
 		node->prev = last_node;
 		last_node->next = node;
 		node->next = NULL;
-		printf("hehehe: %s\n", (*list)->cmd);
+		//printf("hehehe: %s\n", (*list)->cmd);
 	}
 }
 
@@ -83,14 +83,22 @@ void listappend_redir(t_redir *node, t_redir **list)
 {
 	t_redir *last_node;
 
-	printf("it seems all ok \n");
+	//printf("it seems all ok \n");
 	if (*list == NULL)
+	{
 		*list = node;
+		//printf("listnode added succesfully!\n");
+		(*list)->next = NULL;
+		(*list)->prev = NULL;
+	}
 	else
 	{
 		last_node = find_last_commandnode_redir(*list);
+	//	printf("the last added node was: %s\n", last_node->outredir_file);
 		node->prev = last_node;
 		last_node->next = node;
+	//	printf("listnode added succesfully!\n");
+	//	printf("I have just added: %s\n", node->outredir_file);
 		node->next = NULL;
 	}
 }

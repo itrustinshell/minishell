@@ -62,6 +62,22 @@ Sono indicati anche quei permessi
 
 
 
+se collego insieme gli output sia con 
+> output reridectiorn
+che con 
+>> append
+
+se i file non esistono vengono creati tutti ma solo quello finale ha output
+Se i file gia'esistono non vengonono modificati e solo ultimo viene modificato
+
+aaa: sembra che nellínput redirection questa possa effettivamente riguardare solo il comando e queindi non puo che essere, se cé',
+solo e soltanto allínizio subito duppo il comando
+
+
+
+
+
+
 
 
 

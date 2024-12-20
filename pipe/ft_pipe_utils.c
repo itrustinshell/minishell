@@ -60,73 +60,6 @@ int check_pipe_symbol(char **tokenmatrix)
 	return (THERE_IS_NOT_A_PIPE);
 }
 
-// t_command *add_listnode_for_pipe(char **tokenmatrix, current_pipe_index, int i)
-// {
-// 	int			j;
-// 	t_command	*cmdnode;
-
-// 	cmdnode = (t_command *)malloc(sizeof(t_command));
-// 	cmd_index = current_pipe_index - i;
-// 	commandnode->cmd = strdup(tokenmatrix[cmd_index]); 
-// 	commandnode->args = (char **)malloc((n_tokens_fm_cmd_to_pipe + 1) * sizeof(char*));
-// 	i = 0;
-// 	while ((cmd_index + i) < current_pipe_index)
-// 	{
-// 		commandnode->args[i] = strdup(tokenmatrix[cmd_index + i]);	
-// 		i++;
-// 	}
-// 	commandnode->args[i] = NULL;
-// 	commandnode->prev = NULL;
-// 	commandnode->next = NULL;
-// 	return (commandnode);
-// }
-
-// void commandnode_management_for_pipe(char **tokenmatrix,
-// 		int *pipe_index,
-// 		int *generictoken_index,
-// 		t_command **commandlist)
-// {
-// 	t_command *commandnode;
-// 	commandnode = create_commandnode_for_pipe(tokenmatrix, *pipe_index, *generictoken_index);
-// 	listappend_command(commandnode, commandlist);
-// }
-
-/*redirectionscheck verifica la presenza di pipe se si restituisce il numero di pipe
-possibili implementazioi ulteriori poitrebbe indicare il token, la sua posizione e quanti ce ne sono
-al momento è implementato per riconoscere un unico token che si ripete piu volte
-*/
-
-// t_redir *redirlist_for_pipe(char **tokenmatrix, int token_index)
-// {
-// 	t_redir	*redirlist;
-// 	int		i;
-// 	t_redir	*node;
-
-// 	i = token_index;
-// 	redirlist = NULL;
-// 	while (tokenmatrix[i] && tokenmatrix[i][0] != PIPE)
-// 	{
-// 		if (strcmp(tokenmatrix[i], ">") == 0) //estendibile anche alle altre redirection
-// 		{
-// 			printf("trovato >\n");
-// 			node = (t_redir *)malloc(sizeof(t_redir));
-// 			//TODO funzione che freea tutti i nodi se c'è un errore ad esempio alla creaizone del terzo
-// 			i++;
-// 			node->outredir_file = strdup(tokenmatrix[i]); //se fosse stato altra redirezione deve essere implementata
-			
-// 			node->next = NULL;
-// 			listappend_redir(node, &redirlist);
-// 		}
-// 		i++;
-// 	}
-// 	return (redirlist);
-// }
-
-
-	//	redirlist = redirections_check(tokenmatrix, pipe_index + current_token);	
-
-
-/*va a generare una lista di comandi quando ci sono le pipe*/
 t_command	*commandlist_for_pipe(char **tokenmatrix)
 {
 	int			i;
@@ -137,65 +70,46 @@ t_command	*commandlist_for_pipe(char **tokenmatrix)
 	t_redir		*redirnode;
 
 	cmdlist = NULL;
-
 	i = 0;
 	while (tokenmatrix[i] != NULL)
 	{	
-		
 		cmdnode = (t_command *)malloc(sizeof(t_command));
-
 		listappend_command(cmdnode, &cmdlist);
-
-		find_last_commandnode(cmdlist)->cmd = tokenmatrix[i]; //TODO verifica se cé bisogno di strdup
-		printf("ggg: %s\n", tokenmatrix[i]);
-		printf("aaa: %s\n", find_last_commandnode(cmdlist)->cmd);
-		i++;
+		last_cmdnode(cmdlist)->cmd = tokenmatrix[i]; //TODO verifica se cé bisogno di strdup
 		j = 0;
-		while (tokenmatrix[i + j] &&
-				strcmp(tokenmatrix[i + j], ">") != 0 &&
-				tokenmatrix[i + j][0] != PIPE)
+		while (tokenmatrix[i + j] && ((strcmp(tokenmatrix[i + j], ">") != 0) && (strcmp(tokenmatrix[i + j], "<") != 0)) && tokenmatrix[i + j][0] != PIPE)
 			j++;
 		if (j)
 		{
-			cmdlist->args = (char **)malloc((j + 1) * sizeof(char *));
+			last_cmdnode(cmdlist)->args = (char **)malloc((j + 1) * sizeof(char *));
 			t = 0;
 			while(t < j)
 			{
-				cmdlist->args[t] = tokenmatrix[i + t]; //verifica se non e'unn strdup
+				last_cmdnode(cmdlist)->args[t] = tokenmatrix[i + t]; //verifica se non e'unn strdup
 				t++;
 			}
-			cmdlist->args[t] = NULL;
+			last_cmdnode(cmdlist)->args[t] = NULL;
 		}
 		i = i + j;
-		while (tokenmatrix[i] &&
-				tokenmatrix[i][0] != PIPE)
+		while (tokenmatrix[i] && tokenmatrix[i][0] != PIPE)
 		{
-			if (strcmp(tokenmatrix[i], ">") == 0)
+			if ((strcmp(tokenmatrix[i], ">") == 0) || (strcmp(tokenmatrix[i], "<") == 0))
 			{
 				redirnode = (t_redir *)malloc(sizeof(t_redir));
-				listappend_redir(redirnode, &cmdlist->redirlist);
+				i++;
+				redirnode->outredir_file = tokenmatrix[i];
+				if ((strcmp(tokenmatrix[i], ">") == 0))
+					redirnode->type = OUTPUT_REDIRECTION;
+				if ((strcmp(tokenmatrix[i], "<") == 0))
+					redirnode->type = INPUT_REDIRECTION;
+				listappend_redir(redirnode, &last_cmdnode(cmdlist)->redirlist);
 			}
-			i++;
-			cmdlist->redirlist->outredir_file = tokenmatrix[i];
 			i++;
 		}
 		if (!tokenmatrix[i])
 			break;
 		i++;
 	}
-		//test_stampa_args(cmdlist);
-		//print_list(cmdlist);
-	printf("fff: %s\n", cmdlist->cmd);
-	int m =0;
-	while (cmdlist)
-	{
-		printf("r: %s\n",cmdlist->cmd);
-		cmdlist = cmdlist->next;
-		m++;
-	}
-	printf("%d\n", m);
-
-
 	return (cmdlist);
 }
 

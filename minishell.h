@@ -64,11 +64,13 @@
 
 typedef struct s_redir
 {
-	int type_of_redir; //vedi le macro
-	char *outredir_file;
+
+	int				type; //vedi le macro
+	char			*outredir_file;
+	struct s_redir	*head;
+	struct s_redir	*prev;
+	struct s_redir	*next;
 	//TODO inserire altri campi per le specificità delle altre redir
-	struct	s_redir	*prev;
-	struct 	s_redir *next;
 } t_redir;
 
 typedef struct s_command
@@ -78,20 +80,16 @@ typedef struct s_command
 	char				*path;
 	struct s_command	*next;
 	struct s_command	*prev;
-	t_redir		*redirlist;
+	t_redir				*redirlist;
 } t_command;
 
 typedef struct s_token
 {
-
-	char	*str;
-	struct s_token *next;
-	struct s_token *prev;
+	char			*str;
+	struct s_token	*next;
+	struct s_token	*prev;
 
 } t_token;
-
-
-
 
 /*-----tests---------*/
 void test_stampa_args(t_command *commandlist);
@@ -113,11 +111,8 @@ int **generate_array_of_pipes_with_fd(int num_of_cmd);
 int pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray);
 t_command *	commandlist_for_pipe(char **matrix);
 
-
 /*---------redir----------*/
 t_redir *redirlist_for_pipe(char **tokenmatrix, int token_index);
-
-
 
 /*-----pipe's utils--------*/
 int **pipematrix_malloc(int cmdlist_len);
@@ -142,4 +137,4 @@ int ft_strlen(char *str);
 //utils_lists
 void listappend_command(t_command *node, t_command **list);
 void listappend_redir(t_redir *node, t_redir **list);
-t_command *find_last_commandnode(t_command *commandlist);
+t_command *last_cmdnode(t_command *commandlist);

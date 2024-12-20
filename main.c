@@ -53,7 +53,6 @@ void cmd_before_single_outredirection(char **matrix)
 
 	if (pid == 0)
 	{
-		
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		execve(cmd->path, cmd->args, NULL);
@@ -62,10 +61,7 @@ void cmd_before_single_outredirection(char **matrix)
 	{
 		close(fd);
 		wait(NULL);
-
-	}	
-	
-		
+	}		
 }
 
 
@@ -104,8 +100,6 @@ int main(int argc, char **argv)
 		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
 		{
 			cmdlist = commandlist_for_pipe(matrix); //se c'è almeno una pipe, viene costruita una lista di comandi
-			//redirlists_for_pipe(matrix); 
-			//commandlist_for_pipe(matrix);
 			cmdlist_len = listlen(cmdlist);
 			pipematrix = pipematrix_malloc(cmdlist_len);
 			pipex(cmdlist, cmdlist_len, pipematrix);
@@ -121,7 +115,7 @@ int main(int argc, char **argv)
 			single_cmd_ex(cmd); //al momento senza redirections
 		}
 
-		/***************************************final part******************************************************************************/
+		/*********************************final part*******************************************/
 		i = 0;
 		while (matrix[i])
 		{
