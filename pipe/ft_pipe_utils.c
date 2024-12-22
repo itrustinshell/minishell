@@ -77,8 +77,9 @@ t_command	*commandlist_for_pipe(char **tokenmatrix)
 		listappend_command(cmdnode, &cmdlist);
 		last_cmdnode(cmdlist)->cmd = tokenmatrix[i]; //TODO verifica se cé bisogno di strdup
 		j = 0;
-		while (tokenmatrix[i + j] && ((strcmp(tokenmatrix[i + j], ">") != 0) && (strcmp(tokenmatrix[i + j], "<") != 0)) && tokenmatrix[i + j][0] != PIPE)
+		while (tokenmatrix[i + j] && ((strcmp(tokenmatrix[i + j], ">") != 0) && strcmp(tokenmatrix[i + j], "<") != 0) && (strcmp(tokenmatrix[i + j], ">>") != 0) && tokenmatrix[i + j][0] != PIPE)
 			j++;
+	
 		if (j)
 		{
 			last_cmdnode(cmdlist)->args = (char **)malloc((j + 1) * sizeof(char *));
@@ -93,15 +94,18 @@ t_command	*commandlist_for_pipe(char **tokenmatrix)
 		i = i + j;
 		while (tokenmatrix[i] && tokenmatrix[i][0] != PIPE)
 		{
-			if ((strcmp(tokenmatrix[i], ">") == 0) || (strcmp(tokenmatrix[i], "<") == 0))
+			if ((strcmp(tokenmatrix[i], ">") == 0) || (strcmp(tokenmatrix[i], "<") == 0) || (strcmp(tokenmatrix[i], ">>") == 0))
 			{
 				redirnode = (t_redir *)malloc(sizeof(t_redir));
+				if (strcmp(tokenmatrix[i], ">") == 0)
+					redirnode->type = OUTPUT_REDIRECTION;
+				if (strcmp(tokenmatrix[i], "<") == 0)
+					redirnode->type = INPUT_REDIRECTION;
+				if (strcmp(tokenmatrix[i], ">>") == 0)
+					redirnode->type = APPEND_REDIRECTION;
 				i++;
 				redirnode->outredir_file = tokenmatrix[i];
-				if ((strcmp(tokenmatrix[i], ">") == 0))
-					redirnode->type = OUTPUT_REDIRECTION;
-				if ((strcmp(tokenmatrix[i], "<") == 0))
-					redirnode->type = INPUT_REDIRECTION;
+				redirnode->next = NULL;
 				listappend_redir(redirnode, &last_cmdnode(cmdlist)->redirlist);
 			}
 			i++;

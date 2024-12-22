@@ -39,18 +39,22 @@ int listlenredir(t_redir *list)
 t_command *last_cmdnode(t_command *commandlist)
 {
 	t_command *current;
-	
+
+	if (!commandlist)
+		return NULL;
 	current = commandlist;
-	while (current -> next != NULL)
-		current = current -> next;
+	while (current->next != NULL)
+		current = current->next;
 	return (current);
 }
 
-t_redir *find_last_commandnode_redir(t_redir *commandlist)
+t_redir *find_last_commandnode_redir(t_redir *redirlist)
 {
 	t_redir *current;
-	
-	current = commandlist;
+
+	if (!redirlist)
+		return NULL;
+	current = redirlist;
 	while (current->next != NULL)
 		current = current->next;
 	return (current);
@@ -59,6 +63,9 @@ t_redir *find_last_commandnode_redir(t_redir *commandlist)
 void listappend_command(t_command *node, t_command **list)
 {
 	t_command *last_node;
+
+	if (!node)
+		return;
 
 	if (*list == NULL)
 	{

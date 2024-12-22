@@ -27,6 +27,7 @@
 /*-----------issymbol----------*/
 #define INPUT_REDIRECTION 60 //left arrow
 #define OUTPUT_REDIRECTION 62 //right arrow
+#define APPEND_REDIRECTION 222
 #define PIPE 124
 #define DOLLAR_SIGN 36
 #define SINGLE_QUOTE 39
@@ -67,7 +68,7 @@ typedef struct s_redir
 
 	int				type; //vedi le macro
 	char			*outredir_file;
-	struct s_redir	*head;
+	int				fd;
 	struct s_redir	*prev;
 	struct s_redir	*next;
 	//TODO inserire altri campi per le specificità delle altre redir

@@ -1,6 +1,5 @@
 Makefile
 a
-b
 builtins
 cmd
 grep
@@ -10,6 +9,7 @@ minishell
 minishell.h
 minishell_subject.pdf
 pipe
+redirlist)
 studying
 test
 tokenizer

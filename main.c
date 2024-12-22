@@ -115,7 +115,8 @@ int main(int argc, char **argv)
 			single_cmd_ex(cmd); //al momento senza redirections
 		}
 
-		/*********************************final part*******************************************/
+		/*********************************final part*******************************************/ 
+
 		i = 0;
 		while (matrix[i])
 		{

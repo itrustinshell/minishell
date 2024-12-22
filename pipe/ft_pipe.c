@@ -7,60 +7,81 @@
 #include <sys/types.h>
 
 
-t_redir *last_inputredirection(t_redir *redirlist)
+t_redir *last_specified_redirection(t_redir *redirlist, int type_redirection)
 {
     t_redir *ret;
+    t_redir *tmp;
+    
+    if (!redirlist)
+    {
+        printf("Pay attention! you passed a null list to last_specified_redirection function\n");
+        return (NULL);
+    }
+    tmp = redirlist;
 
     ret = NULL;
-    if (!redirlist)
-        return (NULL);
-    while(redirlist)
+    while(tmp)
     {
-        if (redirlist->type == OUTPUT_REDIRECTION)
-            ret = redirlist;
-        redirlist = redirlist->next;
+       // printf("red: %s\n", tmp->outredir_file);
+        if (tmp->type == type_redirection)
+        {
+           // printf("i found same redir\n");
+            ret = tmp;
+         //   if (ret)
+            //    printf("ret esisteeeee\n");
+            //else
+              //  printf("ret non esisteee\n");
+        }
+        //printf("now i go to tne next\n");
+        tmp = tmp->next;
     }
-    return (redirlist);
+    if (!tmp)
+      //  printf("hei it has finished\n");
+ 
+    tmp = redirlist;
+   
+    // if (ret)
+    //     printf("bbboooooooo\n");
+    // else
+    //     printf("ret é NULLO!\n");
+    return (ret);
 }
 
-
-
-int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) {
-    pid_t pid;
-
-
-int i = 0;
-int m = 0;
-int fd;
-// while (cmdlist)
-// {
-//     printf("ecco il comando: %s\n", cmdlist->cmd);
-//     if (cmdlist->args)
-//     {
-//         printf("ecco gli argomenti di %s:\n", cmdlist->cmd);
-//         m = -1;
-//         while(cmdlist->args[++m])
-//             printf("args: %s\n", cmdlist->args[m]);
-//     }
-//     if (cmdlist->redirlist)
-//         printf("ecco le redirections di %s:\n", cmdlist->cmd);
-//     while (cmdlist->redirlist)
-//     {
-//         printf("redir: %s\n", cmdlist->redirlist->outredir_file);
-//         cmdlist->redirlist = cmdlist->redirlist->next;
-//     } 
-//     cmdlist = cmdlist->next;
-// }
-
-if (cmdlist)
+void ft_openfiles(t_redir *redirlist)
 {
+    //int fd;
+    t_redir *tmp;
 
+    tmp = redirlist;
+    while(tmp)
+    {
+        //TODO: open only if outredir
+        //TODO: manage append
+        //TODO: manage heredoc
+        if (tmp->type == OUTPUT_REDIRECTION)
+            tmp->fd = open(tmp->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        else if (tmp->type == APPEND_REDIRECTION)
+            tmp->fd = open(tmp->outredir_file, O_APPEND | O_CREAT | O_TRUNC, 0666);
+        tmp = tmp->next;
+    }
+    tmp = redirlist;
 }
-    printf("la lista esiste\n");
 
-
-    while (cmdlist) 
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) 
+{
+    pid_t       pid;
+    int         i;
+    t_command   *tmp_cmdlist;
+    t_redir     *tmp_redirlist;
+    t_redir     *ret;
+    // ls > a < b > c >> d < e >> f > g | grep u > aa < bb >> cc < dd < ee > ff >> gg
+    //rm a b c d e f g aa bb cc dd ee ff gg 
+    tmp_cmdlist = cmdlist;
+    
+    i = 0;
+    while (tmp_cmdlist) 
 	{
+        tmp_redirlist = tmp_cmdlist->redirlist;
         pid = fork();
         if (pid == CHILD_PID) 
 		{ 
@@ -68,49 +89,48 @@ if (cmdlist)
             if (i > 0) 
 			{
                 // Pipe precedente per input
-                if (cmdlist->redirlist)
+                ft_openfiles(tmp_redirlist);
+                if (tmp_redirlist)
                 {
-                    printf("ci sono redirection da gestire prima delle pipe\n");
-                    m = 0;
-                    while(cmdlist->redirlist)
-                    {
-                        m++;
-                        cmdlist->redirlist = cmdlist->redirlist->next;
-                    }
-                    printf("ho trovato %d redirection\n", m);
+                    ret = last_specified_redirection(tmp_redirlist, INPUT_REDIRECTION);
+                    if (ret)
+                        printf("last input_redir: %s\n", ret->outredir_file);
+                    ret = last_specified_redirection(tmp_redirlist, OUTPUT_REDIRECTION);
+                    if (ret)
+                        printf("last out_redir: %s\n", ret->outredir_file);
+                    ret = last_specified_redirection(tmp_redirlist, APPEND_REDIRECTION);
+                    if (ret)
+                        printf("last out_redir: %s\n", ret->outredir_file);            
                 }
                 close(pipematrix[i - 1][WRITE_END]);
                 dup2(pipematrix[i - 1][READ_HERE_STDIN], STDIN_FILENO);
                 close(pipematrix[i - 1][READ_END]);
             }
-            if (cmdlist->next) 
+            if (tmp_cmdlist->next) 
 			{ 
 				// Pipe corrente per output
-                if (cmdlist->redirlist)
+                ft_openfiles(tmp_redirlist);
+                if (tmp_redirlist)
                 {
-                    printf("ci sono redirection da gestire prima delle pipe\n");
-                    m = 0;
-                    cmdlist->redirlist->head = cmdlist->redirlist;
-                    while(cmdlist->redirlist)
-                    {
-                        //TODO: open only if outredir
-                        //TODO: manage append
-                        //TODO: manage heredoc
-                        fd = open(cmdlist->redirlist->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0466);
-                        m++;
-                        cmdlist->redirlist = cmdlist->redirlist->next;
-                    }
-                    cmdlist->redirlist = cmdlist->redirlist->head;
-                    //TODO: find last out
-                    //TODO: find last in
-                    printf("ho trovato %d redirection\n", m);
+                    ret = last_specified_redirection(tmp_redirlist, INPUT_REDIRECTION);
+                    if (ret)
+                        printf("last input_redir: %s\n", ret->outredir_file);
+                    ret = last_specified_redirection(tmp_redirlist, OUTPUT_REDIRECTION);
+                    if (ret)
+                        dup2(ret->fd, STDOUT_FILENO);
+                    ret = last_specified_redirection(tmp_redirlist, APPEND_REDIRECTION);
+                    if (ret)
+                        printf("last out_redir: %s\n", ret->outredir_file);
                 }
-                close(pipematrix[i][READ_END]);
-                dup2(pipematrix[i][WRITE_HERE_STDOUT], STDOUT_FILENO);
-                close(pipematrix[i][WRITE_END]);
+                else
+                {
+                    close(pipematrix[i][READ_END]);
+                    dup2(pipematrix[i][WRITE_HERE_STDOUT], STDOUT_FILENO);
+                    close(pipematrix[i][WRITE_END]);
+                }
             }
-            cmdlist->path = get_cmdpath(cmdlist->cmd);
-            execve(cmdlist->path, cmdlist->args, NULL);
+            tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+            execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
             perror("execve fallita");
             exit(1);
         } 
@@ -122,7 +142,7 @@ if (cmdlist)
                 close(pipematrix[i - 1][READ_END]);
                 close(pipematrix[i - 1][WRITE_END]);
             }
-            cmdlist = cmdlist->next;
+            tmp_cmdlist = tmp_cmdlist->next;
             i++;
         } 
 		else 
