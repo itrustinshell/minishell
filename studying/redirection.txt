@@ -34,8 +34,7 @@ I primi 3 bit sono per il proprietario (user).
 I successivi 3 bit sono per il gruppo.
 Gli ultimi 3 bit sono per gli altri (others).
 
-Ogni gruppo di 3 bit rappresenta i permessi di lettura (r), scrittura (w) ed esecuzione (x).
-I valori per ciascun permesso sono:
+Ogni gruppo di 3 bit rappresenta i permessi di lettura (r), scrittura (w) ed esecuzione (x). I valori per ciascun permesso sono:
 
 4 per lettura (r)
 2 per scrittura (w)

@@ -68,7 +68,7 @@ typedef struct s_redir
 
 	int				type; //vedi le macro
 	char			*outredir_file;
-	int				fd;
+	struct s_redir	*head;
 	struct s_redir	*prev;
 	struct s_redir	*next;
 	//TODO inserire altri campi per le specificità delle altre redir
