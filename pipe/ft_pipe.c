@@ -49,17 +49,45 @@ void printlist(t_command *cmdlist)
 		{
 			printf("ecco le redirections di %s:\n", tmp_cmdlist->cmd);
 			tmp_redirlist = tmp_cmdlist->redirlist;
+			while (tmp_redirlist)
+			{
+				printf("redir: %s\n", tmp_redirlist->outredir_file);
+				tmp_redirlist = tmp_redirlist->next;
+			}
 		}
-		while (tmp_redirlist)
-		{
-			printf("redir: %s\n", tmp_redirlist->outredir_file);
-			tmp_redirlist = tmp_redirlist->next;
-		}
+		else
+			printf("non ci sno argomenti\n");
 		tmp_cmdlist = tmp_cmdlist->next;
 	}
 	printf("DEBUG: HO TERMINATO DI STAMPARE LISTA, ARGOMENTI E RELATIVE REDIRECTIONS\n\n");
 }
 
+void ft_write_in_last_outputredirection(t_redir *tmp_redirlist)
+{
+	int fd;
+
+	if (last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->type == OUTPUT_REDIRECTION)
+	{
+		fd = open(last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+}
+			
+void ft_open_outputredirections(t_redir *tmp_redirlist)
+{
+	int fd;
+
+	while(tmp_redirlist)
+	{
+		if (tmp_redirlist->type == OUTPUT_REDIRECTION)
+		{
+			fd = open(tmp_redirlist->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			close(fd);
+		}
+		tmp_redirlist = tmp_redirlist->next;
+	}
+}
 
 int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) 
 {
@@ -99,64 +127,46 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix)
         if (pid == CHILD_PID) 
 		{
 			printf("Sono il figlio %d. Provengo dal fork su: %s\n", pid, tmp_cmdlist->cmd);
-	        if (i > 0) 
+			if (i > 0) 
 			{// Pipe precedente per input
 				close(pipematrix[i - 1][WRITE_END]);
-                dup2(pipematrix[i - 1][READ_HERE_STDIN], STDIN_FILENO);
-                close(pipematrix[i - 1][READ_END]);
-            }
-            if (tmp_cmdlist->next) 
+				dup2(pipematrix[i - 1][READ_HERE_STDIN], STDIN_FILENO);
+				close(pipematrix[i - 1][READ_END]);
+			}
+			if (tmp_cmdlist->next) 
 			{ 
-				if (tmp_redirlist)
-					printf("Child: %d, iterazione n.: %d, cmd: %s __ Sono state rilevate redirections.\n", pid, a, tmp_cmdlist->cmd);
-				else
-					printf("iterazione n.: %d: NON sono state rilevate redirections\n", a);         
-                tmp_redirlist = tmp_cmdlist->redirlist;
-				if (last_type_redirection(tmp_redirlist, INPUT_REDIRECTION))
-                	printf("a: %s\n",last_type_redirection(tmp_redirlist, INPUT_REDIRECTION)->outredir_file);
-                if (last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION))
-					printf("a: %s\n",last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->outredir_file);
-				if (last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->type == OUTPUT_REDIRECTION)
+				if (tmp_cmdlist->redirlist)
 				{
-					printf("we pasca'! Ca' tenimme n'autput redirecscion!\n");
-					fd = open(last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-					dup2(fd, STDOUT_FILENO);
-					close(fd);
+					tmp_redirlist = tmp_cmdlist->redirlist;
+					ft_open_outputredirections(tmp_redirlist);
+					ft_write_in_last_outputredirection(tmp_redirlist);
 				}
 				else
 				{
-               // printf("a: %s\n",last_type_redirection(tmp_redirlist, APPEND_REDIRECTION)->outredir_file);
-			   		printf("lo sto prendendo\n");
-                	close(pipematrix[i][READ_END]);
-                	dup2(pipematrix[i][WRITE_HERE_STDOUT], STDOUT_FILENO);
-                	close(pipematrix[i][WRITE_END]);
+					//printf("iterazione n.: %d: NON sono state rilevate redirections\n", a);         
+					close(pipematrix[i][READ_END]);
+					dup2(pipematrix[i][WRITE_HERE_STDOUT], STDOUT_FILENO);
+					close(pipematrix[i][WRITE_END]);
 				}
-		    } 
+			} 
 			else
 			{ //serve solo per il print
-			 	tmp_redirlist = tmp_cmdlist->redirlist;
-
-				if (last_type_redirection(tmp_redirlist, INPUT_REDIRECTION))
-                	printf("a: %s\n",last_type_redirection(tmp_redirlist, INPUT_REDIRECTION)->outredir_file);
-                if (last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION))
-               		printf("a: %s\n",last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->outredir_file);
-
-				if (last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->type == OUTPUT_REDIRECTION)
+				printf("sono l'ultimo comando\n");
+				if (tmp_cmdlist->redirlist)
 				{
-					fd = open(last_type_redirection(tmp_redirlist, OUTPUT_REDIRECTION)->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-					dup2(fd, STDOUT_FILENO);
-					close(fd);
-					//printf("we pasca'! Ca' tenimme n'autput rerirecscion!\n");
+					tmp_redirlist = tmp_cmdlist->redirlist;
+					ft_open_outputredirections(tmp_redirlist);
+					ft_write_in_last_outputredirection(tmp_redirlist);
+
 				}
 			}
-
-            tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
-            
-			//printf("FINE DEL CHILD_ Sto per eseguire il comando: %s\n", tmp_cmdlist->cmd);
+			printf("procedo con l'acquisizione del path\n");
+			tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+			printf("procedo con l'esecuzione\n");
 			execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
 			perror("execve fallita");
-            //exit(1);
-        } 
+			//exit(1);
+		} 
 		else if (pid > 0) 
 		{
 			printf("\nSono nel figlio: %d. Cmd attuale: %s\n", pid, tmp_cmdlist->cmd);
