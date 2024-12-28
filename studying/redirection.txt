@@ -75,7 +75,11 @@ solo e soltanto allínizio subito duppo il comando
 
 
 
+se un file è con append_redirection
+    se esiste non viene cancellato
+se non esiste è creato
 
+se è l'ultiom viene appendeuto
 
 
 

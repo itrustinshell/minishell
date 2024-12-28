@@ -1,6 +1,9 @@
 
 #include "../minishell.h"
 
+/*
+Memory: no_memory_allocation
+*/
 char **tokenizer(char *str_to_tokenize)
 {
 	char **tokens_matrix;

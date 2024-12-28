@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 	
 		cwdpath = getcwd(NULL, 0);
 		printf("%s: ", cwdpath);
-		getline(&inputstr, &len, stdin);
+		getline(&inputstr, &len, stdin); //free di inputstr fatto!
 		matrix = tokenizer(inputstr);
 		//print_matrix_of_char(matrix);
 

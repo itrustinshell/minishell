@@ -6,8 +6,9 @@ non riconosce la d come token separato da <
 
  */
 
-
-/*given a char it checks if it is a given symbol*/
+/*given a char it checks if it is a given symbol
+Memory: no_memory_allocation
+*/
 int	ft_issymbol(char char_to_check)
 {
 	if (char_to_check == INPUT_REDIRECTION)
@@ -25,6 +26,9 @@ int	ft_issymbol(char char_to_check)
 	return (IS_NOT_SYMBOL);
 }
 
+/*
+Memory: no_memory_allocation
+*/
 int singlequote_iteration(char *inputstr, int *iterator, char symbol)
 {
 	int i;
@@ -42,6 +46,9 @@ int singlequote_iteration(char *inputstr, int *iterator, char symbol)
 	return (1);
 }
 
+/*
+Memory: no_memory_allocation
+*/
 int doublequote_iteration(char *inputstr, int *iterator, char symbol)
 {
 	int i;
@@ -59,6 +66,9 @@ int doublequote_iteration(char *inputstr, int *iterator, char symbol)
 	return (1);
 }
 
+/*
+Memory: no_memory_allocation
+*/
 int dollarsign_iteration(char *inputstr, int *iterator, char symbol)
 {
 	int i;
@@ -76,7 +86,9 @@ int dollarsign_iteration(char *inputstr, int *iterator, char symbol)
 	return i;
 }
 
-
+/*
+Memory: no_memory_allocation
+*/
 int symbol_iteration(char *inputstr, int *iterator, char symbol)
 {
 	int i;
@@ -99,7 +111,10 @@ int symbol_iteration(char *inputstr, int *iterator, char symbol)
 }
 
 
-/*trova un simbolo e aggiorna l'indice lungo la stringa da tokenizzare ritornando il numero di tokens*/
+/*trova un simbolo e aggiorna l'indice lungo la stringa da tokenizzare 
+ritornando il numero di tokens
+Memory: no_memory_allocation
+*/
 int	check_symbols(char *inputstr, int *iterator)
 {
 	int n_tokens;
@@ -133,7 +148,10 @@ int	check_symbols(char *inputstr, int *iterator)
 	return (n_tokens);
 }
 
-/*given a string, it calculates how many words it is composed of*/
+/*
+given a string, it calculates how many words it is composed of
+Memory: no_memory_allocation
+*/
 int get_num_of_tokens(char *str_to_tokenize)
 {
 	int n_tokens;

@@ -52,10 +52,7 @@ int check_pipe_symbol(char **tokenmatrix)
 		if (tokenmatrix[i][0] != PIPE)
 			i++;
 		else
-		{
-			//printf("there is a pipe\n");
 			return (THERE_IS_A_PIPE);
-		}
 	}
 	return (THERE_IS_NOT_A_PIPE);
 }
