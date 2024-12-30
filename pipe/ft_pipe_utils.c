@@ -66,11 +66,13 @@ t_command	*commandlist_for_pipe(char **tokenmatrix)
 	t_command	*cmdlist;
 	t_redir		*redirnode;
 
+	redirnode = NULL;
 	cmdlist = NULL;
 	i = 0;
 	while (tokenmatrix[i] != NULL)
 	{	
 		cmdnode = (t_command *)malloc(sizeof(t_command));
+		cmdnode->redirlist = NULL;
 		listappend_command(cmdnode, &cmdlist);
 		last_cmdnode(cmdlist)->cmd = tokenmatrix[i]; //TODO verifica se cé bisogno di strdup
 		j = 0;

@@ -70,7 +70,7 @@ void ft_write_in_latest_outpu_or_append_redir(t_redir *redirnode)
 	if (!redirnode)
 		return;
 		//printf("AAAAAAAAAAAAAAAA: sei in ft_write_in_latest_outpu_or_append_tredir: e il nodo non esiste\n");
-		
+	
 
 	tmp_redirnode = redirnode;
 	if (tmp_redirnode->type == OUTPUT_REDIRECTION)
@@ -86,33 +86,51 @@ void ft_write_in_latest_outpu_or_append_redir(t_redir *redirnode)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
-	else
-		printf("beccato!!!! coa sta succedendo?\n");
+	//else
+		//printf("beccato!!!! coa sta succedendo?\n");
 }
 			
-void ft_open_all_output_and_append_redirections(t_redir *redirlist)
+int ft_open_all_output_and_append_redirections(t_redir *redirlist)
 {
 	int fd;
+	int	output_append_exists;
 	t_redir	*tmp_redirlist;
 
+	output_append_exists = 0;
 	tmp_redirlist = redirlist;
 	while(tmp_redirlist)
 	{
 		if (tmp_redirlist->type == OUTPUT_REDIRECTION) 
 		{
+			output_append_exists = 1;
 			fd = open(tmp_redirlist->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 			close(fd);
 		}
 		if (tmp_redirlist->type == APPEND_REDIRECTION)
 		{
+			output_append_exists = 1;
 			fd = open(tmp_redirlist->outredir_file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 			close(fd);
 		}
 		tmp_redirlist = tmp_redirlist->next;
 	}
+	return (output_append_exists);
 }
 
+void output_append_management(t_redir *redirlist)
+{
+	t_redir	*redirnode;
 
+	redirnode = NULL;
+	if (!redirlist)
+		return;
+	if (ft_open_all_output_and_append_redirections(redirlist) == 0)
+		return;
+	redirnode = find_latest_redirection_among_outpus_and_appends(redirlist);
+	if (!redirnode)
+		return;
+	ft_write_in_latest_outpu_or_append_redir(redirnode);
+}
 //AAA ls < a > b | ls ...se non esisste input si ferma e non da neanche output...ma va al successivo comado e lo esegue
 
 t_redir *find_latest_input_redirection(t_redir *redirlist)
@@ -133,145 +151,160 @@ t_redir *find_latest_input_redirection(t_redir *redirlist)
 	return (ret);
 }
 
-void	get_input_from_latest_input_redir(t_redir *latest_input_redir)
+int	get_input_from_latest_input_redir(t_redir *redirlist)
 {
 	int	fd;
+	t_redir	*latest_input_redir;
+	int ret;
 
-	printf("ecco latest input: %s\n", latest_input_redir->outredir_file);
-	fd = open(latest_input_redir->outredir_file, O_RDONLY);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	ret = 1;
+	if (!redirlist)
+		return (ret);
+	latest_input_redir = find_latest_input_redirection(redirlist);
+	if (!latest_input_redir)
+		return (ret);
+		//printf("ecco latest input: %s\n", latest_input_redir->outredir_file);
+	if (access(latest_input_redir->outredir_file, F_OK) == 0)
+	{
+		fd = open(latest_input_redir->outredir_file, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	else
+		ret = 0;
+	return (ret);
 }
 
 void	read_stdin_from_pipe(int **pipematrix, int i)
 {
 	close(pipematrix[i - 1][WRITE_END]);
-	dup2(pipematrix[i - 1][READ_HERE_STDIN], STDIN_FILENO);
+	dup2(pipematrix[i - 1][READ_END], STDIN_FILENO);
 	close(pipematrix[i - 1][READ_END]);
 }
 
 void	write_stdout_in_the_pipe(int **pipematrix, int i)
 {
 	close(pipematrix[i][READ_END]);
-	dup2(pipematrix[i][WRITE_HERE_STDOUT], STDOUT_FILENO);
+	dup2(pipematrix[i][WRITE_END], STDOUT_FILENO);
 	close(pipematrix[i][WRITE_END]);
 }
 
+void close_all_pipe(int **pipematrix, int cmdlist_len)
+{
+	int	n;
+	n = 0;
+	while (n < (cmdlist_len - 1)) 
+	{
+		close(pipematrix[n][READ_END]);
+		close(pipematrix[n][WRITE_END]);
+		n++;
+	}
+}
+/*
+qui mi arriva la comand list e la pipematrix
+ho gia tutte le pipe.
+
+
+
+ */
+
+
+void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len)
+{
+		int n;
+        int pid = fork();
+        int saved_stdout;
+
+		saved_stdout = dup(STDOUT_FILENO);
+
+        if (pid == 0) 
+		{  // Processo figlio
+          //  printf("child %d: sono nel comando %s\n", i, tmp_cmdlist->cmd);
+			if (i > 0) 
+			{  // Se non è il primo comando, leggi dalla pipe precedente
+
+             //   printf(GREEN"leggerò dalla pipe\n"RESET);
+				read_stdin_from_pipe(pipematrix, i);
+				if (get_input_from_latest_input_redir(tmp_cmdlist->redirlist) == 0)
+				{
+					dup2(saved_stdout, STDOUT_FILENO);
+					printf("ERROREEEEEEEEE\n");
+					exit(1);
+				}
+				output_append_management(tmp_cmdlist->redirlist);
+
+
+
+            }
+            if (tmp_cmdlist->next) 
+			{  // Se non è l'ultimo comando, scrivi nella pipe successiva
+             //   printf(GREEN"sto per scrivere nella pipe\n"RESET);
+				write_stdout_in_the_pipe(pipematrix, i);
+				if (get_input_from_latest_input_redir(tmp_cmdlist->redirlist) == 0)
+				{
+					dup2(saved_stdout, STDOUT_FILENO);
+					printf("ERROREEEEEEEEE\n");
+					exit(1);
+				}
+				output_append_management(tmp_cmdlist->redirlist);
+
+
+            }
+            // Chiudi tutte le pipe inutilizzate
+			close_all_pipe(pipematrix, cmdlist_len);
+
+
+            tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+         //   printf("%d: eseguo\n", i);
+         //   printf(MAGENTA"sto eseguendo il figlio  %d\n\n"RESET, i);
+            execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
+           // perror("execve fallita");
+            exit(1);  // Se execve fallisce
+        }
+}
+
+
 int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) 
 {
-    pid_t       pid;
-    int         i = 0;
-    int         m;
-    int         fd;
-    t_command   *tmp_cmdlist;
-    t_redir     *tmp_redirlist;
-	int a;
-	t_redir	*latest_output_or_append_redir;
-	t_redir	*latest_input_redir;
+    pid_t pid;
+    int i;
+    int f = 1;
+    t_command *tmp_cmdlist = cmdlist;
 
-    
-    // if (tmp_cmdlist)
-	// 	printlist(tmp_cmdlist);
-	// printf("SONO NELLA FUNZIONE: INIZIA IL WHILE\n");
-	
-	a = 1;
-	// if (tmp_cmdlist)
-	// 	printf("la lista esiste\n\n");
-	// else
-	// 	printf("la lista NON esiste\n");
-	int f = 1;
-	int b = 1;
-	int father = getpid();
-	// if (tmp_cmdlist)
-	// 	printf("sono il padre: %d. Sto per forcare con la tmp_cmdlist ferma su %s\n", father, tmp_cmdlist->cmd);
-	tmp_cmdlist = cmdlist;
-	if (!tmp_cmdlist)
-	{
-		printf(" la lista è nulla\n");
-		return (0);
-	}
-	while (tmp_cmdlist) 
-	{   
-		tmp_redirlist = tmp_cmdlist->redirlist;
-		pid = fork();
-        if (pid == CHILD_PID) 
+    if (!tmp_cmdlist) 
+    {
+       // printf("la lista è nulla\n");
+        return (0);
+    }
+   // printlist(tmp_cmdlist);
+    i = -1;
+   // printf("lunghezza cmdlist: %d\n", cmdlist_len);
+
+    // Ciclo per eseguire tutti i comandi della pipeline
+	 while (++i < cmdlist_len) 
+    {
+       // printf("i: %d\n", i);
+        if (i > 0) 
 		{
-			//printf("Sono il figlio %d. Provengo dal fork su: %s\n", pid, tmp_cmdlist->cmd);
-			if (i > 0) 
-			{// Pipe precedente per input
-			//	printf("sonon entrato nella gestione della lettura_leggerò dalla pipe\n");
-				
-				read_stdin_from_pipe(pipematrix, i);
-			}
-			if (tmp_cmdlist->next) 
-			{ 
-				if (tmp_cmdlist->redirlist)
-				{
-					latest_input_redir = find_latest_input_redirection(tmp_cmdlist->redirlist);
-					if (latest_input_redir)
-					{
-					//	printf("esiste uninput\n");
-						if (access(latest_input_redir->outredir_file, F_OK) == 0)
-							get_input_from_latest_input_redir(latest_input_redir);
-						else
-						{
-							printf("INSERIRE IL MESSAGGIO DI ERRORE!!!!!\n");
-							return(1);
-						}
-					}
-					ft_open_all_output_and_append_redirections(tmp_cmdlist->redirlist);
-					latest_output_or_append_redir = find_latest_redirection_among_outpus_and_appends(tmp_cmdlist->redirlist);
-					//printf("MA QUESTO LO LEGGI ??? %s\n", latest_output_or_append_redir->outredir_file);
-					ft_write_in_latest_outpu_or_append_redir(latest_output_or_append_redir);
-				}
-				else
-					write_stdout_in_the_pipe(pipematrix, i);
-				//AAA sto notanchdo che forse quando salto la prima volta uesto...salto cmq il passaggio di chiusura dells pipe di lettura
-				//forse non è un problema....ma verifica
-			} 
-			else
-			{
-				//printf("verifico se ci sono redirections\n");
-				if (tmp_cmdlist->redirlist)
-				{
-					ft_open_all_output_and_append_redirections(tmp_cmdlist->redirlist);
-					latest_output_or_append_redir = find_latest_redirection_among_outpus_and_appends(tmp_cmdlist->redirlist);
-					ft_write_in_latest_outpu_or_append_redir(latest_output_or_append_redir);
-				}
-			}
-			tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
-			//printf("%d: eseguo\n", i);
-			execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
-			perror("execve fallita");
-			//exit(1);
-		} 
-		else if (pid > 0) 
-		{
-			//printf("\nSono nel figlio: %d. Cmd attuale: %s\n", pid, tmp_cmdlist->cmd);
-			// Processo padre man mano che si avanza chiude le pipe precedentamente aperte.
-            if (i > 0) 
-			{
-                close(pipematrix[i - 1][READ_END]);
-                close(pipematrix[i - 1][WRITE_END]);
-            }
-			tmp_cmdlist = tmp_cmdlist->next;
-			// if (tmp_cmdlist)
-			// 	printf("padre: %d, cmd successivo: %s\n", pid, tmp_cmdlist->cmd);
-			// else
-			// 	printf("AAA il comando successivo è nullo. Quindi non si entrerà nel while. Significa che non si entrerà piu nel while che cicla lungo i comandi\n");
-            i++;
-			//printf("sto abbandonando il figlio  %d\n\n", pid);
-        } 
-		else 
-		{
-            perror("Errore fork");
-            exit(1);
+            tmp_cmdlist = tmp_cmdlist->next;
+            //if (tmp_cmdlist)
+            //    printf("figlio: %d, cmd successivo: %s\n", i, tmp_cmdlist->cmd);
+           // else
+             //   printf(RED"AAA: il comando successivo è nullo. Non si cicla più lungo i comandi\n"RESET);
         }
+      //  printf("parent: sono nel comando %s\n", tmp_cmdlist->cmd);
+		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len);
+	}
+    // Processo padre: man mano che si avanza chiude le pipe precedentemente aperte
+   // printf(MAGENTA"\nAAAAAAA Sono nel padre:\n"RESET);
+	close_all_pipe(pipematrix, cmdlist_len);
+
+    // Il padre aspetta la terminazione di tutti i figli
+    while ((pid = wait(NULL)) > 0) {
+        // printf("Figlio n. %d: terminato (exit-code: %d)\n", f, pid);
+        f++;
     }
-    while ((pid = wait(NULL)) > 0) 
-	{
-      //  printf("Figlio n. %d: terminato (exit-code: %d)\n", f, pid);
-		f++;
-    }
-    return 0;
+    return (0);
 }
+
+

@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 		inputstr = NULL;
 	
 		cwdpath = getcwd(NULL, 0);
-		printf("%s: ", cwdpath);
+		printf("%s💪💪💪: ", cwdpath);
 		getline(&inputstr, &len, stdin); //free di inputstr fatto!
 		matrix = tokenizer(inputstr);
 		//print_matrix_of_char(matrix);
@@ -104,16 +104,18 @@ int main(int argc, char **argv)
 			pipematrix = pipematrix_malloc(cmdlist_len);
 			pipex(cmdlist, cmdlist_len, pipematrix);
 		}
-		else if (check_redirection_symbol(matrix) == THERE_IS_A_REDIRECTION)
+		else
+		{
+			cmd = create_cmd(matrix);
+			//printf("AAAAAAA IO VENGO DAL MAIN\n");
+			single_cmd_ex(cmd); //al momento senza redirections
+		}
+		/*else if (check_redirection_symbol(matrix) == THERE_IS_A_REDIRECTION)
 		{
 			printf("there is a redirection\n");
 			cmd_before_single_outredirection(matrix);
 		}
-		else
-		{
-			cmd = create_cmd(matrix);
-			single_cmd_ex(cmd); //al momento senza redirections
-		}
+	*/
 
 		/*********************************final part*******************************************/
 		i = 0;
