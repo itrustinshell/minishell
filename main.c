@@ -65,7 +65,9 @@ void cmd_before_single_outredirection(char **matrix)
 }
 
 
-int main(int argc, char **argv)
+
+
+int main(int argc, char **argv, char **envp)
 {
 	char *inputstr;
 	char *cwdpath;
@@ -77,32 +79,79 @@ int main(int argc, char **argv)
 	int			cmdlist_len;
 	int			**pipematrix;
 	char *buffer = NULL;
-
 	
+	 char **l_envp;
+	 char **g_envp;
+	
+	l_envp = NULL;
+	g_envp = NULL;
+
+	t_env	*genvlist;	//le variabili di ambiente glbale in lista
+	t_env	*lenvlist;	//le variabili di ambiente locale in lista
+	t_env	*lenvnode;
+	genvlist = NULL;	
+	lenvlist = NULL; 	
+	genvlist = copy_envp(envp);
 	while (1)
 	{	
 		len = 0;
 		inputstr = NULL;
-	
 		cwdpath = getcwd(NULL, 0);
 		printf("%s💪💪💪: ", cwdpath);
 		getline(&inputstr, &len, stdin); //free di inputstr fatto!
 		matrix = tokenizer(inputstr);
-		//print_matrix_of_char(matrix);
-
-		if (strcmp(matrix[0], "pwd") == 0)
-		{
-			buffer = getcwd(NULL, 0);
-			printf("%s\n", buffer);
-			//free(buffer);
-			return (0);
-		}
 		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
 		{
-			cmdlist = commandlist_for_pipe(matrix); //se c'è almeno una pipe, viene costruita una lista di comandi
+			cmdlist = commandlist_for_pipe(matrix, g_envp); //se c'è almeno una pipe, viene costruita una lista di comandi
 			cmdlist_len = listlen(cmdlist);
 			pipematrix = pipematrix_malloc(cmdlist_len);
-			pipex(cmdlist, cmdlist_len, pipematrix);
+			pipex(cmdlist, cmdlist_len, pipematrix, genvlist);
+		}
+		else if (strcmp(matrix[0], "add") == 0)//poi aggiungi controllo che qi devoo essere solo due: comndo e argomento fine.non puoi avere 3 o 3 argomenti.
+		{
+			lenvnode = create_lenvnode(matrix[1]);
+			if (lenvnode)
+				printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", lenvnode->name, lenvnode->value);
+			listappend_envnode(lenvnode, &lenvlist);
+			if (lenvlist)
+				printf("finalmente la lista estiste\n");
+			else
+				printf("attenzione ho aggiunto un nodo ma c'è qualcosa che non va: la lista non esista\n");
+		}
+		else if (strcmp(matrix[0], "env") == 0)
+		{//poi aggiungi controllo che qi devoo essere solo due: comndo e argomento fine.non puoi avere 3 o 3 argomenti.
+			//printf("vado a stampare la lista\n");
+			
+			printenvlist(genvlist);
+		}
+		else if (strcmp(matrix[0], "lenv") == 0)
+		{//poi aggiungi controllo che qi devoo essere solo due: comndo e argomento fine.non puoi avere 3 o 3 argomenti.
+			//printf("vado a stampare la lista\n");
+			printenvlist(lenvlist);
+		}
+		else if (strcmp(matrix[0], "export") == 0)
+		{
+			ft_export(matrix[1], lenvlist, &genvlist);
+
+
+			
+				//TODO export e unset
+				/*
+					in pratica devi passare la global list al child.
+					ora. non devi gestire l'aggiunta delle variabili. quidi non ti interessa.
+					devi lavorare sulle variabili già esistenti.
+					queindi dovrai importare env e riprodurlo in un unlteriore.
+					Ora hai env che è una matrice....fai tu! ma portala in lista.
+
+					poi una volta avuta la tua lista interna. lavorerai su quella.
+					avrai una seconda lista.
+					identica.
+					lavorerai principalemnte su quella
+					Quando fai export quella variaile in local la aggungi allalista global..
+					tu passi sempre la lista global.
+					unset ti toglie la variabile da entrambe leliste.
+				*/
+			
 		}
 		else
 		{

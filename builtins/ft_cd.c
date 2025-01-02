@@ -25,42 +25,6 @@ int main (int argc, char **argv)
 		printf("no, strmaps doesn't exist\n");
 		return 0;
 	}
-	/*
-	mapindications = ft_split(strmaps, '/');
-	printf("Here below the map_indications\n");
-	i = 0;
-	while (mapindications[i])
-	{
-		printf("%d: %s\n", i, mapindications[i]);
-		i++;
-	}
-	splittedcwd = ft_split(cwdpath, '/');
-	i=0;
-	printf("Here below, the splittedcwd:\n");
-	while (splittedcwd[i])
-	{
-		printf("%d: %s\n", i, splittedcwd[i]);
-		i++;
-	}
-	i = 0;
-	while (mapindications[i])
-	{
-		while (mapindications[i] && strcmp(mapindications[i], "..") == 0)
-		{
-			printf("test\n");
-			i++;
-		}
-		printf("weeeee\n");
-		if (!mapindications[i])
-		{ 
-			printf("i got a null\n");
-			break;
-		}
-		else
-			i++;		
-	}	
-	printf("there are %d times ..\n", i);
-	*/
 	chdir(strmaps);
 	char *str;
 	str = getcwd(NULL, 0);

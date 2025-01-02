@@ -76,10 +76,13 @@ typedef struct s_command
 {
 	char				*cmd;
 	char				**args;
+	char				**envp;
 	char				*path;
 	struct s_command	*next;
 	struct s_command	*prev;
 	t_redir				*redirlist;
+	int					builtin;
+	
 } t_command;
 
 typedef struct s_token
@@ -89,6 +92,14 @@ typedef struct s_token
 	struct s_token	*prev;
 
 } t_token;
+
+typedef struct s_env
+{
+	char 			*name;
+	char			*value;
+	struct s_env	*next;
+	struct s_env	*prev;
+} t_env;
 
 /*-----tests---------*/
 void test_stampa_args(t_command *commandlist);
@@ -107,8 +118,8 @@ char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 /*-----pipe---------*/
 //t_command *commandlist_for_pipe(char **matrix);
 int **generate_array_of_pipes_with_fd(int num_of_cmd);
-int pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray);
-t_command *	commandlist_for_pipe(char **matrix);
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env *genvlist);
+//t_command *	commandlist_for_pipe(char **matrix, );
 
 /*---------redir----------*/
 t_redir *redirlist_for_pipe(char **tokenmatrix, int token_index);
@@ -117,7 +128,7 @@ t_redir *redirlist_for_pipe(char **tokenmatrix, int token_index);
 int **pipematrix_malloc(int cmdlist_len);
 int check_pipe_symbol(char **matrix);
 t_command *create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
-t_command *commandlist_for_pipe(char **tokenmatrix);
+t_command *commandlist_for_pipe(char **tokenmatrix, char **envp);
 void commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
 
 /*------cmd------*/
@@ -132,8 +143,34 @@ int ft_isspace(char char_to_check);
 char *strjoin(char *str, char *separator);
 int listlen(t_command *list);
 int ft_strlen(char *str);
+int matrixlen(char **matrix);
 
 //utils_lists
 void listappend_command(t_command *node, t_command **list);
 void listappend_redir(t_redir *node, t_redir **list);
 t_command *last_cmdnode(t_command *commandlist);
+
+
+/*------------------builtins--------------------*/
+void ft_export(char *envar, t_env *local_envlist, t_env **global_envlist);
+
+
+/*--------------------env--------------------------*/
+
+
+char *is_valid_lvar(char *lvar, char **l_envp);
+void init_env(t_env *env);
+t_env *access_envar(char *envar, t_env *envlist);
+/*--------------------env lists--------------------------*/
+t_env *last_envnode(t_env *envlist);
+t_env *create_lenvnode(char *str);
+void listappend_envnode(t_env *node, t_env **list);
+int printenvlist(t_env *lenvlist);
+int envlistlen(t_env *list);
+t_env *copy_envp(char **envp);
+
+
+
+
+/*--------------------env utils da confermareeeee--------------------------*/
+char *is_valid_lvar(char *lvar, char **l_envp);

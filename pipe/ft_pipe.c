@@ -19,7 +19,7 @@ void printlist(t_command *cmdlist)
 	while (tmp_cmdlist)
 	{
 		printf("ecco il comando: %s\n", tmp_cmdlist->cmd);
-	    if (tmp_cmdlist->args)
+		if (tmp_cmdlist->args)
 		{
 			printf("ecco gli argomenti di %s:\n", tmp_cmdlist->cmd);
 			m = -1;
@@ -45,21 +45,20 @@ void printlist(t_command *cmdlist)
 
 t_redir *find_latest_redirection_among_outpus_and_appends(t_redir *redirlist)
 {
-    t_redir *ret;
-    t_redir *tmp;
+	t_redir *ret;
+	t_redir *tmp;
 
-    if (!redirlist)
-    	return (NULL);
+	if (!redirlist)
+		return (NULL);
 	tmp = redirlist;
-    ret = NULL;
-    while(tmp)
-    {
-        if (tmp->type == OUTPUT_REDIRECTION || tmp->type == APPEND_REDIRECTION)
-            ret = tmp;
-        tmp = tmp->next;
-    }
-	//tmp = redirlist; //riaggiorno la testa della lista
-    return (ret);
+	ret = NULL;
+	while(tmp)
+	{
+		if (tmp->type == OUTPUT_REDIRECTION || tmp->type == APPEND_REDIRECTION)
+			ret = tmp;
+		tmp = tmp->next;
+	}
+	return (ret);
 }
 
 void ft_write_in_latest_outpu_or_append_redir(t_redir *redirnode)
@@ -69,13 +68,9 @@ void ft_write_in_latest_outpu_or_append_redir(t_redir *redirnode)
 
 	if (!redirnode)
 		return;
-		//printf("AAAAAAAAAAAAAAAA: sei in ft_write_in_latest_outpu_or_append_tredir: e il nodo non esiste\n");
-	
-
 	tmp_redirnode = redirnode;
 	if (tmp_redirnode->type == OUTPUT_REDIRECTION)
 	{
-		//printf("ATTENZIONE!!!!!!! STO PER REDIRIGERE L'OUTPUT REDIR\n");
 		fd = open(tmp_redirnode->outredir_file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
@@ -86,8 +81,6 @@ void ft_write_in_latest_outpu_or_append_redir(t_redir *redirnode)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
-	//else
-		//printf("beccato!!!! coa sta succedendo?\n");
 }
 			
 int ft_open_all_output_and_append_redirections(t_redir *redirlist)
@@ -131,7 +124,6 @@ void output_append_management(t_redir *redirlist)
 		return;
 	ft_write_in_latest_outpu_or_append_redir(redirnode);
 }
-//AAA ls < a > b | ls ...se non esisste input si ferma e non da neanche output...ma va al successivo comado e lo esegue
 
 t_redir *find_latest_input_redirection(t_redir *redirlist)
 {
@@ -151,7 +143,7 @@ t_redir *find_latest_input_redirection(t_redir *redirlist)
 	return (ret);
 }
 
-int	get_input_from_latest_input_redir(t_redir *redirlist)
+int	get_input_from_latest_input_redir(t_redir *redirlist, int saved_stdout)
 {
 	int	fd;
 	t_redir	*latest_input_redir;
@@ -163,7 +155,6 @@ int	get_input_from_latest_input_redir(t_redir *redirlist)
 	latest_input_redir = find_latest_input_redirection(redirlist);
 	if (!latest_input_redir)
 		return (ret);
-		//printf("ecco latest input: %s\n", latest_input_redir->outredir_file);
 	if (access(latest_input_redir->outredir_file, F_OK) == 0)
 	{
 		fd = open(latest_input_redir->outredir_file, O_RDONLY);
@@ -171,7 +162,11 @@ int	get_input_from_latest_input_redir(t_redir *redirlist)
 		close(fd);
 	}
 	else
+	{
+		dup2(saved_stdout, STDOUT_FILENO);
+		printf("ERROREEEEEEEEE\n");
 		ret = 0;
+	}
 	return (ret);
 }
 
@@ -200,111 +195,171 @@ void close_all_pipe(int **pipematrix, int cmdlist_len)
 		n++;
 	}
 }
-/*
-qui mi arriva la comand list e la pipematrix
-ho gia tutte le pipe.
 
-
-
- */
-
-
-void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len)
+int input_output_routine(t_redir *redirlist,  int saved_stdout)
 {
-		int n;
-        int pid = fork();
-        int saved_stdout;
-
-		saved_stdout = dup(STDOUT_FILENO);
-
-        if (pid == 0) 
-		{  // Processo figlio
-          //  printf("child %d: sono nel comando %s\n", i, tmp_cmdlist->cmd);
-			if (i > 0) 
-			{  // Se non è il primo comando, leggi dalla pipe precedente
-
-             //   printf(GREEN"leggerò dalla pipe\n"RESET);
-				read_stdin_from_pipe(pipematrix, i);
-				if (get_input_from_latest_input_redir(tmp_cmdlist->redirlist) == 0)
-				{
-					dup2(saved_stdout, STDOUT_FILENO);
-					printf("ERROREEEEEEEEE\n");
-					exit(1);
-				}
-				output_append_management(tmp_cmdlist->redirlist);
-
-
-
-            }
-            if (tmp_cmdlist->next) 
-			{  // Se non è l'ultimo comando, scrivi nella pipe successiva
-             //   printf(GREEN"sto per scrivere nella pipe\n"RESET);
-				write_stdout_in_the_pipe(pipematrix, i);
-				if (get_input_from_latest_input_redir(tmp_cmdlist->redirlist) == 0)
-				{
-					dup2(saved_stdout, STDOUT_FILENO);
-					printf("ERROREEEEEEEEE\n");
-					exit(1);
-				}
-				output_append_management(tmp_cmdlist->redirlist);
-
-
-            }
-            // Chiudi tutte le pipe inutilizzate
-			close_all_pipe(pipematrix, cmdlist_len);
-
-
-            tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
-         //   printf("%d: eseguo\n", i);
-         //   printf(MAGENTA"sto eseguendo il figlio  %d\n\n"RESET, i);
-            execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
-           // perror("execve fallita");
-            exit(1);  // Se execve fallisce
-        }
+	if (get_input_from_latest_input_redir(redirlist, saved_stdout) == 0)
+		return(0);
+	output_append_management(redirlist);
+	return (1);
 }
 
 
-int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix) 
+int ft_echo(int argc, char **argv)
 {
-    pid_t pid;
-    int i;
-    int f = 1;
-    t_command *tmp_cmdlist = cmdlist;
+	int i;
 
-    if (!tmp_cmdlist) 
-    {
-       // printf("la lista è nulla\n");
-        return (0);
-    }
-   // printlist(tmp_cmdlist);
-    i = -1;
-   // printf("lunghezza cmdlist: %d\n", cmdlist_len);
-
-    // Ciclo per eseguire tutti i comandi della pipeline
-	 while (++i < cmdlist_len) 
-    {
-       // printf("i: %d\n", i);
-        if (i > 0) 
+	if (strcmp(argv[1], "-n") == 0)
+	{
+		i = 2;
+		while (i < argc - 1)
 		{
-            tmp_cmdlist = tmp_cmdlist->next;
-            //if (tmp_cmdlist)
-            //    printf("figlio: %d, cmd successivo: %s\n", i, tmp_cmdlist->cmd);
-           // else
-             //   printf(RED"AAA: il comando successivo è nullo. Non si cicla più lungo i comandi\n"RESET);
-        }
-      //  printf("parent: sono nel comando %s\n", tmp_cmdlist->cmd);
-		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len);
+			printf("%s ", argv[i]);
+			i++;
+		}
+		printf("%s", argv[i]);
 	}
-    // Processo padre: man mano che si avanza chiude le pipe precedentemente aperte
-   // printf(MAGENTA"\nAAAAAAA Sono nel padre:\n"RESET);
-	close_all_pipe(pipematrix, cmdlist_len);
+	else
+	{
+		i = 1;
+		while (i < argc - 1)
+		{
+			printf("%s ", argv[i]);
+			i++;
+		}
+		printf("%s\n", argv[i]);
+	}
+	return(1);
+}
 
-    // Il padre aspetta la terminazione di tutti i figli
-    while ((pid = wait(NULL)) > 0) {
-        // printf("Figlio n. %d: terminato (exit-code: %d)\n", f, pid);
-        f++;
-    }
-    return (0);
+int ft_pwd()
+{
+	char	*cwd_buffer;
+
+	cwd_buffer = NULL;
+	cwd_buffer = getcwd(NULL, 0);
+	printf("%s\n", cwd_buffer);
+
+
+
+	free(cwd_buffer);
+	return (1);
+}
+
+int ft_cd(char **argv)
+{
+	char	*cwdpath;
+	char	*strmaps;
+	char	**mapindications;
+	char	**splittedcwd;
+	int		i;
+	char	*finalpath;
+
+	strmaps = argv[1];
+	cwdpath = getcwd(NULL, 0);
+	printf("hei I am in cd funciton and this is the current path:\n%s\n", cwdpath);
+	if (strmaps)
+	{
+		printf("yes strmpas exists\n");
+	}
+	else
+	{
+		printf("no, strmaps doesn't exist\n");
+		return 0;
+	}
+	chdir(strmaps);
+	char *str;
+	str = getcwd(NULL, 0);
+	printf("this is new dir:%s\n", str);
+	//a questo punto posso dire che se lo strcmp tra str e cwdpath non cambia significa che non ho cambiato cartella e quindi che il path non esiste e bash allora puo generare un messaggo di errore.
+	return (1);
 }
 
 
+void ft_exit()
+{
+	exit(1);
+}
+
+int check_builtin(t_command *tmp_cmdlist, int saved_stdout, t_env *genvlist)
+{
+	if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
+	{
+		int a = 0;
+		while (tmp_cmdlist->args[a])
+			a++;
+		ft_echo(a, tmp_cmdlist->args);
+		return (1);
+	}
+	else if (strcmp(tmp_cmdlist->cmd, "pwd") == 0)
+		return (ft_pwd());
+	else if (strcmp(tmp_cmdlist->cmd, "cd") == 0)
+		return (ft_cd(tmp_cmdlist->args));
+	else if (strcmp(tmp_cmdlist->cmd, "env") == 0)
+		return (printenvlist(genvlist));
+	else if (strcmp(tmp_cmdlist->cmd, "exit") == 0)
+	{
+		ft_exit();
+		return 1;
+	}
+	return (0);
+}
+
+void ft_execve(t_command *tmp_cmdlist, int saved_stdout, t_env *genvlist)
+{
+	if (check_builtin(tmp_cmdlist, saved_stdout, genvlist) == 1)
+		return;
+	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+	execve(tmp_cmdlist->path, tmp_cmdlist->args, NULL);
+}
+
+void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env *genvlist)
+{
+	int pid;
+	int saved_stdout;
+
+	pid = fork();
+	saved_stdout = dup(STDOUT_FILENO);
+	if (pid == 0) 
+	{
+		if (i > 0) 
+		{	
+			read_stdin_from_pipe(pipematrix, i);
+			if (input_output_routine(tmp_cmdlist->redirlist, saved_stdout) == 0)
+				exit(1);
+		}
+		if (tmp_cmdlist->next) 
+		{ 
+			write_stdout_in_the_pipe(pipematrix, i);
+			if (input_output_routine(tmp_cmdlist->redirlist, saved_stdout) == 0)
+				exit(1);
+		}
+		close_all_pipe(pipematrix, cmdlist_len);
+		ft_execve(tmp_cmdlist, saved_stdout, genvlist);
+		exit(1);
+	}
+}
+
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist) 
+{
+	pid_t pid;
+	int i;
+	int f = 1;
+	t_command *tmp_cmdlist = cmdlist;
+
+	if (!tmp_cmdlist) 
+		return (0);
+	i = -1;
+	while (++i < cmdlist_len) 
+	{
+		if (i > 0) 
+			tmp_cmdlist = tmp_cmdlist->next;
+		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len, genvlist);
+	}
+	close_all_pipe(pipematrix, cmdlist_len);
+	while ((pid = wait(NULL)) > 0)
+	{
+		//printf("processo terminato\n");
+	}
+	return (0);
+}

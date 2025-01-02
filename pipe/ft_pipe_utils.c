@@ -57,7 +57,7 @@ int check_pipe_symbol(char **tokenmatrix)
 	return (THERE_IS_NOT_A_PIPE);
 }
 
-t_command	*commandlist_for_pipe(char **tokenmatrix)
+t_command	*commandlist_for_pipe(char **tokenmatrix, char **envp)
 {
 	int			i;
 	int			j;
@@ -73,8 +73,13 @@ t_command	*commandlist_for_pipe(char **tokenmatrix)
 	{	
 		cmdnode = (t_command *)malloc(sizeof(t_command));
 		cmdnode->redirlist = NULL;
+		cmdnode->envp = envp;
 		listappend_command(cmdnode, &cmdlist);
 		last_cmdnode(cmdlist)->cmd = tokenmatrix[i]; //TODO verifica se cé bisogno di strdup
+		if (strcmp(cmdnode->cmd, "echo") == 0)
+		{
+			cmdnode->builtin = 1;
+		}
 		j = 0;
 		while (tokenmatrix[i + j] && strcmp(tokenmatrix[i + j], ">") != 0 && strcmp(tokenmatrix[i + j], "<") != 0 && strcmp(tokenmatrix[i + j], ">>") != 0 && tokenmatrix[i + j][0] != PIPE)
 			j++;
