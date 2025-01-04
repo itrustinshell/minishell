@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+/*execute pipes*/
 int	pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 {
 	int			i;
@@ -15,7 +16,7 @@ int	pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 			tmp_cmdlist = tmp_cmdlist->next;
 		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env);
 	}
-	allpipeclose(pipematrix, cmdlist_len);
+	pipeclose(pipematrix, cmdlist_len);
 	i = 0;
 	while (i < cmdlist_len)
 	{
@@ -25,6 +26,7 @@ int	pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 	return (0);
 }
 
+/*execute builtins*/
 int	builtinex(t_command *cmd, t_env **env)
 {
 	int	a;
@@ -56,6 +58,7 @@ int	builtinex(t_command *cmd, t_env **env)
 	return (0);
 }
 
+/*execute single command*/
 void	cmdex(t_command *cmd, t_env **env)
 {
 	pid_t	pid;
@@ -73,6 +76,7 @@ void	cmdex(t_command *cmd, t_env **env)
 	waitpid(pid, &status, 0);
 }
 
+/*execute cmdlist*/
 void	executor(t_command *cmdlist, t_env **env)
 {
 	int	cmdlist_len;

@@ -130,7 +130,7 @@ int 		**pipesalloc(int cmdlist_len);
 int 		pipecheck(char **matrix);
 void		piperead(int **pipematrix, int i);
 void		pipewrite(int **pipematrix, int i);
-void		allpipeclose(int **pipematrix, int cmdlist_len);
+void		pipeclose(int **pipematrix, int cmdlist_len);
 void		pipefork(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
 int			check_builtin_in_cmdlist(t_command *tmp_cmdlist, t_env *genvlist);
 t_command 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);

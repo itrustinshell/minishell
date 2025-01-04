@@ -35,7 +35,7 @@ void	pipewrite(int **pipematrix, int i)
 }
 
 /*close all pipe*/
-void	allpipeclose(int **pipematrix, int cmdlist_len)
+void	pipeclose(int **pipematrix, int cmdlist_len)
 {
 	int	n;
 

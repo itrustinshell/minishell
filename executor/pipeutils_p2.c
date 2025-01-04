@@ -35,7 +35,7 @@ void	pipefork(int **pipematrix, t_command *tmp_cmdlist,
 			if (ioa_redirops(tmp_cmdlist->redirlist, saved_stdout) == 0)
 				exit(1);
 		}
-		allpipeclose(pipematrix, cmdlist_len);
+		pipeclose(pipematrix, cmdlist_len);
 		ft_execve(tmp_cmdlist, *env);
 		exit(1);
 	}
