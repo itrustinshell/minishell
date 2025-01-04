@@ -7,10 +7,9 @@ CFLAGS = -Wall -Wextra -Werror
 SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tokenizer.c\
 		builtins/ft_builtin.c builtins/ft_export.c builtins/ft_env.c builtins/ft_env_lists.c builtins/ft_cd.c builtins/ft_echo.c builtins/ft_exit.c builtins/ft_pwd.c \
 		parsing.c\
-		executor/executor.c executor/exec_cmd_utils.c \
-		executor/exec_singlecmd.c executor/exec_redirutils.c executor/exec_pipeutils.c\
+		executor/executor.c executor/exec_redirutils.c executor/exec_pipeutils.c \
 		test/pipe_test.c test/printmatrix.c\
-		utils/ft_split.c utils/cmd_init.c utils/free.c utils/list_utils.c utils/ft_isspace.c utils/strjoin.c utils/ft_strlen.c \
+		utils/ft_split.c utils/free.c utils/list_utils.c utils/cmd_utils.c utils/general_utils.c\
 		main.c \
 
 OBJ = $(SRC:.c=.o)

@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-
 int countwords(char *str, char separator)
 {
 	int n_word;
@@ -63,31 +62,3 @@ char **ft_split(char *str, char separator)
 	matrix[i] = NULL;
 	return matrix;	
 }
-
-/*
-void test_print_matrix(char **matrix)
-{
-	int i;
-
-
-	i = 0;
-
-
-	while (matrix[i])
-	{
-		printf("%s\n", matrix[i]);
-		i++;
-	}
-}
-
-int main(void)
-{
-	char *str;
-	char **matrix;
-
-	str = " s:ciao:come:stai:io:sono:un:ragazzo:";	
-	matrix = ft_split(str, ':');
-	test_print_matrix(matrix);
-	return (0);
-}
-*/
