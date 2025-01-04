@@ -14,8 +14,9 @@ int check_builtin_for_singlecmd(char **matrix, t_env **global_envlist, char *inp
 	}
 	else if (strcmp(matrix[0], "exit") == 0)
 	{
-		ft_freematrix(matrix);
-		free(inputstr);
+		//ft_freematrix(matrix);
+		//free(inputstr);
+		(void)inputstr;
 		inputstr = NULL;
 		exit(1);
 	}

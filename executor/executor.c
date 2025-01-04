@@ -24,14 +24,24 @@ int execute_pipe(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *g
 	return (0);
 }
 
-void execute_multiple_cmd(t_command *cmdlist, t_env *global_envlist)
+void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
-
+	
 	cmdlist_len = listlen(cmdlist);
-	pipematrix = pipematrix_malloc(cmdlist_len);
-	execute_pipe(cmdlist, cmdlist_len, pipematrix, global_envlist);
+	if (there_is_a_pipe)
+	{
+		//if (cmdlist_len == 1)
+		//	return;
+		pipematrix = pipematrix_malloc(cmdlist_len);
+		execute_pipe(cmdlist, cmdlist_len, pipematrix, global_envlist);
+	}
+	else if (cmdlist_len == 1)
+	{
+		if(!there_is_a_builtin)
+			execute_single_cmd(cmdlist);
+	}
 }
 
 void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
@@ -43,13 +53,13 @@ void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
 	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
 }
 
-void	execute_single_cmd(char **matrix)
+void	execute_single_cmd(t_command *cmd)
 {
 	pid_t		pid;
 	int			status;
-	t_command	*cmd;
+	//t_command	*cmd;
 
-	cmd = create_cmd(matrix);
+	//cmd = create_cmd(matrix);
 	//printf("sono appena entrato nella gestione del singolo comando\n");	
 	cmd->path = get_cmdpath(cmd->cmd);
 	//printf("ecco il path del comando: %s\n", cmd->path);
@@ -58,7 +68,7 @@ void	execute_single_cmd(char **matrix)
 		execve(cmd->path, cmd->args, NULL);
 	//if (pid > CHILD_PID0) //parent
 	waitpid(pid, &status, 0); // Attendi il processo figlio//status e'una variabile che ti consente di verificare come e' terminato il figlio ...il codice di terminazione
-	free_cmd(cmd);
+	//free_cmd(cmd);
 
 }
 

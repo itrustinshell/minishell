@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_command	*commandlist_for_pipe(char **tokenmatrix)
+t_command	*parsing(char **tokenmatrix)
 {
 	int			i;
 	int			j;

@@ -112,7 +112,7 @@ char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 
 //PARSING
-t_command 	*commandlist_for_pipe(char **tokenmatrix);
+t_command 	*parsing(char **tokenmatrix);
 void		listappend_command(t_command *node, t_command **list);
 t_command	*last_cmdnode(t_command *commandlist);
 int			listlen(t_command *list);
@@ -120,9 +120,12 @@ void 		listappend_redir(t_redir *node, t_redir **list);
 
 
 //EXECUTOR
-void 		execute_multiple_cmd(t_command *cmdlist, t_env *global_envlist);
+
+
+void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe);
+
 int 		execute_pipe(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env *genvlist);
-void 		execute_single_cmd(char **matrix);
+void		execute_single_cmd(t_command *cmd);
 void 		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
 //executor utils
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);

@@ -15,36 +15,34 @@ void prompt(char **inputstr)
 int main(int argc, char **argv, char **envp)
 {
 	char		*inputstr;
-	char		**matrix;
-	t_command	*cmdlist;
-	//int			cmdlist_len;
-	
+	char		**token_matrix;
+	t_command	*cmdlist;	
 	t_env		*global_envlist;	
+	int there_is_a_pipe;
+	int there_is_a_builtin;
 
 	(void)argc;
 	(void)argv;
 	(void)envp;
+		global_envlist = NULL;
 	//global_envlist = copy_envp(envp);
-	global_envlist = NULL;
-	matrix = NULL;
-	//cmdlist_len = 0;
+
+
 	while (1)
 	{	
 		inputstr = NULL;
 		prompt(&inputstr);
-		matrix = tokenizer(inputstr);
+		token_matrix = tokenizer(inputstr);
 		//print_matrix_of_char(matrix);
-		if (check_pipe_symbol(matrix) == THERE_IS_A_PIPE)
-		{
-			cmdlist = commandlist_for_pipe(matrix);
-			execute_multiple_cmd(cmdlist, global_envlist);
-		}
-		else if(!check_builtin_for_singlecmd(matrix, &global_envlist, inputstr))
-			execute_single_cmd(matrix);
+		cmdlist = parsing(token_matrix);
+		there_is_a_pipe = check_pipe_symbol(token_matrix);
+		there_is_a_builtin = check_builtin_for_singlecmd(token_matrix, &global_envlist, inputstr);
+	
+		executor(cmdlist, global_envlist, there_is_a_builtin, there_is_a_pipe);
+
 		free(inputstr);
 		inputstr = NULL;
-		ft_freematrix(matrix);
-
+		ft_freematrix(token_matrix);
 	}
 	return (0);
 }
