@@ -23,13 +23,13 @@ void	pipefork(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t
 		if (i > 0) 
 		{	
 			piperead(pipematrix, i);
-			if (ioa_ops(tmp_cmdlist->redirlist, saved_stdout) == 0)
+			if (ioa_redirops(tmp_cmdlist->redirlist, saved_stdout) == 0)
 				exit(1);
 		}
 		if (tmp_cmdlist->next) 
 		{ 
 			pipewrite(pipematrix, i);
-			if (ioa_ops(tmp_cmdlist->redirlist, saved_stdout) == 0)
+			if (ioa_redirops(tmp_cmdlist->redirlist, saved_stdout) == 0)
 				exit(1);
 		}
 		allpipeclose(pipematrix, cmdlist_len);

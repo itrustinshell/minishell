@@ -140,7 +140,7 @@ int			check_builtin_in_cmdlist(t_command *tmp_cmdlist, t_env *genvlist);
 t_command 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
 t_redir		*redirlist_for_pipe(char **tokenmatrix, int token_index);
-int 		ioa_ops(t_redir *redirlist,  int saved_stdout);
+int 		ioa_redirops(t_redir *redirlist,  int saved_stdout);
 
 
 //free
