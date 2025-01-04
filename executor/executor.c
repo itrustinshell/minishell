@@ -1,6 +1,8 @@
 #include "../minishell.h"
 
-int execute_pipe(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist) 
+
+
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist) 
 {
 	pid_t pid;
 	int i;
@@ -24,36 +26,9 @@ int execute_pipe(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *g
 	return (0);
 }
 
-void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe)
-{
-	int	cmdlist_len;
-	int	**pipematrix;
-	
-	cmdlist_len = listlen(cmdlist);
-	if (there_is_a_pipe)
-	{
-		//if (cmdlist_len == 1)
-		//	return;
-		pipematrix = pipematrix_malloc(cmdlist_len);
-		execute_pipe(cmdlist, cmdlist_len, pipematrix, global_envlist);
-	}
-	else if (cmdlist_len == 1)
-	{
-		if(!there_is_a_builtin)
-			execute_single_cmd(cmdlist);
-	}
-}
 
-void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
-{
-	if (check_builtin_in_cmdlist(tmp_cmdlist, genvlist) == 1)
-		return;
-	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
-	char **envlist = convert_list_to_matrix(genvlist);
-	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
-}
 
-void	execute_single_cmd(t_command *cmd)
+void	cmdex(t_command *cmd)
 {
 	pid_t		pid;
 	int			status;
@@ -72,3 +47,22 @@ void	execute_single_cmd(t_command *cmd)
 
 }
 
+void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe)
+{
+	int	cmdlist_len;
+	int	**pipematrix;
+	
+	cmdlist_len = listlen(cmdlist);
+	if (there_is_a_pipe)
+	{
+		//if (cmdlist_len == 1)
+		//	return;
+		pipematrix = pipematrix_malloc(cmdlist_len);
+		pipex(cmdlist, cmdlist_len, pipematrix, global_envlist);
+	}
+	else if (cmdlist_len == 1)
+	{
+		if(!there_is_a_builtin)
+			cmdex(cmdlist);
+	}
+}

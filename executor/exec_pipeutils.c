@@ -100,6 +100,14 @@ void close_all_pipe(int **pipematrix, int cmdlist_len)
 	}
 }
 
+void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
+{
+	if (check_builtin_in_cmdlist(tmp_cmdlist, genvlist) == 1)
+		return;
+	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+	char **envlist = convert_list_to_matrix(genvlist);
+	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
+}
 
 void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env *genvlist)
 {

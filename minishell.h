@@ -124,8 +124,8 @@ void 		listappend_redir(t_redir *node, t_redir **list);
 
 void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe);
 
-int 		execute_pipe(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env *genvlist);
-void		execute_single_cmd(t_command *cmd);
+int 		pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env *genvlist);
+void		cmdex(t_command *cmd);
 void 		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
 //executor utils
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);

@@ -24,21 +24,21 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	(void)envp;
-		global_envlist = NULL;
+	global_envlist = NULL;
 	//global_envlist = copy_envp(envp);
-
-
 	while (1)
 	{	
 		inputstr = NULL;
 		prompt(&inputstr);
-		token_matrix = tokenizer(inputstr);
+		token_matrix = tokenizer(inputstr); // TOKENIZER
 		//print_matrix_of_char(matrix);
-		cmdlist = parsing(token_matrix);
+
+		cmdlist = parsing(token_matrix); //PARSING
+		
 		there_is_a_pipe = check_pipe_symbol(token_matrix);
 		there_is_a_builtin = check_builtin_for_singlecmd(token_matrix, &global_envlist, inputstr);
 	
-		executor(cmdlist, global_envlist, there_is_a_builtin, there_is_a_pipe);
+		executor(cmdlist, global_envlist, there_is_a_builtin, there_is_a_pipe); //EXECUTOR
 
 		free(inputstr);
 		inputstr = NULL;
