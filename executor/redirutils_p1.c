@@ -22,7 +22,8 @@ open, and the input is redirected to his fd.
 RETURN: returns 0 only if user indicates a file that 
 doesn't exist. In all the other cases it returns 1,
 even if there are no redirection.
-Indeed the 
+Indeed, if there is no input redirection, no file is 
+created and the stdin just is not redirect to any fd.
 */
 int	i_redirops(t_redir *redirlist, int saved_stdout)
 {
