@@ -1,42 +1,7 @@
 #include "../minishell.h"
 
-void printlist(t_command *cmdlist) //solo per testing
-{
-	t_command	*tmp_cmdlist;
-	t_redir		*tmp_redirlist;
-	int			m;
-
-	printf("\nDEBUG: STO STAMPANDO LA LISTA DI COMANDI CON ARGOMENTI E REDIRECTION\n");
-	m = 0;
-	tmp_cmdlist = cmdlist;
-	while (tmp_cmdlist)
-	{
-		printf("ecco il comando: %s\n", tmp_cmdlist->cmd);
-		if (tmp_cmdlist->args)
-		{
-			printf("ecco gli argomenti di %s:\n", tmp_cmdlist->cmd);
-			m = -1;
-			while(tmp_cmdlist->args[++m])
-				printf("args: %s\n", tmp_cmdlist->args[m]);
-		}
-		if (tmp_cmdlist->redirlist)
-		{
-			printf("ecco le redirections di %s:\n", tmp_cmdlist->cmd);
-			tmp_redirlist = tmp_cmdlist->redirlist;
-			while (tmp_redirlist)
-			{
-				printf("redir: %s\n", tmp_redirlist->outredir_file);
-				tmp_redirlist = tmp_redirlist->next;
-			}
-		}
-		else
-			printf("non ci sno argomenti\n");
-		tmp_cmdlist = tmp_cmdlist->next;
-	}
-	printf("DEBUG: HO TERMINATO DI STAMPARE LISTA, ARGOMENTI E RELATIVE REDIRECTIONS\n\n");
-}
-
-int **pipesalloc(int cmdlist_len) //in base a quanti comandi riceve, alloca una matrice di pipe
+/*allocates the array of pipes*/
+int **pipesalloc(int cmdlist_len)
 {
 	int	i;
 	int	**pipematrix;
@@ -103,7 +68,7 @@ void close_all_pipe(int **pipematrix, int cmdlist_len)
 
 void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
 {
-	if (check_builtin_in_cmdlist(tmp_cmdlist, genvlist) == 1)
+	if (builtinex(tmp_cmdlist, &genvlist) == 1)
 		return;
 	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
 	char **envlist = convert_list_to_matrix(genvlist);

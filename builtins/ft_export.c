@@ -29,7 +29,7 @@ int there_is_equal_before_end(char *str)
 	return (0);
 }
 
-int check_export(char **matrix)
+int exportcheck(char **matrix)
 {
 	if (matrixlen(matrix) > 3)
 	{

@@ -24,6 +24,37 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 	return (0);
 }
 
+
+int builtinex(t_command *cmd, t_env **env)
+{
+	if (strcmp(cmd->cmd, "echo") == 0)
+	{
+		int a = 0;
+		while (cmd->args[a])
+			a++;
+		ft_echo(a, cmd->args);
+		return (1);
+	}
+	else if (strcmp(cmd->cmd, "pwd") == 0)
+		return (ft_pwd());
+	else if (strcmp(cmd->cmd, "export") == 0)
+	{
+		if (exportcheck(cmd->args) == 1)
+			ft_export(cmd->args[1], env);
+	}
+	else if (strcmp(cmd->cmd, "cd") == 0)
+		return (ft_cd(cmd->args));
+	else if (strcmp(cmd->cmd, "env") == 0)
+		return (printenvlist(*env));
+	else if (strcmp(cmd->cmd, "exit") == 0)
+	{
+		ft_exit();
+		return 1;
+	}
+	return (0);
+}
+
+/*
 int builtinex(t_command *cmd, t_env **env)
 {
 	int ret;
@@ -33,7 +64,7 @@ int builtinex(t_command *cmd, t_env **env)
 		printenvlist(*env);
 	else if (strcmp(cmd->cmd, "export") == 0)
 	{
-		if (check_export(cmd->args) == 1)
+		if (exportcheck(cmd->args) == 1)
 			ft_export(cmd->args[1], env);
 	}
 	else if (strcmp(cmd->cmd, "exit") == 0)
@@ -48,6 +79,7 @@ int builtinex(t_command *cmd, t_env **env)
 		ret = 0;
 	return (ret);
 }
+*/
 
 void	cmdex(t_command *cmd, t_env **env)
 {

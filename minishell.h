@@ -162,7 +162,7 @@ int	printenvlist(t_env *lenvlist);
 void 	addto_globalenv(t_env **local_envlist, char *str);
 int 	there_is_equal_before_end(char *str);
 int 	ends_with_equal_sign(char *str);
-int 	check_export(char **matrix);
+int 	exportcheck(char **matrix);
 t_env	*last_envlist(t_env *envlist);
 t_env	*create_lenvnode(char *str);
 void	envlist_append(t_env *node, t_env **list);
