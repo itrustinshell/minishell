@@ -14,16 +14,15 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 	{
 		if (i > 0) 
 			tmp_cmdlist = tmp_cmdlist->next;
-		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len, env);
+		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env);
 	}
-	close_all_pipe(pipematrix, cmdlist_len);
+	allpipeclose(pipematrix, cmdlist_len);
 	while ((pid = wait(NULL)) > 0)
 	{
 		//printf("processo terminato\n");
 	}
 	return (0);
 }
-
 
 int builtinex(t_command *cmd, t_env **env)
 {
@@ -80,8 +79,6 @@ void executor(t_command *cmdlist, t_env **env)
 	cmdlist_len = listlen(cmdlist);
 	if (cmdlist_len > 1)
 	{
-		//if (cmdlist_len == 1)
-		//	return;
 		pipematrix = pipesalloc(cmdlist_len);
 		pipex(cmdlist, cmdlist_len, pipematrix, env);
 	}

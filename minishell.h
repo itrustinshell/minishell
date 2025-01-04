@@ -110,7 +110,6 @@ int ft_issymbol(char char_to_check);
 int check_symbols(char *str_tocheck, int *iterator);
 char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
-
 //PARSING
 t_command 	*parsing(char **tokenmatrix);
 void		listappend_command(t_command *node, t_command **list);
@@ -133,15 +132,15 @@ void		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);
 int 		**pipesalloc(int cmdlist_len);
 int 		pipecheck(char **matrix);
-void		read_stdin_from_pipe(int **pipematrix, int i);
-void		write_stdout_in_the_pipe(int **pipematrix, int i);
-void		close_all_pipe(int **pipematrix, int cmdlist_len);
-void		fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
+void		piperead(int **pipematrix, int i);
+void		pipewrite(int **pipematrix, int i);
+void		allpipeclose(int **pipematrix, int cmdlist_len);
+void		pipefork(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
 int			check_builtin_in_cmdlist(t_command *tmp_cmdlist, t_env *genvlist);
 t_command 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
 t_redir		*redirlist_for_pipe(char **tokenmatrix, int token_index);
-int 		input_output_routine(t_redir *redirlist,  int saved_stdout);
+int 		ioa_ops(t_redir *redirlist,  int saved_stdout);
 
 
 //free
@@ -186,4 +185,4 @@ int ft_isspace(char char_to_check);
 char *strjoin(char *str, char *separator);
 int ft_strlen(char *str);
 int matrixlen(char **matrix);
-char **convert_list_to_matrix(t_env *envlist);
+char **litoma(t_env *envlist);

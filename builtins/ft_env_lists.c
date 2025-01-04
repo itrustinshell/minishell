@@ -94,7 +94,8 @@ int envlist_len(t_env *list)
 	return (i);
 }
 
-char **convert_list_to_matrix(t_env *envlist)
+/*list to matrix*/
+char **litoma(t_env *envlist)
 {
 	int lenlist;
 	t_env *tmp_envlist;

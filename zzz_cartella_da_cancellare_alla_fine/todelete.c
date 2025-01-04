@@ -103,3 +103,36 @@ int builtinex(t_command *cmd, t_env **env)
 	return (ret);
 }
 
+// int check_redirection_symbol(char **tokenmatrix) //cerca se c'è almeno una redirection
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (tokenmatrix[i])
+// 	{
+// 		if (tokenmatrix[i][0] != OUTPUT_REDIRECTION)
+// 			i++;
+// 		else
+// 		{
+// 			return (THERE_IS_A_REDIRECTION);
+// 		}
+// 	}
+// 	return (THERE_IS_NOT_A_REDIRECTION);
+// }
+
+
+/*check if it is at least one pipe*/
+int pipecheck(char **tokenmatrix) 
+{
+	int	i;
+
+	i = 0;
+	while (tokenmatrix[i])
+	{
+		if (tokenmatrix[i][0] != PIPE)
+			i++;
+		else
+			return (THERE_IS_A_PIPE);
+	}
+	return (THERE_IS_NOT_A_PIPE);
+}

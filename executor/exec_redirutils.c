@@ -71,7 +71,8 @@ int ft_open_all_output_and_append_redirections(t_redir *redirlist)
 	return (output_append_exists);
 }
 
-void output_append_management(t_redir *redirlist)
+/*manage output and append redirections*/
+void oa_redir(t_redir *redirlist)
 {
 	t_redir	*redirnode;
 
@@ -86,7 +87,8 @@ void output_append_management(t_redir *redirlist)
 	ft_write_in_latest_outpu_or_append_redir(redirnode);
 }
 
-t_redir *find_latest_input_redirection(t_redir *redirlist)
+/*finds last input redirections*/
+t_redir *i_redirlast(t_redir *redirlist)
 {
 	t_redir	*tmp_redirlist;
 	t_redir	*ret;
@@ -104,7 +106,8 @@ t_redir *find_latest_input_redirection(t_redir *redirlist)
 	return (ret);
 }
 
-int	get_input_from_latest_input_redir(t_redir *redirlist, int saved_stdout)
+/*manage input redirection*/
+int	i_redir(t_redir *redirlist, int saved_stdout)
 {
 	int	fd;
 	t_redir	*latest_input_redir;
@@ -113,7 +116,7 @@ int	get_input_from_latest_input_redir(t_redir *redirlist, int saved_stdout)
 	ret = 1;
 	if (!redirlist)
 		return (ret);
-	latest_input_redir = find_latest_input_redirection(redirlist);
+	latest_input_redir = i_redirlast(redirlist);
 	if (!latest_input_redir)
 		return (ret);
 	if (access(latest_input_redir->outredir_file, F_OK) == 0)
@@ -131,28 +134,11 @@ int	get_input_from_latest_input_redir(t_redir *redirlist, int saved_stdout)
 	return (ret);
 }
 
-int input_output_routine(t_redir *redirlist,  int saved_stdout)
+/*the whole input-output-append operations*/
+int ioa_ops(t_redir *redirlist,  int saved_stdout)
 {
-	if (get_input_from_latest_input_redir(redirlist, saved_stdout) == 0)
+	if (i_redir(redirlist, saved_stdout) == 0)
 		return(0);
-	output_append_management(redirlist);
+	oa_redir(redirlist);
 	return (1);
-}
-
-int check_redirection_symbol(char **tokenmatrix) //cerca se c'è almeno una redirection
-{
-	int	i;
-
-	i = 0;
-	while (tokenmatrix[i])
-	{
-		if (tokenmatrix[i][0] != OUTPUT_REDIRECTION)
-			i++;
-		else
-		{
-			//printf("there is a pipe\n");
-			return (THERE_IS_A_REDIRECTION);
-		}
-	}
-	return (THERE_IS_NOT_A_REDIRECTION);
 }
