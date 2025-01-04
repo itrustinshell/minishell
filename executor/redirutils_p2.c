@@ -1,23 +1,6 @@
 #include "../minishell.h"
 
-/*find last occurrence indifferently among output or append redirections*/
-t_redir *oa_redirlast(t_redir *redirlist)
-{
-	t_redir *ret;
-	t_redir *tmp;
 
-	if (!redirlist)
-		return (NULL);
-	tmp = redirlist;
-	ret = NULL;
-	while(tmp)
-	{
-		if (tmp->type == OUTPUT_REDIRECTION || tmp->type == APPEND_REDIRECTION)
-			ret = tmp;
-		tmp = tmp->next;
-	}
-	return (ret);
-}
 
 /*write in all output and append redirections*/
 void oa_redirwrite(t_redir *redirnode)
@@ -70,22 +53,24 @@ int oa_rediropen(t_redir *redirlist)
 	return (output_append_exists);
 }
 
-/*operatiosn with output and append redirections*/
-void oa_redirops(t_redir *redirlist)
+/*find last occurrence indifferently among output or append redirections*/
+t_redir *oa_redirlast(t_redir *redirlist)
 {
-	t_redir	*redirnode;
+	t_redir *ret;
+	t_redir *tmp;
 
-	redirnode = NULL;
 	if (!redirlist)
-		return;
-	if (oa_rediropen(redirlist) == 0)
-		return;
-	redirnode = oa_redirlast(redirlist);
-	if (!redirnode)
-		return;
-	oa_redirwrite(redirnode);
+		return (NULL);
+	tmp = redirlist;
+	ret = NULL;
+	while(tmp)
+	{
+		if (tmp->type == OUTPUT_REDIRECTION || tmp->type == APPEND_REDIRECTION)
+			ret = tmp;
+		tmp = tmp->next;
+	}
+	return (ret);
 }
-
 /*finds last input redirections*/
 t_redir *i_redirlast(t_redir *redirlist)
 {
@@ -103,41 +88,4 @@ t_redir *i_redirlast(t_redir *redirlist)
 		tmp_redirlist = tmp_redirlist->next;
 	}
 	return (ret);
-}
-
-/*operations with input redirection*/
-int	i_redirops(t_redir *redirlist, int saved_stdout)
-{
-	int	fd;
-	t_redir	*latest_input_redir;
-	int ret;
-
-	ret = 1;
-	if (!redirlist)
-		return (ret);
-	latest_input_redir = i_redirlast(redirlist);
-	if (!latest_input_redir)
-		return (ret);
-	if (access(latest_input_redir->outredir_file, F_OK) == 0)
-	{
-		fd = open(latest_input_redir->outredir_file, O_RDONLY);
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-	}
-	else
-	{
-		dup2(saved_stdout, STDOUT_FILENO);
-		printf("ERROREEEEEEEEE\n");
-		ret = 0;
-	}
-	return (ret);
-}
-
-/*the whole input-output-append operations*/
-int ioa_redirops(t_redir *redirlist,  int saved_stdout)
-{
-	if (i_redirops(redirlist, saved_stdout) == 0)
-		return(0);
-	oa_redirops(redirlist);
-	return (1);
 }

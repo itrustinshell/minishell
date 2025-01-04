@@ -103,12 +103,12 @@ void print_matrix_of_int(int **matrix, int limit_row, int limit_column);
 void print_list(t_command *commandlist);
 
 //TOKENIZER
-char **tokenizer(char *str_to_tokenize);
-int get_num_of_tokens(char *str);
-int ft_isspace(char char_to_check);
-int ft_issymbol(char char_to_check);
-int check_symbols(char *str_tocheck, int *iterator);
-char **create_tokenmatrix(char* str_to_tokenize, int n_tokens);
+char	**tokenizer(char *str_to_tokenize);
+int		get_num_of_tokens(char *str);
+int		ft_isspace(char char_to_check);
+int		ft_issymbol(char char_to_check);
+int		check_symbols(char *str_tocheck, int *iterator);
+char	**create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 //PARSING
 t_command 	*parsing(char **tokenmatrix);
@@ -119,14 +119,10 @@ void 		listappend_redir(t_redir *node, t_redir **list);
 
 
 //EXECUTOR
-
-
 void		executor(t_command *cmdlist, t_env **env);
-
 int			pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env **env);
 void		cmdex(t_command *cmd, t_env **env);
 int			builtinex(t_command *cmd, t_env **env);
-
 //executor utils
 void		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);
@@ -141,22 +137,25 @@ t_command 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_ind
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
 t_redir		*redirlist_for_pipe(char **tokenmatrix, int token_index);
 int 		ioa_redirops(t_redir *redirlist,  int saved_stdout);
-
+void 		oa_redirops(t_redir *redirlist);
+int			oa_rediropen(t_redir *redirlist);
+void		oa_redirwrite(t_redir *redirnode);
+t_redir		*oa_redirlast(t_redir *redirlist);
+t_redir		*i_redirlast(t_redir *redirlist);
 
 //free
-void ft_free_n_matrix(char **matrix, int n);
-void ft_freematrix(char **matrix);
-void ft_freelist(t_env *envlist);
-void free_cmd(t_command *cmd);
-
+void	ft_freematrix(char **matrix);
+void	ft_freelist(t_env *envlist);
+void	ft_free_n_matrix(char **matrix, int n);
+void	free_cmd(t_command *cmd);
 
 ///BUILTINS
-int ft_echo(int argc, char **argv);
-int ft_pwd();
-int ft_cd(char **argv);
-void ft_exit();
-void ft_export(char *namevar, t_env **env);
-int	printenvlist(t_env *lenvlist);
+int		ft_echo(int argc, char **argv);
+int		ft_pwd();
+int		ft_cd(char **argv);
+void	ft_exit();
+void	ft_export(char *namevar, t_env **env);
+int		printenvlist(t_env *lenvlist);
 //builtins utils
 void 	addto_globalenv(t_env **local_envlist, char *str);
 int 	there_is_equal_before_end(char *str);
@@ -172,17 +171,16 @@ char	*is_valid_lvar(char *lvar, char **l_envp);
 void	init_envnode(t_env *env);
 t_env	*access_envar(char *envar, t_env *envlist);
 
-
 //CMD utils
-char *find_external_cmd(char *cmd);	
-t_command *create_cmd(char **matrix);
-char *get_cmdpath(char *cmd);
-void init_cmd(t_command *cmd);
+char		*find_external_cmd(char *cmd);	
+t_command	*create_cmd(char **matrix);
+char		*get_cmdpath(char *cmd);
+void		init_cmd(t_command *cmd);
 
 //GENERAL utils
-char **ft_split(char *str, char separator);
-int ft_isspace(char char_to_check);
-char *strjoin(char *str, char *separator);
-int ft_strlen(char *str);
-int matrixlen(char **matrix);
-char **litoma(t_env *envlist);
+char	**ft_split(char *str, char separator);
+int		ft_isspace(char char_to_check);
+char	*strjoin(char *str, char *separator);
+int		ft_strlen(char *str);
+int		matrixlen(char **matrix);
+char	**litoma(t_env *envlist);
