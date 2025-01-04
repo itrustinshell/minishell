@@ -72,7 +72,7 @@ void listappend_command(t_command *node, t_command **list)
 		//printf("it is no more null\n");
 		last_node = last_cmdnode(*list);
 		//printf("i found last node: %s\n", last_node->cmd);
-		node->prev = last_node;
+		//node->prev = last_node;
 		last_node->next = node;
 		node->next = NULL;
 		//printf("hehehe: %s\n", (*list)->cmd);

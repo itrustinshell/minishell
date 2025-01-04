@@ -36,7 +36,8 @@ char **ft_split(char *str, char separator)
 	n_words = countwords(str, separator);
 //	printf("number of word: %d\n", n_words);
 	matrix = (char **)malloc((n_words + 1) * sizeof(char *));
-	
+	if (!matrix)
+		return (NULL);
 	i = 0;
 	int j = 0;
 	int k;
@@ -48,6 +49,8 @@ char **ft_split(char *str, char separator)
 		while (str[j + k] && str[j + k] != separator)
 			k++;
 		matrix[i] = (char *)malloc((k + 1) * sizeof(char));
+		if (!matrix[i])
+			ft_free_n_matrix(matrix, i);
 		k = 0;
 		while (str[j + k] && str[j + k] != separator)
 		{

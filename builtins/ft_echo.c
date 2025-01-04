@@ -1,8 +1,7 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
+#include "../minishell.h"
 
-int main(int argc, char **argv)
+
+int ft_echo(int argc, char **argv)
 {
 	int i;
 
@@ -26,5 +25,6 @@ int main(int argc, char **argv)
 		}
 		printf("%s\n", argv[i]);
 	}
-	return(0);
+	return(1);
 }
+

@@ -8,7 +8,6 @@ char **tokenizer(char *str_to_tokenize)
 {
 	char **tokens_matrix;
 	int n_tokens;
-	int i;
 
 	if (!str_to_tokenize)
 		return (NULL);

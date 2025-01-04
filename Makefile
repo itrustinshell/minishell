@@ -2,14 +2,15 @@ NAME = minishell
 
 CC = gcc
 
-#CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
-SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tokenizer.c \
-		pipe/ft_pipe.c pipe/ft_pipe_utils.c\
-		env/env_lists.c env/env_utils.c env/env.c env/ft_export.c\
+SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tokenizer.c\
+		builtins/ft_builtin.c builtins/ft_export.c builtins/ft_env.c builtins/ft_env_lists.c builtins/ft_cd.c builtins/ft_echo.c builtins/ft_exit.c builtins/ft_pwd.c \
+		parsing/cmdlist_forpipe.c\
+		executor/executor.c executor/exec_cmd_utils.c \
+		executor/exec_singlecmd.c executor/exec_redirutils.c executor/exec_pipeutils.c\
 		test/pipe_test.c test/printmatrix.c\
-		utils/ft_split.c utils/list_utils.c utils/ft_isspace.c utils/strjoin.c utils/ft_strlen.c \
-		cmd/cmd_utils.c cmd/manage_single_cmd.c\
+		utils/ft_split.c utils/cmd_init.c utils/free.c utils/list_utils.c utils/ft_isspace.c utils/strjoin.c utils/ft_strlen.c \
 		main.c \
 
 OBJ = $(SRC:.c=.o)
