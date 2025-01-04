@@ -54,38 +54,10 @@ int builtinex(t_command *cmd, t_env **env)
 	return (0);
 }
 
-/*
-int builtinex(t_command *cmd, t_env **env)
-{
-	int ret;
-
-	ret = 1;
-	if (strcmp(cmd->cmd, "env") == 0)
-		printenvlist(*env);
-	else if (strcmp(cmd->cmd, "export") == 0)
-	{
-		if (exportcheck(cmd->args) == 1)
-			ft_export(cmd->args[1], env);
-	}
-	else if (strcmp(cmd->cmd, "exit") == 0)
-	{
-		//ft_freematrix(matrix);
-		//free(inputstr);
-		// (void)inputstr;
-		// inputstr = NULL;
-		exit(1);
-	}
-	else
-		ret = 0;
-	return (ret);
-}
-*/
-
 void	cmdex(t_command *cmd, t_env **env)
 {
 	pid_t		pid;
 	int			status;
-	//t_command	*cmd;
 
 	if(builtinex(cmd, env))
 		return;

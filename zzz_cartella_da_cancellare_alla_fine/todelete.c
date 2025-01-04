@@ -76,3 +76,30 @@ t_env *nodedup(t_env *node)
 	printf("ecco il nodo duplicato:%s=%s\n",duplicated_node->name, duplicated_node->value);
 	return (duplicated_node);
 }
+
+
+int builtinex(t_command *cmd, t_env **env)
+{
+	int ret;
+
+	ret = 1;
+	if (strcmp(cmd->cmd, "env") == 0)
+		printenvlist(*env);
+	else if (strcmp(cmd->cmd, "export") == 0)
+	{
+		if (exportcheck(cmd->args) == 1)
+			ft_export(cmd->args[1], env);
+	}
+	else if (strcmp(cmd->cmd, "exit") == 0)
+	{
+		//ft_freematrix(matrix);
+		//free(inputstr);
+		// (void)inputstr;
+		// inputstr = NULL;
+		exit(1);
+	}
+	else
+		ret = 0;
+	return (ret);
+}
+

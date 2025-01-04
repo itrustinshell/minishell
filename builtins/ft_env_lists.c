@@ -5,13 +5,13 @@ t_env *create_lenvnode(char *str)
 	t_env *new;
 	char **splittedstr;
 
-	printf("anzitutto ecco cosa gli passo:%s.\n", str);
+	//printf("anzitutto ecco cosa gli passo:%s.\n", str);
 	new = NULL;
 	splittedstr = NULL;
 	splittedstr = ft_split(str, '=');
 	if (!splittedstr)
 		return (NULL);
-	printf("ora ecco quello che gli passo splittato:\n1)%s,\n2)%s.\n",splittedstr[0], splittedstr[1]);
+	//printf("ora ecco quello che gli passo splittato:\n1)%s,\n2)%s.\n",splittedstr[0], splittedstr[1]);
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
 	{
