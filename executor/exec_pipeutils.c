@@ -36,7 +36,7 @@ void printlist(t_command *cmdlist) //solo per testing
 	printf("DEBUG: HO TERMINATO DI STAMPARE LISTA, ARGOMENTI E RELATIVE REDIRECTIONS\n\n");
 }
 
-int **pipematrix_malloc(int cmdlist_len) //in base a quanti comandi riceve, alloca una matrice di pipe
+int **pipesalloc(int cmdlist_len) //in base a quanti comandi riceve, alloca una matrice di pipe
 {
 	int	i;
 	int	**pipematrix;
@@ -59,7 +59,8 @@ int **pipematrix_malloc(int cmdlist_len) //in base a quanti comandi riceve, allo
 	return (pipematrix);
 }
 
-int check_pipe_symbol(char **tokenmatrix) //cerca se c'è almeo una pipe
+/*check if it is at least one pipe*/
+int pipecheck(char **tokenmatrix) 
 {
 	int	i;
 
@@ -109,7 +110,7 @@ void ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
 	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
 }
 
-void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env *genvlist)
+void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env **env)
 {
 	int pid;
 	int saved_stdout;
@@ -131,7 +132,7 @@ void fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cm
 				exit(1);
 		}
 		close_all_pipe(pipematrix, cmdlist_len);
-		ft_execve(tmp_cmdlist, genvlist);
+		ft_execve(tmp_cmdlist, *env);
 		exit(1);
 	}
 }

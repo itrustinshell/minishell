@@ -1,29 +1,7 @@
 #include "../minishell.h"
 
-int check_builtin_for_singlecmd(char **matrix, t_env **global_envlist, char *inputstr)
-{
-	int ret;
 
-	ret = 1;
-	if (strcmp(matrix[0], "env") == 0)
-		printenvlist(*global_envlist);
-	else if (strcmp(matrix[0], "export") == 0)
-	{
-		if (check_export(matrix) == 1)
-			ft_export(matrix[1], global_envlist);
-	}
-	else if (strcmp(matrix[0], "exit") == 0)
-	{
-		//ft_freematrix(matrix);
-		//free(inputstr);
-		(void)inputstr;
-		inputstr = NULL;
-		exit(1);
-	}
-	else
-		ret = 0;
-	return (ret);
-}
+
 
 int check_builtin_in_cmdlist(t_command *tmp_cmdlist, t_env *genvlist)
 {

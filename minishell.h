@@ -122,19 +122,21 @@ void 		listappend_redir(t_redir *node, t_redir **list);
 //EXECUTOR
 
 
-void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe);
+void		executor(t_command *cmdlist, t_env **env);
 
-int 		pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env *genvlist);
-void		cmdex(t_command *cmd);
-void 		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
+int			pipex(t_command *cmdlist, int cmdlist_len, int **pipesarray, t_env **env);
+void		cmdex(t_command *cmd, t_env **env);
+int			builtinex(t_command *cmd, t_env **env);
+
 //executor utils
+void		ft_execve(t_command *tmp_cmdlist, t_env *genvlist);
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);
-int 		**pipematrix_malloc(int cmdlist_len);
-int 		check_pipe_symbol(char **matrix);
+int 		**pipesalloc(int cmdlist_len);
+int 		pipecheck(char **matrix);
 void		read_stdin_from_pipe(int **pipematrix, int i);
 void		write_stdout_in_the_pipe(int **pipematrix, int i);
 void		close_all_pipe(int **pipematrix, int cmdlist_len);
-void		fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env *genvlist);
+void		fork_along_pipesloop(int **pipematrix,t_command *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
 int			check_builtin_in_cmdlist(t_command *tmp_cmdlist, t_env *genvlist);
 t_command 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_command **commandlist);
@@ -154,10 +156,9 @@ int ft_echo(int argc, char **argv);
 int ft_pwd();
 int ft_cd(char **argv);
 void ft_exit();
-void ft_export(char *namevar, t_env **list);
+void ft_export(char *namevar, t_env **env);
 int	printenvlist(t_env *lenvlist);
 //builtins utils
-int 	check_builtin_for_singlecmd(char **matrix, t_env **global_envlist, char *inputstr);
 void 	addto_globalenv(t_env **local_envlist, char *str);
 int 	there_is_equal_before_end(char *str);
 int 	ends_with_equal_sign(char *str);

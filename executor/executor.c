@@ -1,8 +1,6 @@
 #include "../minishell.h"
 
-
-
-int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist) 
+int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env) 
 {
 	pid_t pid;
 	int i;
@@ -16,7 +14,7 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist
 	{
 		if (i > 0) 
 			tmp_cmdlist = tmp_cmdlist->next;
-		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len, genvlist);
+		fork_along_pipesloop(pipematrix, tmp_cmdlist, i, cmdlist_len, env);
 	}
 	close_all_pipe(pipematrix, cmdlist_len);
 	while ((pid = wait(NULL)) > 0)
@@ -26,43 +24,63 @@ int pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env *genvlist
 	return (0);
 }
 
+int builtinex(t_command *cmd, t_env **env)
+{
+	int ret;
 
+	ret = 1;
+	if (strcmp(cmd->cmd, "env") == 0)
+		printenvlist(*env);
+	else if (strcmp(cmd->cmd, "export") == 0)
+	{
+		if (check_export(cmd->args) == 1)
+			ft_export(cmd->args[1], env);
+	}
+	else if (strcmp(cmd->cmd, "exit") == 0)
+	{
+		//ft_freematrix(matrix);
+		//free(inputstr);
+		// (void)inputstr;
+		// inputstr = NULL;
+		exit(1);
+	}
+	else
+		ret = 0;
+	return (ret);
+}
 
-void	cmdex(t_command *cmd)
+void	cmdex(t_command *cmd, t_env **env)
 {
 	pid_t		pid;
 	int			status;
 	//t_command	*cmd;
 
-	//cmd = create_cmd(matrix);
-	//printf("sono appena entrato nella gestione del singolo comando\n");	
+	if(builtinex(cmd, env))
+		return;
 	cmd->path = get_cmdpath(cmd->cmd);
-	//printf("ecco il path del comando: %s\n", cmd->path);
 	pid = fork(); //forko altrimenti execve mi cancella la shell corrente
-	if (pid == CHILD_PID0) //child
+	if (pid == 0)
+	{
 		execve(cmd->path, cmd->args, NULL);
-	//if (pid > CHILD_PID0) //parent
+		exit(1);
+	}
 	waitpid(pid, &status, 0); // Attendi il processo figlio//status e'una variabile che ti consente di verificare come e' terminato il figlio ...il codice di terminazione
 	//free_cmd(cmd);
-
 }
 
-void executor(t_command *cmdlist, t_env *global_envlist, int there_is_a_builtin, int there_is_a_pipe)
+void executor(t_command *cmdlist, t_env **env)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
 	
 	cmdlist_len = listlen(cmdlist);
-	if (there_is_a_pipe)
+	if (cmdlist_len > 1)
 	{
 		//if (cmdlist_len == 1)
 		//	return;
-		pipematrix = pipematrix_malloc(cmdlist_len);
-		pipex(cmdlist, cmdlist_len, pipematrix, global_envlist);
+		pipematrix = pipesalloc(cmdlist_len);
+		pipex(cmdlist, cmdlist_len, pipematrix, env);
 	}
-	else if (cmdlist_len == 1)
-	{
-		if(!there_is_a_builtin)
-			cmdex(cmdlist);
-	}
+	else
+		cmdex(cmdlist, env);
 }
