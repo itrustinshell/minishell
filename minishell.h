@@ -155,7 +155,7 @@ int		ft_pwd();
 int		ft_cd(char **argv);
 void	ft_exit();
 void	ft_export(char *namevar, t_env **env);
-int		printenvlist(t_env *lenvlist);
+int		ft_env(t_env *lenvlist);
 //builtins utils
 void 	addto_globalenv(t_env **local_envlist, char *str);
 int 	there_is_equal_before_end(char *str);

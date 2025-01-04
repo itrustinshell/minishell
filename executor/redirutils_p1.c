@@ -1,27 +1,27 @@
 #include "../minishell.h"
 
-/*operatiosn with output and append redirections*/
-void oa_redirops(t_redir *redirlist)
+/*operations with output and append redirections*/
+void	oa_redirops(t_redir *redirlist)
 {
 	t_redir	*redirnode;
 
 	redirnode = NULL;
 	if (!redirlist)
-		return;
+		return ;
 	if (oa_rediropen(redirlist) == 0)
-		return;
+		return ;
 	redirnode = oa_redirlast(redirlist);
 	if (!redirnode)
-		return;
+		return ;
 	oa_redirwrite(redirnode);
 }
 
 /*operations with input redirection*/
 int	i_redirops(t_redir *redirlist, int saved_stdout)
 {
-	int	fd;
+	int		fd;
 	t_redir	*latest_input_redir;
-	int ret;
+	int		ret;
 
 	ret = 1;
 	if (!redirlist)
@@ -45,10 +45,10 @@ int	i_redirops(t_redir *redirlist, int saved_stdout)
 }
 
 /*the whole input-output-append operations*/
-int ioa_redirops(t_redir *redirlist,  int saved_stdout)
+int	ioa_redirops(t_redir *redirlist, int saved_stdout)
 {
 	if (i_redirops(redirlist, saved_stdout) == 0)
-		return(0);
+		return (0);
 	oa_redirops(redirlist);
 	return (1);
 }

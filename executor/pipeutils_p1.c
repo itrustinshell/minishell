@@ -40,7 +40,7 @@ void	allpipeclose(int **pipematrix, int cmdlist_len)
 	int	n;
 
 	n = -1;
-	while (++n < (cmdlist_len - 1)) 
+	while (++n < (cmdlist_len - 1))
 	{
 		close(pipematrix[n][READ_END]);
 		close(pipematrix[n][WRITE_END]);

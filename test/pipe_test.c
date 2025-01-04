@@ -1,47 +1,50 @@
 #include "../minishell.h"
 
-void test_stampa_args(t_command *commandlist)
+/* Funzione per stampare gli argomenti di una lista di comandi */
+void	test_stampa_args(t_command *commandlist)
 {
-	int i;
+	int	i;
 
-	while (commandlist -> next != NULL)
+	while (commandlist->next != NULL)
 	{
-		printf("this is the command:%s\n", commandlist -> cmd);
+		printf("this is the command: %s\n", commandlist->cmd);
 		i = 0;
-		while (commandlist -> args[i])
+		while (commandlist->args[i])
 		{
-			printf("argument: %s\n", commandlist -> args[i]);
+			printf("argument: %s\n", commandlist->args[i]);
 			i++;
 		}
-		commandlist = commandlist -> next;
+		commandlist = commandlist->next;
 	}
-	printf("this last cmd: %s\n", commandlist-> cmd);
+	printf("this last cmd: %s\n", commandlist->cmd);
 	i = 0;
-	while (commandlist -> args[i])
+	while (commandlist->args[i])
 	{
-		printf("argument: %s\n", commandlist -> args[i]);
+		printf("argument: %s\n", commandlist->args[i]);
 		i++;
 	}
-	printf ("it was already null\n");
+	printf("it was already null\n");
 }
 
-
-void print_list(t_command *commandlist)
+/* Funzione per stampare la lista di comandi */
+void	print_list(t_command *commandlist)
 {
-	t_command *current;
-		int a;
-		printf("i'm printing command list\n");
-		current = commandlist;
-		a = 0;
-		while (current)
-		{
-			printf("cmd %d: %s\n", a, current->cmd);
-			current = current->next;
-			a++;
-		}
+	t_command	*current;
+	int			a;
+
+	printf("i'm printing command list\n");
+	current = commandlist;
+	a = 0;
+	while (current)
+	{
+		printf("cmd %d: %s\n", a, current->cmd);
+		current = current->next;
+		a++;
+	}
 }
 
-void printlist(t_command *cmdlist) //solo per testing
+/* Funzione di debug per stampare comandi, argomenti e redirazioni */
+void	printlist(t_command *cmdlist)
 {
 	t_command	*tmp_cmdlist;
 	t_redir		*tmp_redirlist;
@@ -57,7 +60,7 @@ void printlist(t_command *cmdlist) //solo per testing
 		{
 			printf("ecco gli argomenti di %s:\n", tmp_cmdlist->cmd);
 			m = -1;
-			while(tmp_cmdlist->args[++m])
+			while (tmp_cmdlist->args[++m])
 				printf("args: %s\n", tmp_cmdlist->args[m]);
 		}
 		if (tmp_cmdlist->redirlist)
@@ -71,7 +74,7 @@ void printlist(t_command *cmdlist) //solo per testing
 			}
 		}
 		else
-			printf("non ci sno argomenti\n");
+			printf("non ci sono redir\n");
 		tmp_cmdlist = tmp_cmdlist->next;
 	}
 	printf("DEBUG: HO TERMINATO DI STAMPARE LISTA, ARGOMENTI E RELATIVE REDIRECTIONS\n\n");

@@ -1,11 +1,11 @@
 #include "../minishell.h"
 
-int countwords(char *str, char separator)
+int	countwords(char *str, char separator)
 {
-	int n_word;
-	int padlock;
-	int i;
-	//se vuota restiruisci zero
+	int	n_word;
+	int	padlock;
+	int	i;
+
 	n_word = 0;
 	i = 0;
 	while (str[i])
@@ -23,23 +23,23 @@ int countwords(char *str, char separator)
 			i++;
 		}
 	}
-	return n_word;
+	return (n_word);
 }
 
-char **ft_split(char *str, char separator)
+char	**ft_split(char *str, char separator)
 {
-	int n_words;
-	char **matrix;
-	int i;
+	int		n_words;
+	char	**matrix;
+	int		i;
+	int		j;
+	int		k;
 
 	n_words = countwords(str, separator);
-//	printf("number of word: %d\n", n_words);
 	matrix = (char **)malloc((n_words + 1) * sizeof(char *));
 	if (!matrix)
 		return (NULL);
 	i = 0;
-	int j = 0;
-	int k;
+	j = 0;
 	while (i < n_words)
 	{
 		while (str[j] == separator)
@@ -60,5 +60,5 @@ char **ft_split(char *str, char separator)
 		i++;
 	}
 	matrix[i] = NULL;
-	return matrix;	
+	return (matrix);
 }

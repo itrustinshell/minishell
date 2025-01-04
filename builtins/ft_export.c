@@ -1,13 +1,13 @@
 #include "../minishell.h"
 
-int ends_with_equal_sign(char *str)
+int	ends_with_equal_sign(char *str)
 {
 	int	i;
 	int	ret;
 
 	ret = 0;
 	i = 0;
-	while(str[i])
+	while (str[i])
 		i++;
 	i--;
 	if (str[i] == '=')
@@ -15,12 +15,12 @@ int ends_with_equal_sign(char *str)
 	return (ret);
 }
 
-int there_is_equal_before_end(char *str)
+int	there_is_equal_before_end(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i] == '=')
 			return (1);
@@ -29,12 +29,12 @@ int there_is_equal_before_end(char *str)
 	return (0);
 }
 
-int exportcheck(char **matrix)
+int	exportcheck(char **matrix)
 {
 	if (matrixlen(matrix) > 3)
 	{
 		printf("ci sono piu di 3 pezzi con l'export\n");
-		return 0;
+		return (0);
 	}
 	if (!matrix[1])
 	{
@@ -44,19 +44,16 @@ int exportcheck(char **matrix)
 	if (!ends_with_equal_sign(matrix[1]))
 	{
 		if (!there_is_equal_before_end(matrix[1]))
-		{
-			printf("c'è il pezzo che dovrebbe contneere uguale ma non c'è uguale\n");
 			return (0);
-		}
 		else if (matrixlen(matrix) >= 3)
-		{	
+		{
 			printf("troppi argomenti\n");
 			return (0);
 		}
 		else
 		{
 			printf("ok qui puoi lavorare per estrarre la variabile\n");
-			return (1);	
+			return (1);
 		}
 	}
 	else
@@ -80,18 +77,18 @@ void addto_globalenv(t_env **local_envlist, char *str)
 	t_env *local_envnode;
 
 	local_envnode = create_lenvnode(str);
-			if (local_envnode)
-				printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", local_envnode->name, local_envnode->value);
-			envlist_append(local_envnode, local_envlist);
-			if (local_envlist)
-				printf("finalmente la lista estiste\n");
-			else
-				printf("attenzione ho aggiunto un nodo ma c'è qualcosa che non va: la lista non esista\n");	
+	if (local_envnode)
+		printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", local_envnode->name, local_envnode->value);
+	envlist_append(local_envnode, local_envlist);
+	if (local_envlist)
+		printf("finalmente la lista estiste\n");
+	else
+		printf("attenzione ho aggiunto un nodo ma c'è qualcosa che non va: la lista non esista\n");	
 }
 
 t_env *access_envar(char *namevar, t_env *list) //verifica se esiste la variabile
 {
-	t_env *tmp_list;
+	t_env	*tmp_list;
 
 	if (!list)
 	{
@@ -117,7 +114,7 @@ t_env *access_envar(char *namevar, t_env *list) //verifica se esiste la variabil
 	return (NULL);
 }
 
-void ft_export(char *namevar, t_env **global_envlist)
+void	ft_export(char *namevar, t_env **global_envlist)
 {
 	t_env	*found_global_envar;
 	t_env	*new_node;
@@ -126,10 +123,10 @@ void ft_export(char *namevar, t_env **global_envlist)
 	if (new_node)
 		printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", new_node->name, new_node->value);
 	found_global_envar = access_envar(new_node->value, *global_envlist);
-	if(found_global_envar)
+	if (found_global_envar)
 	{
 		printf("la variabile già esiste nell'ambiente globale!");
-		return;
+		return ;
 	}
 	else
 		envlist_append(new_node, global_envlist);

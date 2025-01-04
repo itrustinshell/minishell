@@ -1,9 +1,8 @@
 #include "../minishell.h"
 
-
-int ft_echo(int argc, char **argv)
+int	ft_echo(int argc, char **argv)
 {
-	int i;
+	int	i;
 
 	if (strcmp(argv[1], "-n") == 0)
 	{
@@ -25,6 +24,5 @@ int ft_echo(int argc, char **argv)
 		}
 		printf("%s\n", argv[i]);
 	}
-	return(1);
+	return (1);
 }
-

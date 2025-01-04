@@ -1,14 +1,16 @@
 #include "../minishell.h"
 
+/* Inizializza la struttura t_command */
 void init_cmd(t_command *cmd)
 {
-    cmd->cmd = NULL;
-    cmd->args = NULL;
-    cmd->path = NULL;
-    cmd->next = NULL;
-    cmd->redirlist = NULL;
+	cmd->cmd = NULL;
+	cmd->args = NULL;
+	cmd->path = NULL;
+	cmd->next = NULL;
+	cmd->redirlist = NULL;
 }
 
+/* Ottieni il percorso del comando */
 char *get_cmdpath(char *cmd)
 {
 	char *path;
@@ -17,50 +19,87 @@ char *get_cmdpath(char *cmd)
 	int i;
 	int access_result;
 
-	if (cmd)
-//		printf("il comando esiste: %s\n", cmd);
+	if (!cmd)
+		return (NULL);
 	path = getenv("PATH");
-//	printf("ecco la variabile PATH: %s\n", path);
+	if (!path)
+		return (NULL);
 	splitted_path = ft_split(path, ':');
-
+	if (!splitted_path)
+		return (NULL);
 	i = 0;
 	while (splitted_path[i])
 	{
 		finalpath = strjoin(splitted_path[i], "/");
+		if (!finalpath)
+		{
+			free(splitted_path);
+			return (NULL);
+		}
 		finalpath = strjoin(finalpath, cmd);
-//		printf("verifico l'esistenza di: %s\n", finalpath);
+		if (!finalpath)
+		{
+			free(splitted_path);
+			return (NULL);
+		}
 		access_result = access(finalpath, X_OK);
 		if (access_result == 0)
+		{
+			free(splitted_path);
 			return (finalpath);
-		//qui dovresti metter un else free l'attuale path creato con strjoin perchè strjoin malloca
+		}
+		free(finalpath);
 		i++;
 	}
+	free(splitted_path);
 	printf("NON HO TROVATO IL COMANDO!!!\n");
 	return (NULL);
 }
 
+/* Crea un nuovo nodo t_command dalla matrice di comandi */
 t_command *create_cmd(char **matrix)
 {
 	int			i;
 	int			matrix_len;
 	t_command	*cmd;
 
+	if (!matrix || !matrix[0])
+		return (NULL);
 	cmd = (t_command *)malloc(sizeof(t_command));
-	cmd->cmd = strdup(matrix[0]); 
-	
-	matrix_len = matrixlen(matrix);
-	cmd->args = (char **)malloc((matrix_len + 1) * sizeof(char*));
-	i = 0;
-	while ( i < matrix_len)
+	if (!cmd)
+		return (NULL);
+	cmd->cmd = strdup(matrix[0]);
+	if (!cmd->cmd)
 	{
-		cmd->args[i] = strdup(matrix[i]);	
+		free(cmd);
+		return (NULL);
+	}
+	matrix_len = matrixlen(matrix);
+	cmd->args = (char **)malloc((matrix_len + 1) * sizeof(char *));
+	if (!cmd->args)
+	{
+		free(cmd->cmd);
+		free(cmd);
+		return (NULL);
+	}
+	i = 0;
+	while (i < matrix_len)
+	{
+		cmd->args[i] = strdup(matrix[i]);
+		if (!cmd->args[i])
+		{
+			while (i > 0)
+			{
+				free(cmd->args[--i]);
+			}
+			free(cmd->args);
+			free(cmd->cmd);
+			free(cmd);
+			return (NULL);
+		}
 		i++;
 	}
-	/*termino con NULL*/
 	cmd->args[i] = NULL;
-	//cmd->prev = NULL;
 	cmd->next = NULL;
-	//printf("created singe node for execution without pipe\n");
 	return (cmd);
 }
-
