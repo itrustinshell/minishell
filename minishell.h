@@ -96,6 +96,20 @@ typedef struct s_env
 	struct s_env	*prev;
 } t_env;
 
+typedef struct s_buffer
+{
+	char	*str;
+	struct s_buffer *next;
+} t_buffer;
+
+typedef struct s_heredoc
+{
+	char				*delimiter;
+	t_buffer			*input;
+	struct s_heredoc	*next;
+} t_heredoc;
+
+
 /*-----tests---------*/
 void test_stampa_args(t_command *commandlist);
 void print_matrix_of_char(char **matrix);

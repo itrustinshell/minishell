@@ -28,7 +28,7 @@ int main(int argc, char **argv, char **envp)
 	{	
 		inputstr = NULL;
 		prompt(&inputstr);
-		token_matrix = tokenizer(inputstr); // TOKENIZER
+		token_matrix = tokenizer(inputstr); //TOKENIZER
 		cmdlist = parsing(token_matrix); //PARSING
 		executor(cmdlist, &env); //EXECUTOR
 		free(inputstr);

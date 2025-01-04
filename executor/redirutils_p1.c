@@ -16,7 +16,14 @@ void	oa_redirops(t_redir *redirlist)
 	oa_redirwrite(redirnode);
 }
 
-/*operations with input redirection*/
+/*If exist an input redirection, then the indicated
+file is checked with "access". If it exists, it is
+open, and the input is redirected to his fd.
+RETURN: returns 0 only if user indicates a file that 
+doesn't exist. In all the other cases it returns 1,
+even if there are no redirection.
+Indeed the 
+*/
 int	i_redirops(t_redir *redirlist, int saved_stdout)
 {
 	int		fd;
