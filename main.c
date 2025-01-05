@@ -16,7 +16,7 @@ int main(int argc, char **argv, char **envp)
 {
 	char		*inputstr;
 	char		**token_matrix;
-	t_command	*cmdlist;	
+	t_cmd	*cmdlist;	
 	t_env		*env;	
 
 	(void)argc;

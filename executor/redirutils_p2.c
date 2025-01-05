@@ -11,14 +11,14 @@ void	oa_redirwrite(t_redir *redirnode)
 	tmp_redirnode = redirnode;
 	if (tmp_redirnode->type == OUTPUT_REDIRECTION)
 	{
-		fd = open(tmp_redirnode->outredir_file,
+		fd = open(tmp_redirnode->file,
 				O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
 	else if (tmp_redirnode->type == APPEND_REDIRECTION)
 	{
-		fd = open(tmp_redirnode->outredir_file,
+		fd = open(tmp_redirnode->file,
 				O_WRONLY | O_CREAT | O_APPEND, 0666);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
@@ -39,14 +39,14 @@ int	oa_rediropen(t_redir *redirlist)
 		if (tmp_redirlist->type == OUTPUT_REDIRECTION)
 		{
 			output_append_exists = 1;
-			fd = open(tmp_redirlist->outredir_file,
+			fd = open(tmp_redirlist->file,
 					O_WRONLY | O_CREAT | O_TRUNC, 0666);
 			close(fd);
 		}
 		if (tmp_redirlist->type == APPEND_REDIRECTION)
 		{
 			output_append_exists = 1;
-			fd = open(tmp_redirlist->outredir_file,
+			fd = open(tmp_redirlist->file,
 					O_WRONLY | O_CREAT | O_APPEND, 0666);
 			close(fd);
 		}
@@ -92,3 +92,4 @@ t_redir	*i_redirlast(t_redir *redirlist)
 	}
 	return (ret);
 }
+//input redir potrebbe cercare sia < che << 

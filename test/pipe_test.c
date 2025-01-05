@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 /* Funzione per stampare gli argomenti di una lista di comandi */
-void	test_stampa_args(t_command *commandlist)
+void	test_stampa_args(t_cmd *commandlist)
 {
 	int	i;
 
@@ -27,9 +27,9 @@ void	test_stampa_args(t_command *commandlist)
 }
 
 /* Funzione per stampare la lista di comandi */
-void	print_list(t_command *commandlist)
+void	print_list(t_cmd *commandlist)
 {
-	t_command	*current;
+	t_cmd	*current;
 	int			a;
 
 	printf("i'm printing command list\n");
@@ -44,9 +44,9 @@ void	print_list(t_command *commandlist)
 }
 
 /* Funzione di debug per stampare comandi, argomenti e redirazioni */
-void	printlist(t_command *cmdlist)
+void	printlist(t_cmd *cmdlist)
 {
-	t_command	*tmp_cmdlist;
+	t_cmd	*tmp_cmdlist;
 	t_redir		*tmp_redirlist;
 	int			m;
 
@@ -69,7 +69,21 @@ void	printlist(t_command *cmdlist)
 			tmp_redirlist = tmp_cmdlist->redirlist;
 			while (tmp_redirlist)
 			{
-				printf("redir: %s\n", tmp_redirlist->outredir_file);
+				if (tmp_redirlist->type == INPUT_REDIRECTION || tmp_redirlist->type == OUTPUT_REDIRECTION || tmp_redirlist->type == APPEND_REDIRECTION)
+				{
+					if (tmp_redirlist->type == INPUT_REDIRECTION)
+						printf("inputredir: ");
+					else if (tmp_redirlist->type == OUTPUT_REDIRECTION)
+						printf("outputredir: ");
+					else if (tmp_redirlist->type == APPEND_REDIRECTION)
+						printf("appendredir: ");
+					printf("%s\n", tmp_redirlist->file);
+				}
+				else if (tmp_redirlist->type == HEREDOC)
+				{
+					printf("heredoc: ");
+					printf("%s\n", tmp_redirlist->delimiter);
+				}
 				tmp_redirlist = tmp_redirlist->next;
 			}
 		}

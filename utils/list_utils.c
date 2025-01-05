@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-int	listlen(t_command *list)
+int	listlen(t_cmd *list)
 {
 	int			i;
-	t_command	*current;
+	t_cmd	*current;
 
 	if (list == NULL)
 		return (0);
@@ -36,9 +36,9 @@ int	listlenredir(t_redir *list)
 	return (i);
 }
 
-t_command	*last_cmdnode(t_command *commandlist)
+t_cmd	*last_cmdnode(t_cmd *commandlist)
 {
-	t_command	*current;
+	t_cmd	*current;
 
 	current = commandlist;
 	while (current->next != NULL)
@@ -46,7 +46,7 @@ t_command	*last_cmdnode(t_command *commandlist)
 	return (current);
 }
 
-t_redir	*find_last_commandnode_redir(t_redir *commandlist)
+t_redir	*find_last_cmdnode_redir(t_redir *commandlist)
 {
 	t_redir	*current;
 
@@ -56,9 +56,9 @@ t_redir	*find_last_commandnode_redir(t_redir *commandlist)
 	return (current);
 }
 
-void	listappend_command(t_command *node, t_command **list)
+void	listappend_command(t_cmd *node, t_cmd **list)
 {
-	t_command	*last_node;
+	t_cmd	*last_node;
 
 	if (*list == NULL)
 	{
@@ -81,12 +81,12 @@ void	listappend_redir(t_redir *node, t_redir **list)
 	{
 		*list = node;
 		(*list)->next = NULL;
-		(*list)->prev = NULL;
+		//(*list)->prev = NULL;
 	}
 	else
 	{
-		last_node = find_last_commandnode_redir(*list);
-		node->prev = last_node;
+		last_node = find_last_cmdnode_redir(*list);
+		//node->prev = last_node;
 		last_node->next = node;
 		node->next = NULL;
 	}

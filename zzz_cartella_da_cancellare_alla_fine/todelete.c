@@ -78,7 +78,7 @@ t_env *nodedup(t_env *node)
 }
 
 
-int builtinex(t_command *cmd, t_env **env)
+int builtinex(t_cmd *cmd, t_env **env)
 {
 	int ret;
 

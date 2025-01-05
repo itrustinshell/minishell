@@ -1,10 +1,10 @@
 #include "../minishell.h"
 
 /*execute pipes*/
-int	pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
+int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 {
 	int			i;
-	t_command	*tmp_cmdlist;
+	t_cmd	*tmp_cmdlist;
 
 	tmp_cmdlist = cmdlist;
 	if (!tmp_cmdlist)
@@ -27,7 +27,7 @@ int	pipex(t_command *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 }
 
 /*execute builtins*/
-int	builtinex(t_command *cmd, t_env **env)
+int	builtinex(t_cmd *cmd, t_env **env)
 {
 	int	a;
 
@@ -59,7 +59,7 @@ int	builtinex(t_command *cmd, t_env **env)
 }
 
 /*execute single command*/
-void	cmdex(t_command *cmd, t_env **env)
+void	cmdex(t_cmd *cmd, t_env **env)
 {
 	pid_t	pid;
 	int		status;
@@ -77,11 +77,12 @@ void	cmdex(t_command *cmd, t_env **env)
 }
 
 /*execute cmdlist*/
-void	executor(t_command *cmdlist, t_env **env)
+void	executor(t_cmd *cmdlist, t_env **env)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
 
+	printlist(cmdlist);
 	cmdlist_len = listlen(cmdlist);
 	if (cmdlist_len > 1)
 	{

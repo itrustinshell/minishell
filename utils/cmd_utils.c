@@ -1,15 +1,5 @@
 #include "../minishell.h"
 
-/* Inizializza la struttura t_command */
-void init_cmd(t_command *cmd)
-{
-	cmd->cmd = NULL;
-	cmd->args = NULL;
-	cmd->path = NULL;
-	cmd->next = NULL;
-	cmd->redirlist = NULL;
-}
-
 /* Ottieni il percorso del comando */
 char *get_cmdpath(char *cmd)
 {
@@ -56,16 +46,16 @@ char *get_cmdpath(char *cmd)
 	return (NULL);
 }
 
-/* Crea un nuovo nodo t_command dalla matrice di comandi */
-t_command *create_cmd(char **matrix)
+/* Crea un nuovo nodo t_cmd dalla matrice di comandi */
+t_cmd *create_cmd(char **matrix)
 {
 	int			i;
 	int			matrix_len;
-	t_command	*cmd;
+	t_cmd	*cmd;
 
 	if (!matrix || !matrix[0])
 		return (NULL);
-	cmd = (t_command *)malloc(sizeof(t_command));
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->cmd = strdup(matrix[0]);

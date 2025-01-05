@@ -3,11 +3,11 @@
 
 void cmd_before_single_outredirection(char **matrix)
 {
-	t_command	*cmd;
+	t_cmd	*cmd;
 	int			i;
 	int			fd;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	
 	cmd->cmd = strdup(matrix[0]);
 	cmd->path = get_cmdpath(cmd->cmd);

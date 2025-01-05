@@ -49,7 +49,7 @@ void	ft_freelist(t_env *envlist)
 	free(tmp_list);
 }
 
-void	free_cmd(t_command *cmd) //solo quando è singolo comando....uindi non frea le liste di comandi....non fria i next...aaa dovrebbe friare la lista di redir perchè è fissa per  ogni comando...da implementare
+void	free_cmd(t_cmd *cmd) //solo quando è singolo comando....uindi non frea le liste di comandi....non fria i next...aaa dovrebbe friare la lista di redir perchè è fissa per  ogni comando...da implementare
 {
 	if (cmd)
 	{

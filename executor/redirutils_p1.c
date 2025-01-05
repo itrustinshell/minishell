@@ -36,10 +36,10 @@ int	i_redirops(t_redir *redirlist, int saved_stdout)
 		return (ret);
 	latest_input_redir = i_redirlast(redirlist);
 	if (!latest_input_redir)
-		return (ret);
-	if (access(latest_input_redir->outredir_file, F_OK) == 0)
+		return (2);
+	if (access(latest_input_redir->file, F_OK) == 0)
 	{
-		fd = open(latest_input_redir->outredir_file, O_RDONLY);
+		fd = open(latest_input_redir->file, O_RDONLY);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}

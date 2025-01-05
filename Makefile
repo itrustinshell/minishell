@@ -9,7 +9,7 @@ SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tok
 		parsing.c\
 		executor/executor.c executor/redirutils_p1.c executor/redirutils_p2.c executor/pipeutils_p1.c executor/pipeutils_p2.c\
 		test/pipe_test.c test/printmatrix.c\
-		utils/ft_split.c utils/free.c utils/list_utils.c utils/cmd_utils.c utils/general_utils.c\
+		utils/ft_split.c utils/init.c utils/free.c utils/list_utils.c utils/cmd_utils.c utils/general_utils.c\
 		main.c \
 
 OBJ = $(SRC:.c=.o)

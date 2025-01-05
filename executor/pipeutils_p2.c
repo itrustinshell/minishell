@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 /*exec builtins or external cmd*/
-void	ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist)
 {
 	char	**envlist;
 
@@ -13,7 +13,7 @@ void	ft_execve(t_command *tmp_cmdlist, t_env *genvlist)
 }
 
 /*fork along the pipes*/
-void	pipefork(int **pipematrix, t_command *tmp_cmdlist, 
+void	pipefork(int **pipematrix, t_cmd *tmp_cmdlist, 
 		int i, int cmdlist_len, t_env **env)
 {
 	int	pid;

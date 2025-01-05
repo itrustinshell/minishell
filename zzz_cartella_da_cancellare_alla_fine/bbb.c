@@ -19,12 +19,12 @@ int check_redirection_symbol(char **tokenmatrix)
 	return (THERE_IS_NOT_A_REDIRECTION);
 }
 
-t_command *get_command(char **matrix)
+t_cmd *get_cmd(char **matrix)
 {
-	t_command	*cmd;
+	t_cmd	*cmd;
 	int			i;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	cmd->cmd = strdup(matrix[0]);
 	cmd->path = get_cmdpath(cmd->cmd);
 	i = 0;
@@ -47,9 +47,9 @@ void single_outredirection(char **matrix)
 	int			fd;
 	int			pid;
 	char		*file;
-	t_command	*cmd;
+	t_cmd	*cmd;
 
-	cmd = get_command(matrix);
+	cmd = get_cmd(matrix);
 	while (matrix[i][0] != OUTPUT_REDIRECTION)
 		i++;
 	i++;
