@@ -16,6 +16,6 @@ void redirinit(t_redir *node)
 	node->type = 0;
     node->file = NULL;
     node->delimiter = NULL;
-    node->input = NULL;
+    node->heredoclist = NULL;
     node->next = NULL;
 }

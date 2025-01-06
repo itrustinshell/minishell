@@ -79,17 +79,15 @@ t_redir	*i_redirlast(t_redir *redirlist)
 {
 	t_redir	*tmp_redirlist;
 	t_redir	*ret;
-
 	if (!redirlist)
 		return (NULL);
 	ret = NULL;
 	tmp_redirlist = redirlist;
 	while (tmp_redirlist)
 	{
-		if (tmp_redirlist->type == INPUT_REDIRECTION)
+		if (tmp_redirlist->type == INPUT_REDIRECTION || tmp_redirlist->type == HEREDOC)
 			ret = tmp_redirlist;
 		tmp_redirlist = tmp_redirlist->next;
 	}
 	return (ret);
 }
-//input redir potrebbe cercare sia < che << 

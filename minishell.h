@@ -81,7 +81,7 @@ typedef struct s_env
 
 typedef struct s_heredoc
 {
-	char			*input;
+	char				*input;
 	struct s_heredoc	*next;
 } t_heredoc;
 
@@ -90,7 +90,7 @@ typedef struct s_redir
 	int				type; //vedi le macro
 	char			*file; //if ioa
 	char			*delimiter; //if heredoc
-	t_heredoc		*input;
+	t_heredoc		*heredoclist;
 	struct s_redir	*next;
 } t_redir;
 
@@ -120,10 +120,10 @@ char	**create_tokenmatrix(char* str_to_tokenize, int n_tokens);
 
 //PARSING
 t_cmd 	*parsing(char **tokenmatrix);
-void		listappend_command(t_cmd *node, t_cmd **list);
+void	listappend_command(t_cmd *node, t_cmd **list);
 t_cmd	*last_cmdnode(t_cmd *commandlist);
-int			listlen(t_cmd *list);
-void 		listappend_redir(t_redir *node, t_redir **list);
+int		listlen(t_cmd *list);
+void 	listappend_redir(t_redir *node, t_redir **list);
 
 
 //EXECUTOR
@@ -141,15 +141,17 @@ void		pipewrite(int **pipematrix, int i);
 void		pipeclose(int **pipematrix, int cmdlist_len);
 void		pipefork(int **pipematrix,t_cmd *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
 int			check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
-t_cmd 	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
+t_cmd 		*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_cmd **commandlist);
 t_redir		*redirlist_for_pipe(char **tokenmatrix, int token_index);
-int 		ioa_redirops(t_redir *redirlist,  int saved_stdout);
+int			ioa_redirops(t_redir *redirlist, int saved_stdout);
 void 		oa_redirops(t_redir *redirlist);
 int			oa_rediropen(t_redir *redirlist);
 void		oa_redirwrite(t_redir *redirnode);
 t_redir		*oa_redirlast(t_redir *redirlist);
 t_redir		*i_redirlast(t_redir *redirlist);
+void		printallheredoclists(t_cmd *cmd);
+int			count_heredoc(t_cmd *cmd);
 
 //free
 void	ft_freematrix(char **matrix);
@@ -180,11 +182,11 @@ void	init_envnode(t_env *env);
 t_env	*access_envar(char *envar, t_env *envlist);
 
 //CMD utils
-char		*find_external_cmd(char *cmd);	
+char	*find_external_cmd(char *cmd);	
 t_cmd	*create_cmd(char **matrix);
-char		*get_cmdpath(char *cmd);
-void		cmdinit(t_cmd *cmd);
-void redirinit(t_redir *node);
+char	*get_cmdpath(char *cmd);
+void	cmdinit(t_cmd *cmd);
+void 	redirinit(t_redir *node);
 void	printlist(t_cmd *cmdlist);
 
 //GENERAL utils

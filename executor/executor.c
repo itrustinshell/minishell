@@ -1,6 +1,8 @@
 #include "../minishell.h"
 
-/*execute pipes*/
+/*execute pipes
+stats all forks in a while, then the father waits.
+*/
 int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 {
 	int			i;
@@ -76,13 +78,127 @@ void	cmdex(t_cmd *cmd, t_env **env)
 	waitpid(pid, &status, 0);
 }
 
+void heredoc_prompt(char **inputstr)
+{
+	size_t len;
+	len = 0;
+
+	//*inputstr = NULL;
+	printf(">: ");
+	getline(inputstr, &len, stdin); //free di inputstr fatto!
+}
+
+void	heredocinit(t_heredoc *node)
+{
+	if (node)
+	{
+		node->input = NULL;
+		node->next = NULL;
+	}
+}
+
+t_heredoc *create_heredocnode(char *inputstr)
+{
+	t_heredoc	*node;
+
+	if(!inputstr)
+		return (NULL);
+	node = (t_heredoc *)malloc(sizeof(t_heredoc));
+	heredocinit(node);
+	node->input = strdup(inputstr);
+	return (node);
+}
+
+t_heredoc	*last_heredocnode(t_heredoc *list)
+{
+	t_heredoc	*current;
+
+	current = list;
+	while (current->next != NULL)
+		current = current->next;
+	return (current);
+}
+
+void	listappend_heredoc(t_heredoc *node, t_heredoc **list)
+{
+	t_heredoc	*last_node;
+
+	if (*list == NULL)
+	{
+		*list = node;
+		(*list)->next = NULL;
+	}
+	else
+	{
+		last_node = last_heredocnode(*list);
+		last_node->next = node;
+		node->next = NULL;
+	}
+}
+
+void	build_heredoclist(char *inputstr, t_heredoc **heredoclist)
+{
+	t_heredoc	*node;
+
+	(void)inputstr;
+	node = create_heredocnode(inputstr);
+	listappend_heredoc(node, heredoclist);
+}
+
+void	heredoc(t_cmd *cmd, int n_heredoc)
+{
+	char	*inputstr;
+	size_t	len;
+	int		j;
+	t_cmd *tmp_cmdlist;
+	t_redir *tmp_redirlist;
+
+	tmp_cmdlist = cmd;
+	len = 0;
+	if (!n_heredoc)
+		return;
+	while (tmp_cmdlist)
+	{
+		tmp_redirlist = tmp_cmdlist->redirlist;
+		while (tmp_redirlist)
+		{
+			while (tmp_redirlist && tmp_redirlist->type != HEREDOC)
+				tmp_redirlist = tmp_redirlist->next;
+			if(tmp_redirlist)
+			{
+				while (1)
+				{
+					//heredoc_prompt(&inputstr);
+					printf(">: ");
+					getline(&inputstr, &len, stdin);
+					j = 0;
+					while (inputstr[j] != '\n')
+						j++;
+					inputstr[j] = '\0';
+					//printf("you inserted: %s. Remember the current delimiter is: %s\n", inputstr,tmp_redirlist->delimiter );
+					if (strcmp(inputstr,  tmp_redirlist->delimiter) == 0)
+						break;
+					inputstr[j] = '\n';
+					build_heredoclist(inputstr, &(tmp_redirlist->heredoclist));
+				}
+				tmp_redirlist = tmp_redirlist->next;
+			}
+		}
+		tmp_cmdlist = tmp_cmdlist->next;
+	}
+}
+
 /*execute cmdlist*/
 void	executor(t_cmd *cmdlist, t_env **env)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
-
-	printlist(cmdlist);
+	int	n_heredoc;
+	//printlist(cmdlist);
+	n_heredoc = count_heredoc(cmdlist);
+	//printf("n_heredoc: %d\n", n_heredoc);
+	heredoc(cmdlist, n_heredoc);
+	//printallheredoclists(cmdlist, n_heredoc);
 	cmdlist_len = listlen(cmdlist);
 	if (cmdlist_len > 1)
 	{
