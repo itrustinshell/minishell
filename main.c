@@ -18,13 +18,12 @@ int main(int argc, char **argv, char **envp)
 	char		**token_matrix;
 	t_cmd	*cmdlist;	
 	t_env		*env;	
-	//int exit_code; TODO: implementare exit_code $?
-	
+
 	(void)argc;
 	(void)argv;
 	(void)envp;
 	env = NULL;
-	env = copy_envp(envp);
+	//env = copy_env(envp);
 	while (1)
 	{	
 		inputstr = NULL;

@@ -11,6 +11,12 @@ char *get_cmdpath(char *cmd)
 
 	if (!cmd)
 		return (NULL);
+	access_result = access(cmd, X_OK);
+	if (access_result == 0)
+	{
+		printf("ho trovato il comando solo con cmd\'n");
+		return (cmd);
+	}
 	path = getenv("PATH");
 	if (!path)
 		return (NULL);
