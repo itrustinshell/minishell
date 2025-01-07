@@ -197,15 +197,22 @@ void	executor(t_cmd *cmdlist, t_env **env, int *exit_code)
 	int	cmdlist_len;
 	int	**pipematrix;
 	int	n_heredoc;
+
+	
 	//printlist(cmdlist);
 	n_heredoc = count_heredoc(cmdlist);
 	//printf("n_heredoc: %d\n", n_heredoc);
 	heredoc(cmdlist, n_heredoc);
 	//printallheredoclists(cmdlist, n_heredoc);
+	
 	cmdlist_len = listlen(cmdlist);
+	if (cmdlist_len == 0)
+		return;
 	if (cmdlist_len > 1)
 	{
+		
 		pipematrix = pipesalloc(cmdlist_len);
+		
 		pipex(cmdlist, cmdlist_len, pipematrix, env, exit_code);
 	}
 	else
