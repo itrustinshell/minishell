@@ -127,9 +127,9 @@ void 	listappend_redir(t_redir *node, t_redir **list);
 
 
 //EXECUTOR
-void		executor(t_cmd *cmdlist, t_env **env);
-int			pipex(t_cmd *cmdlist, int cmdlist_len, int **pipesarray, t_env **env);
-void		cmdex(t_cmd *cmd, t_env **env);
+void		executor(t_cmd *cmdlist, t_env **env, int *exit_code);
+int			pipex(t_cmd *cmdlist, int cmdlist_len, int **pipesarray, t_env **env, int *exit_code);
+void		cmdex(t_cmd *cmd, t_env **env, int *exit_code);
 int			builtinex(t_cmd *cmd, t_env **env);
 //executor utils
 void		ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist);

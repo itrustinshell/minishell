@@ -17,8 +17,10 @@ int main(int argc, char **argv, char **envp)
 	char		*inputstr;
 	char		**token_matrix;
 	t_cmd	*cmdlist;	
-	t_env		*env;	
+	t_env		*env;
+	int		exit_code;	
 
+	exit_code = 0;
 	(void)argc;
 	(void)argv;
 	(void)envp;
@@ -30,7 +32,7 @@ int main(int argc, char **argv, char **envp)
 		prompt(&inputstr);
 		token_matrix = tokenizer(inputstr); //TOKENIZER
 		cmdlist = parsing(token_matrix); //PARSING
-		executor(cmdlist, &env); //EXECUTOR
+		executor(cmdlist, &env, &exit_code); //EXECUTOR
 		free(inputstr);
 		inputstr = NULL;
 		ft_freematrix(token_matrix);

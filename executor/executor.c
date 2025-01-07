@@ -189,7 +189,7 @@ void	heredoc(t_cmd *cmd, int n_heredoc)
 }
 
 /*execute cmdlist*/
-void	executor(t_cmd *cmdlist, t_env **env)
+void	executor(t_cmd *cmdlist, t_env **env, int *exit_code)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
@@ -203,7 +203,7 @@ void	executor(t_cmd *cmdlist, t_env **env)
 	if (cmdlist_len > 1)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
-		pipex(cmdlist, cmdlist_len, pipematrix, env);
+		pipex(cmdlist, cmdlist_len, pipematrix, env, );
 	}
 	else
 		cmdex(cmdlist, env);
