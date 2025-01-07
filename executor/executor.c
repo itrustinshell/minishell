@@ -3,10 +3,11 @@
 /*execute pipes
 stats all forks in a while, then the father waits.
 */
-int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
+int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *exit_code)
 {
 	int			i;
 	t_cmd	*tmp_cmdlist;
+	int		status;
 
 	tmp_cmdlist = cmdlist;
 	if (!tmp_cmdlist)
@@ -22,7 +23,8 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env)
 	i = 0;
 	while (i < cmdlist_len)
 	{
-		wait(NULL);
+		wait(&status);
+		*exit_code = WEXITSTATUS(status);
 		i++;
 	}
 	return (0);
@@ -61,7 +63,7 @@ int	builtinex(t_cmd *cmd, t_env **env)
 }
 
 /*execute single command*/
-void	cmdex(t_cmd *cmd, t_env **env)
+void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	pid_t	pid;
 	int		status;
@@ -76,6 +78,7 @@ void	cmdex(t_cmd *cmd, t_env **env)
 		exit(1);
 	}
 	waitpid(pid, &status, 0);
+	*exit_code = WEXITSTATUS(status);
 }
 
 void heredoc_prompt(char **inputstr)
@@ -203,8 +206,8 @@ void	executor(t_cmd *cmdlist, t_env **env, int *exit_code)
 	if (cmdlist_len > 1)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
-		pipex(cmdlist, cmdlist_len, pipematrix, env, );
+		pipex(cmdlist, cmdlist_len, pipematrix, env, exit_code);
 	}
 	else
-		cmdex(cmdlist, env);
+		cmdex(cmdlist, env, exit_code);
 }

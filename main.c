@@ -33,6 +33,7 @@ int main(int argc, char **argv, char **envp)
 		token_matrix = tokenizer(inputstr); //TOKENIZER
 		cmdlist = parsing(token_matrix); //PARSING
 		executor(cmdlist, &env, &exit_code); //EXECUTOR
+		printf("sono nel main. Dopo executor. e questo è l'exit_code: %d\n", exit_code);
 		free(inputstr);
 		inputstr = NULL;
 		ft_freematrix(token_matrix);
