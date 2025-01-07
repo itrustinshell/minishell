@@ -1,12 +1,12 @@
 #include "../minishell.h"
 
 /*exec builtins or external cmd*/
-void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist)
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, int *exit_code)
 {
 	char	**envlist;
 	//printf("sono già entrato in execve\n");
 
-	if (builtinex(tmp_cmdlist, &genvlist) == 1)
+	if (builtinex(tmp_cmdlist, &genvlist, exit_code) == 1)
 		return ;
 	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
 	envlist = litoma(genvlist);
@@ -15,7 +15,7 @@ void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist)
 
 /*fork along the pipes*/
 void	pipefork(int **pipematrix, t_cmd *cmdlist, 
-		int i, int cmdlist_len, t_env **env)
+		int i, int cmdlist_len, t_env **env, int *exit_code)
 {
 	int	pid;
 	int	saved_stdout;
@@ -57,7 +57,7 @@ void	pipefork(int **pipematrix, t_cmd *cmdlist,
 			// 	printf("last inputredir is an HEREDOC\n");
 		}
 		pipeclose(pipematrix, cmdlist_len);
-		ft_execve(tmp_cmdlist, *env);
+		ft_execve(tmp_cmdlist, *env, exit_code);
 		exit(1);
 	}
 }

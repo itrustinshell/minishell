@@ -130,16 +130,16 @@ void 	listappend_redir(t_redir *node, t_redir **list);
 void		executor(t_cmd *cmdlist, t_env **env, int *exit_code);
 int			pipex(t_cmd *cmdlist, int cmdlist_len, int **pipesarray, t_env **env, int *exit_code);
 void		cmdex(t_cmd *cmd, t_env **env, int *exit_code);
-int			builtinex(t_cmd *cmd, t_env **env);
+int			builtinex(t_cmd *cmd, t_env **env, int *exit_code);
 //executor utils
-void		ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist);
+void		ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, int *exit_code);
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);
 int 		**pipesalloc(int cmdlist_len);
 int 		pipecheck(char **matrix);
 void		piperead(int **pipematrix, int i);
 void		pipewrite(int **pipematrix, int i);
 void		pipeclose(int **pipematrix, int cmdlist_len);
-void		pipefork(int **pipematrix,t_cmd *tmp_cmdlist, int i, int cmdlist_len, t_env **env);
+void		pipefork(int **pipematrix,t_cmd *tmp_cmdlist, int i, int cmdlist_len, t_env **env, int *exit_code);
 int			check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
 t_cmd 		*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_cmd **commandlist);
@@ -160,7 +160,7 @@ void	ft_free_n_matrix(char **matrix, int n);
 void	free_cmd(t_cmd *cmd);
 
 ///BUILTINS
-int		ft_echo(int argc, char **argv);
+int		ft_echo(int argc, char **argv, int *exit_code);
 int		ft_pwd();
 int		ft_cd(char **argv);
 void	ft_exit();

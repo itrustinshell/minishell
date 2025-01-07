@@ -17,7 +17,7 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *e
 	{
 		if (i > 0)
 			tmp_cmdlist = tmp_cmdlist->next;
-		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env);
+		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env, exit_code);
 	}
 	pipeclose(pipematrix, cmdlist_len);
 	i = 0;
@@ -31,7 +31,7 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *e
 }
 
 /*execute builtins*/
-int	builtinex(t_cmd *cmd, t_env **env)
+int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	a;
 
@@ -40,7 +40,7 @@ int	builtinex(t_cmd *cmd, t_env **env)
 		a = 0;
 		while (cmd->args[a])
 			a++;
-		ft_echo(a, cmd->args);
+		ft_echo(a, cmd->args, exit_code);
 		return (1);
 	}
 	else if (strcmp(cmd->cmd, "pwd") == 0)
@@ -68,7 +68,7 @@ void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 	pid_t	pid;
 	int		status;
 
-	if (builtinex(cmd, env))
+	if (builtinex(cmd, env, exit_code))
 		return ;
 	cmd->path = get_cmdpath(cmd->cmd);
 	pid = fork();

@@ -1,9 +1,14 @@
+
+
 #include "../minishell.h"
 
-int	ft_echo(int argc, char **argv)
+//TODO: gestire gli exit code...il momento in cui agirnare o stampare con echo, e il ritorno di tutti gli altri.
+
+int	ft_echo(int argc, char **argv, int *exit_code)
 {
 	int	i;
 
+	(void)exit_code;
 	if (strcmp(argv[1], "-n") == 0)
 	{
 		i = 2;
