@@ -5,17 +5,18 @@ stats all forks in a while, then the father waits.
 */
 int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *exit_code)
 {
-	int			i;
+	int		i;
 	t_cmd	*tmp_cmdlist;
 	int		status;
 
 	tmp_cmdlist = cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
+	//i'm goingo to go through all the commands forking all of them
 	i = -1;
 	while (++i < cmdlist_len)
 	{
-		if (i > 0)
+		if (i > 0) //if there is only one node this if winn never be executed and we will never have a next
 			tmp_cmdlist = tmp_cmdlist->next;
 		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env, exit_code);
 	}
