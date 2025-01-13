@@ -144,12 +144,12 @@ int			check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
 t_cmd 		*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void 		commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_cmd **commandlist);
 t_redir		*redirlist_for_pipe(char **tokenmatrix, int token_index);
-int			ioa_redirops(t_redir *redirlist, int saved_stdout);
+int			ihoa_redirops(t_redir *redirlist, int saved_stdout);
 void 		oa_redirops(t_redir *redirlist);
 int			oa_rediropen(t_redir *redirlist);
 void		oa_redirwrite(t_redir *redirnode);
 t_redir		*oa_redirlast(t_redir *redirlist);
-t_redir		*i_redirlast(t_redir *redirlist);
+t_redir		*ih_redirlast(t_redir *redirlist);
 void		printallheredoclists(t_cmd *cmd);
 int			count_heredoc(t_cmd *cmd);
 

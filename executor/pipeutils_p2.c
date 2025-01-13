@@ -25,7 +25,7 @@ void	pipefork(int **pipematrix, t_cmd *cmdlist,
 	int	pid;
 	int	saved_stdout;
 	int	n_heredoc;
-	int	i_ret;
+	int	ret;
 	t_cmd *tmp_cmdlist;
 
 	tmp_cmdlist = cmdlist;
@@ -51,33 +51,21 @@ void	pipefork(int **pipematrix, t_cmd *cmdlist,
 			ricambiare lo standard input facendolo corrispondere ad esempio al filde_descriptor
 			di un file che segue l'input redirection...Stesse considerazioni valgono 
 			per outpu, append redirection. ioa reirops infatti sta per "input output append redirection operation"*/
-			i_ret = ioa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+			ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
 			/*se ioa_redirops ritorna 0 significa che c'è stato un errore.
 				in particolare c'era un input redirection, ma quest'ultima aveva come
 				suo riferimento per l'input, un file inesistente.
 			*/
-			if (i_ret == 0) 
+			if (ret == 0) 
 				exit(1);
-			// else if (i_ret == 2)
-			// 	printf("NO iredr o heredoc found!!!\n");
-			// else if (i_ret == 3)
-			// 	printf("last inputredir is an iredir and it is OK\n");
-			// else if (i_ret == 4)
-			// 	printf("last inputredir is an HEREDOC\n");
 		}
 		if (tmp_cmdlist->next)
 		{
 			pipewrite(pipematrix, i);
-			i_ret = ioa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+			ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
 			printf("sono stati rilevati %d heredoc\n", n_heredoc);
-			if (i_ret == 0)
+			if (ret == 0)
 				exit(1);			
-			// else if (i_ret == 2)
-			// 	printf("NO iredr o heredoc found!!!\n");
-			// else if (i_ret == 3)
-			// 	printf("last inputredir is an iredir and it is OK\n");
-			// else if (i_ret == 4)
-			// 	printf("last inputredir is an HEREDOC\n");
 		}
 		pipeclose(pipematrix, cmdlist_len);
 		ft_execve(tmp_cmdlist, *env, exit_code);

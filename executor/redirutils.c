@@ -75,7 +75,7 @@ t_redir	*oa_redirlast(t_redir *redirlist)
 }
 
 /*finds last input redirections*/
-t_redir	*i_redirlast(t_redir *redirlist)
+t_redir	*ih_redirlast(t_redir *redirlist)
 {
 	t_redir	*tmp_redirlist;
 	t_redir	*ret;
