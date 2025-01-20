@@ -2,41 +2,57 @@
 
 void prompt(char **inputstr)
 {
-	size_t len;
-	char *cwdpath;
+    //size_t len;
+    char *cwdpath;
 
-	len = 0;
-	*inputstr = NULL;
-	cwdpath = getcwd(NULL, 0);
-	printf("%s💪💪💪: ", cwdpath);
-	getline(inputstr, &len, stdin); //free di inputstr fatto!
+    //len = 0;
+    *inputstr = NULL;
+    cwdpath = getcwd(NULL, 0);
+    printf("%s💪💪💪: ", cwdpath);
+    free(cwdpath);
+    *inputstr = readline(""); // Usando readline invece di getline per consistenza
+    //if (*inputstr)
+    //    add_history(*inputstr);
 }
 
 int main(int argc, char **argv, char **envp)
 {
-	char		*inputstr;
-	char		**token_matrix;
-	t_cmd	*cmdlist;	
-	t_env		*env;
-	int		exit_code;	
+    char    *inputstr;
+    t_cmd   *cmdlist;    
+    t_env   *env;
+    int     exit_code;    
 
-	exit_code = 0;
-	(void)argc;
-	(void)argv;
-	(void)envp;
-	env = NULL;
-	//env = copy_env(envp);
-	while (1)
-	{	
-		inputstr = NULL;
-		prompt(&inputstr);
-		token_matrix = tokenizer(inputstr); //TOKENIZER
-		cmdlist = parsing(token_matrix); //PARSING
-		executor(cmdlist, &env, &exit_code); //EXECUTOR
-		//printf("sono nel main. Dopo executor. e questo è l'exit_code: %d\n", exit_code);
-		free(inputstr);
-		inputstr = NULL;
-		ft_freematrix(token_matrix);
-	}
-	return (0);
+    exit_code = 0;
+    (void)argc;
+    (void)argv;
+    env = NULL;
+    //env = copy_envp(envp);
+
+    while (1)
+    {    
+        inputstr = NULL;
+        prompt(&inputstr);
+        
+        if (!inputstr) // Gestione di Ctrl+D (EOF)
+            break;
+            
+        if (inputstr[0] != '\0') // Ignora linee vuote
+        {
+            cmdlist = parse_input(inputstr);
+            if (cmdlist)
+            {
+                executor(cmdlist, &env, &exit_code);
+                free_cmd(cmdlist);
+            }
+        }
+        
+        free(inputstr);
+        inputstr = NULL;
+    }
+
+    // Cleanup finale
+    if (env)
+        ft_freelist(env);
+    printf("exit\n");
+    return (exit_code);
 }

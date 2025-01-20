@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/types.h>  // For pid_t
 #include <sys/wait.h>   // For wait()
+#include "libft/libft.h"
 
 /*----colori-----*/
 #define RESET   "\033[0m"
@@ -97,6 +98,7 @@ typedef struct s_redir
 
 typedef struct s_cmd
 {
+	int					argc;
 	char				*cmd;
 	char				**args;
 	char				*path;
@@ -190,9 +192,8 @@ void 	redirinit(t_redir *node);
 void	printlist(t_cmd *cmdlist);
 
 //GENERAL utils
-char	**ft_split(char *str, char separator);
-int		ft_isspace(char char_to_check);
 char	*strjoin(char *str, char *separator);
-int		ft_strlen(char *str);
 int		matrixlen(char **matrix);
 char	**litoma(t_env *envlist);
+
+t_cmd *parse_input(char *input);
