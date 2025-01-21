@@ -1,0 +1,17 @@
+Makefile
+a
+b
+builtins
+executor
+main.c
+main.o
+minishell
+minishell.h
+minishell_subject.pdf
+parsing.c
+parsing.o
+test
+tokenizer
+utils
+zzz_cartella_da_cancellare_alla_fine
+zzz_studying

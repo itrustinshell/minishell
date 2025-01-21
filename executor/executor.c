@@ -32,6 +32,7 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *e
 }
 
 /*execute builtins*/
+
 int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	a;
@@ -68,6 +69,10 @@ void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	pid_t	pid;
 	int		status;
+	int		ret;
+	int		saved_stdout;
+
+	saved_stdout = dup(STDOUT_FILENO);
 
 	if (builtinex(cmd, env, exit_code))
 		return ;
@@ -75,6 +80,9 @@ void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 	pid = fork();
 	if (pid == 0)
 	{
+		ret = ihoa_redirops(cmd->redirlist, saved_stdout);	
+		if (ret == 0)
+			exit(1);
 		execve(cmd->path, cmd->args, NULL);
 		exit(1);
 	}
