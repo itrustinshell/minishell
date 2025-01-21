@@ -2,11 +2,13 @@ Makefile
 a
 builtins
 executor
+libft
 main.c
 main.o
 minishell
 minishell.h
 minishell_subject.pdf
+parser.o
 parsing.c
 parsing.o
 test
