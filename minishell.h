@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <readline/readline.h>
-#include <readline/history.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -99,12 +98,12 @@ typedef struct s_redir
 
 typedef struct s_cmd
 {
-	int					argc;
 	char				*cmd;
 	char				**args;
 	char				*path;
 	struct s_cmd		*next;
 	t_redir				*redirlist;
+	int					argc;
 } t_cmd;
 
 /*-----tests---------*/
@@ -193,8 +192,8 @@ void 	redirinit(t_redir *node);
 void	printlist(t_cmd *cmdlist);
 
 //GENERAL utils
+int		ft_isspace(char char_to_check);
 char	*strjoin(char *str, char *separator);
 int		matrixlen(char **matrix);
 char	**litoma(t_env *envlist);
-
 t_cmd *parse_input(char *input);

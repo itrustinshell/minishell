@@ -143,7 +143,7 @@ t_cmd *create_command(t_list *tokens)
         else if (current_tok->type == LEFT_ARG)
         {
             token_size = ft_strlen(current_tok->value);
-            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), INPUT_REDIR);
+            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), INPUT_REDIRECTION);
             if (!redir || !redir->file)
                 return (NULL);
             ft_strncpy(redir->file, current_tok->value, token_size);
@@ -152,7 +152,7 @@ t_cmd *create_command(t_list *tokens)
         else if (current_tok->type == RIGHT_ARG)
         {
             token_size = ft_strlen(current_tok->value);
-            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), OUT_REDIR);
+            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), OUTPUT_REDIRECTION);
             if (!redir || !redir->file)
                 return (NULL);
             ft_strncpy(redir->file, current_tok->value, token_size);
