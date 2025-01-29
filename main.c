@@ -1,13 +1,50 @@
 #include "minishell.h"
+#include <signal.h>
+
+static int g_signal_received = 0;
+
+void handle_sigint(int sig)
+{
+    (void)sig;
+    g_signal_received = 1;
+    printf("\n");
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
+
+void handle_sigquit(int sig)
+{
+    (void)sig;
+    g_signal_received = 2;
+}
+
+void setup_signals(void)
+{
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
+
+    // Setup SIGINT (Ctrl-C)
+    sa_int.sa_handler = handle_sigint;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+    sigaction(SIGINT, &sa_int, NULL);
+
+    // Setup SIGQUIT (Ctrl-\)
+    sa_quit.sa_handler = handle_sigquit;
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags = 0;
+    sigaction(SIGQUIT, &sa_quit, NULL);
+}
 
 void prompt(char **inputstr)
 {
-	char *cwdpath;
+    char *cwdpath;
     char *cwdpath_modified;
     int   len;
 
-	cwdpath = getcwd(NULL, 0);
-	len = ft_strlen(cwdpath);
+    cwdpath = getcwd(NULL, 0);
+    len = ft_strlen(cwdpath);
 
     cwdpath_modified = malloc(len + 3);
     strcpy(cwdpath_modified, cwdpath);
@@ -16,24 +53,26 @@ void prompt(char **inputstr)
     cwdpath_modified[len + 2] = '\0';
 
     *inputstr = readline(cwdpath_modified);
+    
+    free(cwdpath);
+    free(cwdpath_modified);
+    
     if (*inputstr) 
     {
         size_t len = strlen(*inputstr);
-        char *with_newline = malloc(len + 2); // +1 per '\n' e +1 per '\0'
+        char *with_newline = malloc(len + 2);
         if (!with_newline) 
+        {
             free(*inputstr);
+            return;
+        }
         strcpy(with_newline, *inputstr);
-        with_newline[len] = '\0'; //ho dovuto aggiungere qui un \0 al posto del \n precedentemente aggiuto. Pecckè a storie iev abbascie. Damn holy nothing.
-        with_newline[len + 1] = '\0'; //let's go to see (iamm a vrè)
+        with_newline[len] = '\0';
+        with_newline[len + 1] = '\0';
         free(*inputstr);
         *inputstr = with_newline;
-    }
-    if (*inputstr)
-    {
         add_history(*inputstr);
     }
-    else
-        printf("weeee\n");
 }
 
 int main(int argc, char **argv, char **envp)
@@ -49,20 +88,34 @@ int main(int argc, char **argv, char **envp)
     env = NULL;
     //env = copy_envp(envp);
 
+    setup_signals();
+
     while (1)
     {    
+        g_signal_received = 0;
         inputstr = NULL;
         prompt(&inputstr);
         
-        if (!inputstr) // Gestione di Ctrl+D (EOF)
+        if (!inputstr) // Handle Ctrl-D (EOF)
+        {
+            printf("\nexit\n");
             break;
+        }
             
-        if (inputstr[0] != '\0') // Ignora linee vuote
+        if (inputstr[0] != '\0') // Ignore empty lines
         {
             cmdlist = parse_input(inputstr);
             if (cmdlist)
             {
                 executor(cmdlist, &env, &exit_code);
+                if (g_signal_received == 2)  // If SIGQUIT was received
+                {
+                    printf("Quit (core dumped)\n");
+                    exit_code = 131;
+                    free_cmd(cmdlist);
+                    free(inputstr);
+                    break;
+                }
                 free_cmd(cmdlist);
             }
         }
@@ -71,9 +124,7 @@ int main(int argc, char **argv, char **envp)
         inputstr = NULL;
     }
 
-    // Cleanup finale
     if (env)
         ft_freelist(env);
-    printf("exit\n");
     return (exit_code);
 }
