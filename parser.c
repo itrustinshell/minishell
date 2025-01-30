@@ -170,10 +170,11 @@ t_cmd *create_command(t_list *tokens)
         else if (current_tok->type == HEREDOC_ARG)
         {
             token_size = ft_strlen(current_tok->value);
-            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), HEREDOC);
-            if (!redir || !redir->file)
+            t_redir *redir = new_redir(NULL, HEREDOC);
+            redir->delimiter = (char *)calloc(token_size + 1, sizeof(char));
+            if (!redir || !redir->delimiter)
                 return (NULL);
-            ft_strncpy(redir->file, current_tok->value, token_size);
+            ft_strncpy(redir->delimiter, current_tok->value, token_size);
             listappend_redir(redir, &cmd->redirlist);
         }
         else if (current_tok->type == APPEND_ARG)
