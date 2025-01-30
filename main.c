@@ -47,9 +47,11 @@ int main(int argc, char **argv, char **envp)
 	exit_code = 0;
 	(void)argc;
 	(void)argv;
-	(void)envp;
+	
 	env = NULL;
-	//env = copy_env(envp);
+	printf("wewe\n");
+	env = copy_envp(envp);
+	printf("ioioooooo\n");
 	while (1)
 	{	
 		inputstr = NULL;

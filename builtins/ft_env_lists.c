@@ -4,7 +4,7 @@ t_env	*create_lenvnode(char *str)
 {
 	t_env	*new;
 	char	**splittedstr;
-
+	printf("i'm creating a newnode\n");
 	new = NULL;
 	splittedstr = NULL;
 	splittedstr = ft_split(str, '=');
@@ -17,7 +17,8 @@ t_env	*create_lenvnode(char *str)
 	}
 	init_envnode(new);
 	new->name = strdup(splittedstr[0]);
-	new->value = strdup(splittedstr[1]);
+	if (splittedstr[1] != NULL)	
+		new->value = strdup(splittedstr[1]);
 	return (new);
 }
 

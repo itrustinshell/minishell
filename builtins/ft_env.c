@@ -26,12 +26,12 @@ t_env	*copy_envp(char **envp)
 	while (envp[i])
 	{
 		envnode = create_lenvnode(envp[i]);
-		if (!envnode)
+		/*if (!envnode)
 		{
 			ft_freelist(envlist);
 			return (NULL);
 		}
-		envlist_append(envnode, &envlist);
+*/		envlist_append(envnode, &envlist);	
 		i++;
 	}
 	return (envlist);
