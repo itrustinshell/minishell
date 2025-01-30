@@ -19,6 +19,8 @@ enum token_type
     DOUBLE_RIGHT,
     LEFT_ARG,
     RIGHT_ARG,
+    APPEND_ARG,
+    HEREDOC_ARG
 };
 
 typedef struct s_tkn
@@ -75,10 +77,17 @@ void get_token_type(t_tkn *token, t_list *tokens)
         last_node = ft_lstlast(tokens);
         if (last_node)
             last_token = (t_tkn *)last_node->content;
-        if (last_node && (last_token->type == DOUBLE_LEFT || last_token->type == LEFT))
+        
+        if (last_node && last_token->type == LEFT)
             token->type = LEFT_ARG;
-        else if (last_node && (last_token->type == DOUBLE_RIGHT || last_token->type == RIGHT))
+        else if (last_node && (last_token->type == DOUBLE_LEFT))
+            token->type = HEREDOC_ARG;
+
+        else if (last_node && last_token->type == RIGHT)
             token->type = RIGHT_ARG;
+        else if (last_node && last_token->type == DOUBLE_RIGHT)
+            token->type = APPEND_ARG;
+
         else if(last_node && (last_token->type == COMMAND || last_token->type == ARG))
             token->type = ARG;
         else if (!last_node || !has_command(tokens))
@@ -153,6 +162,24 @@ t_cmd *create_command(t_list *tokens)
         {
             token_size = ft_strlen(current_tok->value);
             t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), OUTPUT_REDIRECTION);
+            if (!redir || !redir->file)
+                return (NULL);
+            ft_strncpy(redir->file, current_tok->value, token_size);
+            listappend_redir(redir, &cmd->redirlist);
+        }
+        else if (current_tok->type == HEREDOC_ARG)
+        {
+            token_size = ft_strlen(current_tok->value);
+            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), HEREDOC);
+            if (!redir || !redir->file)
+                return (NULL);
+            ft_strncpy(redir->file, current_tok->value, token_size);
+            listappend_redir(redir, &cmd->redirlist);
+        }
+        else if (current_tok->type == APPEND_ARG)
+        {
+            token_size = ft_strlen(current_tok->value);
+            t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), APPEND_REDIRECTION);
             if (!redir || !redir->file)
                 return (NULL);
             ft_strncpy(redir->file, current_tok->value, token_size);
