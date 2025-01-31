@@ -8,6 +8,7 @@
 #include <sys/wait.h>   // For wait()
 #include "libft/libft.h"
 
+#define BOOL char
 /*----colori-----*/
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -62,6 +63,27 @@
 #define APPEND_REDIR 3
 #define HEREDOC 4
 
+enum token_type
+{
+    INVALID,
+    COMMAND,
+    ARG,
+    LEFT,
+    RIGHT,
+    DOUBLE_LEFT,
+    DOUBLE_RIGHT,
+    LEFT_ARG,
+    RIGHT_ARG,
+    APPEND_ARG,
+    HEREDOC_ARG
+};
+
+typedef struct s_tkn
+{
+    unsigned int    len;
+    char           *value;
+    enum token_type type;
+} t_tkn;
 
 typedef struct s_token
 {
