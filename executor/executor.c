@@ -61,10 +61,18 @@ int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 		ft_exit();
 		return (1);
 	}
+	else if(strcmp(cmd->cmd, "unset") == 0)
+	{
+		ft_unset(cmd->args[1], env);	
+		return(1);	
+	}	
 	return (0);
 }
 
-/*execute single command*/
+/*execute single command
+it first try for builtin.
+If there are no builtin it 
+continues executind external command*/
 void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	pid_t	pid;

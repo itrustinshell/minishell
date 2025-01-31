@@ -86,8 +86,7 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     env = NULL;
-    //env = copy_envp(envp);
-
+	env = copy_envp(envp);
     setup_signals();
 
     while (1)
