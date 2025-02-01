@@ -6,6 +6,7 @@
 - isspace
 - strcmp
 - atoi
+- isdigit
 
 aaa:se premo piu volte tab mi fa ls
 */
