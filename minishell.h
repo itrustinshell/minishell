@@ -187,7 +187,7 @@ void	free_cmd(t_cmd *cmd);
 int		ft_echo(int argc, char **argv, int *exit_code);
 int		ft_pwd();
 int		ft_cd(char **argv);
-void	ft_exit();
+void	ft_exit(int n_args, char **args);
 void	ft_export(char *namevar, t_env **env);
 int		ft_env(t_env *lenvlist);
 int 	ft_unset(char *namevar, t_env **list);

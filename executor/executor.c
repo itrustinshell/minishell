@@ -35,14 +35,14 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *e
 
 int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 {
-	int	a;
+	int	argc;
 
 	if (strcmp(cmd->cmd, "echo") == 0)
 	{
-		a = 0;
-		while (cmd->args[a])
-			a++;
-		ft_echo(a, cmd->args, exit_code);
+		argc = 0;
+		while (cmd->args[argc])
+			argc++;
+		ft_echo(argc, cmd->args, exit_code);
 		return (1);
 	}
 	else if (strcmp(cmd->cmd, "pwd") == 0)
@@ -58,8 +58,11 @@ int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 		return (ft_env(*env));
 	else if (strcmp(cmd->cmd, "exit") == 0)
 	{
-		ft_exit();
-		return (1);
+		argc = 0;
+		while (cmd->args[argc])
+			argc++;
+		ft_exit(argc, cmd->args);
+		return (1); //probablimente va tolto perche'sei dopo exit...ma vedi bene
 	}
 	else if(strcmp(cmd->cmd, "unset") == 0)
 	{

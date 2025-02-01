@@ -123,7 +123,9 @@ t_cmd	*create_command(t_list *tokens)
 			if (!cmd->cmd)
 				return (NULL);
 			ft_strncpy(cmd->cmd, current_tok->value, token_size);
+			printf("eh\n");
 			cmd->path = get_cmdpath(cmd->cmd);
+			printf("wa\n");
 			cmd->args[0] = ft_strdup(cmd->cmd);
 		}
 		else if (current_tok->type == ARG)

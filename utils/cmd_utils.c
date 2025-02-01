@@ -1,6 +1,16 @@
 #include "../minishell.h"
 
-/* Ottieni il percorso del comando */
+/*	DESCRIPTION:
+		Ottieni il percorso del comando.
+		Qusta funzione si applica a prescindere a tutti i comandi.
+		Pertanto si applica anche alle builtins.
+		Ovviamente se il comando non e'un comando esterno,
+		non verra' trovata alcuna corrispondenza.
+		Attenzione ai casi in cui come echo ci sono comandi esterni.
+		In questo ultimo caso e'trovato effettivamente un path.
+		Tuttavia al momento della esecuzione verra'eseguito 
+		ft_echo (come builtin).
+*/
 char *get_cmdpath(char *cmd)
 {
 	char *path;
