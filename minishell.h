@@ -220,4 +220,4 @@ int		ft_isspace(char char_to_check);
 char	*strjoin(char *str, char *separator);
 int		matrixlen(char **matrix);
 char	**litoma(t_env *envlist);
-t_cmd *parse_input(char *input);
+t_cmd 	*parse_input(char *input);

@@ -56,8 +56,7 @@ int	exportcheck(char **matrix)
 			return (1);
 		}
 	}
-	else
-	{
+	else	{
 		if (matrixlen(matrix) > 3)
 		{
 			printf("AAA: il simbolo di uguale c'è ma ci sono troppi argomenti\n");
@@ -88,6 +87,7 @@ void addto_globalenv(t_env **local_envlist, char *str)
 
 t_env *access_envar(char *namevar, t_env *list) //verifica se esiste la variabile
 {
+	printf("sono alla ricercaquesta variabile: %s\n", namevar);
 	t_env	*tmp_list;
 
 	if (!list)
@@ -103,6 +103,8 @@ t_env *access_envar(char *namevar, t_env *list) //verifica se esiste la variabil
 	tmp_list = list;
 	while (tmp_list)
 	{
+		printf("ecco tmp_list->name: %s\n", tmp_list->name);
+		printf("namevar: %s\n", namevar);
 		if (strcmp(tmp_list->name, namevar) == 0)
 		{
 			printf("SI! La variabile ESISTE\n");
@@ -114,6 +116,29 @@ t_env *access_envar(char *namevar, t_env *list) //verifica se esiste la variabil
 	return (NULL);
 }
 
+t_env	*create_lenvnode(char *str)
+{
+	t_env	*new;
+	char	**splittedstr;
+	//printf("i'm creating a newnode\n");
+	new = NULL;
+	splittedstr = NULL;
+	splittedstr = ft_split(str, '=');
+	if (!splittedstr)
+		return (NULL);
+	new = (t_env *)malloc(sizeof(t_env));
+	if (!new)
+	{
+		return (NULL);
+	}
+	init_envnode(new);
+	new->name = strdup(splittedstr[0]);
+	if (splittedstr[1] != NULL)	
+		new->value = strdup(splittedstr[1]);
+	return (new);
+}
+
+
 void	ft_export(char *namevar, t_env **global_envlist)
 {
 	t_env	*found_global_envar;
@@ -122,7 +147,7 @@ void	ft_export(char *namevar, t_env **global_envlist)
 	new_node = create_lenvnode(namevar);
 	if (new_node)
 		printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", new_node->name, new_node->value);
-	found_global_envar = access_envar(new_node->value, *global_envlist);
+	found_global_envar = access_envar(new_node->name, *global_envlist);
 	if (found_global_envar)
 	{
 		printf("la variabile già esiste nell'ambiente globale!");

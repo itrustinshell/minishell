@@ -1,27 +1,5 @@
 #include "../minishell.h"
 
-t_env	*create_lenvnode(char *str)
-{
-	t_env	*new;
-	char	**splittedstr;
-	//printf("i'm creating a newnode\n");
-	new = NULL;
-	splittedstr = NULL;
-	splittedstr = ft_split(str, '=');
-	if (!splittedstr)
-		return (NULL);
-	new = (t_env *)malloc(sizeof(t_env));
-	if (!new)
-	{
-		return (NULL);
-	}
-	init_envnode(new);
-	new->name = strdup(splittedstr[0]);
-	if (splittedstr[1] != NULL)	
-		new->value = strdup(splittedstr[1]);
-	return (new);
-}
-
 void	init_envnode(t_env *env)
 {
 	if (!env)

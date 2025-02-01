@@ -9,8 +9,14 @@
 - isdigit
 
 - nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
+- con gli apici doppi si rompe (sono riconosciute le pipe)
+- con gli apici singoli si rompe
+- le variabili $ non sono espanse nei doppi apici (non viene restituito alcun token)
+- 
+-
 
--aaa:se premo piu volte tab mi fa ls
+
+- aaa:se premo piu volte tab mi fa ls
 */
 
 static int g_signal_received = 0;
