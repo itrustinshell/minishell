@@ -138,18 +138,34 @@ t_env	*create_lenvnode(char *str)
 	return (new);
 }
 
+void	update_envar_value(t_env *found_global_envar, char *envar_value)
+{
+	if (strcmp(found_global_envar->value, envar_value) == 0)
+	{
+		printf("non c'é bisogno di aggiornare\n");
+		return ;
+	}
+	printf("bisogna aggiornare\n");
+	free(found_global_envar->value);
+	found_global_envar->value = strdup(envar_value);
+	//free(envar_value);
+	
+	return;
+		
+}
 
-void	ft_export(char *namevar, t_env **global_envlist)
+void	ft_export(char *envar_name, t_env **global_envlist)
 {
 	t_env	*found_global_envar;
 	t_env	*new_node;
 
-	new_node = create_lenvnode(namevar);
+	new_node = create_lenvnode(envar_name);
 	if (new_node)
 		printf("il nodo esiste. Il name è %s, mentre il valore è %s\n", new_node->name, new_node->value);
 	found_global_envar = access_envar(new_node->name, *global_envlist);
 	if (found_global_envar)
 	{
+		update_envar_value(found_global_envar, new_node->value);
 		printf("la variabile già esiste nell'ambiente globale!");
 		return ;
 	}
