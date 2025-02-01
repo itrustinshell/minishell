@@ -22,7 +22,7 @@ int	ft_echo(int argc, char **argv, int *exit_code)
 		}
 		printf("%s", argv[i]);
 	}
-	else if (strcmp(argv[1], "$?") == 0)
+	else if (argc == 2 && strcmp(argv[1], "$?") == 0)
 		printf("Last process exit-code: %d\n", *exit_code);
 	else
 	{
@@ -34,10 +34,16 @@ int	ft_echo(int argc, char **argv, int *exit_code)
 		i = 1;
 		while (i < argc - 1)
 		{
-			printf("%s ", argv[i]);
+			if (argv[i][0] == '$' && argv[i][1] == '?')
+				printf("%d ", *exit_code);
+			else
+				printf("%s ", argv[i]);
 			i++;
 		}
-		printf("%s\n", argv[i]);
+		if (argv[i][0] == '$' && argv[i][1] == '?')
+				printf("%d\n", *exit_code);
+		else
+			printf("%s\n", argv[i]);
 	}
 	return (1);
 }

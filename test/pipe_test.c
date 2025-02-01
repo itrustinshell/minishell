@@ -55,7 +55,7 @@ void	printlist(t_cmd *cmdlist)
 	tmp_cmdlist = cmdlist;
 	while (tmp_cmdlist)
 	{
-		printf("ecco il comando: %s\n", tmp_cmdlist->cmd);
+		//printf("ecco il comando: %s\n", tmp_cmdlist->cmd);
 		if (tmp_cmdlist->args)
 		{
 			printf("ecco gli argomenti di %s:\n", tmp_cmdlist->cmd);

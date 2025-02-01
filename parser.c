@@ -280,7 +280,7 @@ t_cmd	*parse_command(char *command_string)
 			strncpy(token->value, beginning, token->len);
 			//fine del blocco aggiunto da largenzi
 		}
-		else if (*command_string == '$')
+		else if (*command_string == '$' && *(command_string + 1) != '?')
 		{
 			//printf("trovato\n");
 			//printf("ecco cosa viene dopo: %c\n", *(command_string + 1));
@@ -297,13 +297,24 @@ t_cmd	*parse_command(char *command_string)
 			expand(&token->value);
 		}
 		else if (*command_string)
-		{
-			printf("ecco command_string: %c\n", *(command_string));
+		{ //aaa anche in questo else if ho aggionto del codice perche'vanno gestite le espressioni del tipo $? +$?
+			//printf("ecco command_string: %c\n", *(command_string));
 			beginning = command_string;
-			while ((is_valid_arg_char(*command_string)) && *command_string)
+			if (*(command_string + 1) == '?')
 			{
-				command_string++;
-				token -> len++;
+				while (*command_string && *command_string != ' ')
+				{
+					command_string++;
+					token -> len++;
+				}
+			}
+			else //ho aggiunto questo else prrch' ho messo un elseif prtima... e dentro ho messo il blocco originale
+			{
+				while ((is_valid_arg_char(*command_string)) && *command_string)
+				{
+					command_string++;
+					token -> len++;
+				}
 			}
 			// Here i have a new token
 			token->value = (char *)calloc(token->len + 1, sizeof(char));
