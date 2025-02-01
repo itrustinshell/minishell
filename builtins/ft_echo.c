@@ -26,7 +26,10 @@ int	ft_echo(int argc, char **argv, int *exit_code)
 	else
 	{
 		if (argc == 1)
+		{
+			printf("\n");
 			return (1);
+		}
 		i = 1;
 		while (i < argc - 1)
 		{
