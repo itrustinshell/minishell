@@ -1,5 +1,13 @@
 #include "minishell.h"
 #include <signal.h>
+#include<readline/history.h>
+
+/*TODO: 
+- isspace
+- strcmp
+
+aaa:se premo piu volte tab mi fa ls
+*/
 
 static int g_signal_received = 0;
 
@@ -101,7 +109,7 @@ int main(int argc, char **argv, char **envp)
             break;
         }
             
-        if (inputstr[0] != '\0') // Ignore empty lines
+        if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0) // Ignore empty lines
         {
             cmdlist = parse_input(inputstr);
             if (cmdlist)
@@ -111,15 +119,14 @@ int main(int argc, char **argv, char **envp)
                 {
                     printf("Quit (core dumped)\n");
                     exit_code = 131;
-                    free_cmd(cmdlist);
-                    free(inputstr);
+                    //free_cmd(cmdlist); tolti a causa di double free
+                    //free(inputstr); tolti a causa di double free
                     break;
                 }
-                free_cmd(cmdlist);
+                //free_cmd(cmdlist); tolti a causa di double free
             }
         }
-        
-        free(inputstr);
+        free(inputstr); 
         inputstr = NULL;
     }
 

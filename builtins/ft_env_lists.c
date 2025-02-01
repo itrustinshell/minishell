@@ -4,7 +4,7 @@ t_env	*create_lenvnode(char *str)
 {
 	t_env	*new;
 	char	**splittedstr;
-	printf("i'm creating a newnode\n");
+	//printf("i'm creating a newnode\n");
 	new = NULL;
 	splittedstr = NULL;
 	splittedstr = ft_split(str, '=');
