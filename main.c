@@ -116,7 +116,7 @@ int main(int argc, char **argv, char **envp)
         if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0) // Ignore empty lines
         {
             cmdlist = parse_input(inputstr);
-            //printlist(cmdlist);
+            printlist(cmdlist);
             if (cmdlist)
             {
                 executor(cmdlist, &env, &exit_code);
