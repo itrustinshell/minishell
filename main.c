@@ -8,7 +8,9 @@
 - atoi
 - isdigit
 
-aaa:se premo piu volte tab mi fa ls
+- nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
+
+-aaa:se premo piu volte tab mi fa ls
 */
 
 static int g_signal_received = 0;

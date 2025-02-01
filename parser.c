@@ -123,9 +123,9 @@ t_cmd	*create_command(t_list *tokens)
 			if (!cmd->cmd)
 				return (NULL);
 			ft_strncpy(cmd->cmd, current_tok->value, token_size);
-			printf("eh\n");
+			//printf("eh\n");
 			cmd->path = get_cmdpath(cmd->cmd);
-			printf("wa\n");
+			//printf("wa\n");
 			cmd->args[0] = ft_strdup(cmd->cmd);
 		}
 		else if (current_tok->type == ARG)
@@ -266,8 +266,24 @@ t_cmd	*parse_command(char *command_string)
 			strncpy(token->value, beginning, token->len);
 			command_string++;
 		}
+		else if(*command_string == '$' && *(command_string + 1) == '?' && *(command_string + 2) == '\0')
+		{ //AAA questo blocco di esle e'stato aggiungo da largenzi per gestire echo $?
+			//printf("stai bell\n");
+			beginning = command_string;
+			while (*command_string)
+			{
+				command_string++;
+				token -> len++;
+			}
+			// Here i have a new token
+			token->value = (char *)calloc(token->len + 1, sizeof(char));
+			strncpy(token->value, beginning, token->len);
+			//fine del blocco aggiunto da largenzi
+		}
 		else if (*command_string == '$')
 		{
+			//printf("trovato\n");
+			//printf("ecco cosa viene dopo: %c\n", *(command_string + 1));
 			//printf("Found env variable\n");
 			beginning = ++command_string;
 			while (*command_string && is_valid_arg_char(*command_string))
@@ -282,6 +298,7 @@ t_cmd	*parse_command(char *command_string)
 		}
 		else if (*command_string)
 		{
+			printf("ecco command_string: %c\n", *(command_string));
 			beginning = command_string;
 			while ((is_valid_arg_char(*command_string)) && *command_string)
 			{

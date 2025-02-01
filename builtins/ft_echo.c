@@ -12,7 +12,6 @@ int	ft_echo(int argc, char **argv, int *exit_code)
 {
 	int	i;
 
-	(void)exit_code;
 	if (argv[1] && strcmp(argv[1], "-n") == 0)
 	{
 		i = 2;
@@ -23,6 +22,8 @@ int	ft_echo(int argc, char **argv, int *exit_code)
 		}
 		printf("%s", argv[i]);
 	}
+	else if (strcmp(argv[1], "$?") == 0)
+		printf("Last process exit-code: %d\n", *exit_code);
 	else
 	{
 		if (argc == 1)
