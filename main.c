@@ -2,23 +2,23 @@
 #include <signal.h>
 #include<readline/history.h>
 
+
+/* PROBLEMATICHE RISCONTRATE
+- nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
+- con gli apici doppi si rompe (sono riconosciute le pipe)
+- con gli apici singoli si rompe
+- le variabili $ non sono espanse nei doppi apici (non viene restituito alcun token)
+- le pipe non vanno
+- aaa:se premo piu volte tab mi fa ls
+*/
+
+
 /*TODO: 
 - isspace
 - strcmp
 - atoi
 - isdigit
-
-- nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
-- con gli apici doppi si rompe (sono riconosciute le pipe)
-- con gli apici singoli si rompe
-- le variabili $ non sono espanse nei doppi apici (non viene restituito alcun token)
-- 
--
-
-
-- aaa:se premo piu volte tab mi fa ls
 */
-
 static int g_signal_received = 0;
 
 void handle_sigint(int sig)
@@ -122,7 +122,7 @@ int main(int argc, char **argv, char **envp)
         if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0) // Ignore empty lines
         {
             cmdlist = parse_input(inputstr);
-            printlist(cmdlist);
+            //printlist(cmdlist);
             if (cmdlist)
             {
                 executor(cmdlist, &env, &exit_code);
