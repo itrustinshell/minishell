@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 /*exec builtins or external cmd*/
-void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, int *exit_code)
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, char **envp, int *exit_code)
 {
 	char	**envlist;
 	//if the execution of a builtin was succesfully done that's all.
@@ -15,12 +15,17 @@ void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, int *exit_code)
 	//it means that when i execute execve, it knows who is its input and 
 	//where output (these are not info to pass via args_ execve knows how to do it
 	// so it applies your changes in redirections stream.)
+
+
+	//execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);		
+	(void)envp;
 	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
+
 }
 
 /*fork along the pipes*/
 void	pipefork(int **pipematrix, t_cmd *cmdlist, 
-		int i, int cmdlist_len, t_env **env, int *exit_code)
+		int i, int cmdlist_len, t_env **env, char **envp, int *exit_code)
 {
 	int	pid;
 	int	saved_stdout;
@@ -68,7 +73,7 @@ void	pipefork(int **pipematrix, t_cmd *cmdlist,
 				exit(1);			
 		}
 		pipeclose(pipematrix, cmdlist_len);
-		ft_execve(tmp_cmdlist, *env, exit_code);
+		ft_execve(tmp_cmdlist, *env, envp, exit_code);
 		exit(1);
 	}
 }
