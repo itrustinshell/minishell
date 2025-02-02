@@ -34,33 +34,16 @@ void	pipefork(int **pipematrix, t_cmd *cmdlist,
 	t_cmd *tmp_cmdlist;
 
 	tmp_cmdlist = cmdlist;
-	pid = fork(); //la prima cosa che fa questa funzinoa quando è chiamata è forkare
-	saved_stdout = dup(STDOUT_FILENO); //mi salvo lo stdout perchè dopo lo ripristinerò
-	if (pid == 0) //ora sono nel figlio_ In pratica questa funzione esegue il codice del figlio.
+	pid = fork();
+	saved_stdout = dup(STDOUT_FILENO);
+	if (pid == 0)
 	{
 		n_heredoc = 0;
-		/*qui dentro ci entro a partire dal secondo comando in poi perchè
-			è dal secondo comando in poi che l'output del precedente comando
-			diventa un input_ I primo comando non riceve input che siano output di precedenti
-			comandi.*/
 		if (i > 0) 
 		{
-			//con piperead predisponiamo la pipe per andare a prendere l'input dalla pipe.
-			//Nella pipe troveremo l'output scritto dal precedente comando.
-			//questo output sarà cosi l'input del comando che ora lo sta leggendo.
 			piperead(pipematrix, i);
-			/*Ora una volta predisposte le pipe, io devo vedere se ci sono eventuali
-			rerirection che mi vanno a modificare qualcosa_ Ad esempio potrebbero esserci
-			delle input redirection. Se infatti ci fossero delle input redirection allora 
-			io non dovrò più andare a leggere dalla pipe. Questo significa che andrò a 
-			ricambiare lo standard input facendolo corrispondere ad esempio al filde_descriptor
-			di un file che segue l'input redirection...Stesse considerazioni valgono 
-			per outpu, append redirection. ioa reirops infatti sta per "input output append redirection operation"*/
+			
 			ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
-			/*se ioa_redirops ritorna 0 significa che c'è stato un errore.
-				in particolare c'era un input redirection, ma quest'ultima aveva come
-				suo riferimento per l'input, un file inesistente.
-			*/
 			if (ret == 0) 
 				exit(1);
 		}

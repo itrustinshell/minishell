@@ -65,25 +65,25 @@
 
 enum token_type
 {
-    INVALID,
-    COMMAND,
-    ARG,
-    LEFT,
-    RIGHT,
-    DOUBLE_LEFT,
-    DOUBLE_RIGHT,
-    LEFT_ARG,
-    RIGHT_ARG,
-    APPEND_ARG,
-    HEREDOC_ARG
+	INVALID,
+	COMMAND,
+	ARG,
+	LEFT,
+	RIGHT,
+	DOUBLE_LEFT,
+	DOUBLE_RIGHT,
+	LEFT_ARG,
+	RIGHT_ARG,
+	APPEND_ARG,
+	HEREDOC_ARG
 };
 
 typedef struct s_tkn
 {
-    unsigned int    len;
-    char           *value;
-    enum token_type type;
-} t_tkn;
+	unsigned int    len;
+	char           *value;
+	enum token_type type;
+}	t_tkn;
 
 typedef struct s_token
 {
@@ -99,14 +99,14 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 	struct s_env	*prev;
-} t_env;
+}	t_env;
 
 
 typedef struct s_heredoc
 {
 	char				*input;
 	struct s_heredoc	*next;
-} t_heredoc;
+}	t_heredoc;
 
 typedef struct s_redir
 {
@@ -115,8 +115,7 @@ typedef struct s_redir
 	char			*delimiter; //if heredoc
 	t_heredoc		*heredoclist;
 	struct s_redir	*next;
-} t_redir;
-
+}	t_redir;
 
 typedef struct s_cmd
 {
@@ -126,7 +125,16 @@ typedef struct s_cmd
 	struct s_cmd		*next;
 	t_redir				*redirlist;
 	int					argc;
-} t_cmd;
+}	t_cmd;
+
+typedef struct	s_pipex_data
+{
+	t_cmd	*cmdlist;
+	int		cmdlist_len;
+	int		**pipematrix;
+	t_env	**env;
+	char	**envp;
+}	t_pipex_data;
 
 /*-----tests---------*/
 void test_stampa_args(t_cmd *commandlist);
@@ -152,17 +160,19 @@ void 	listappend_redir(t_redir *node, t_redir **list);
 
 //EXECUTOR
 void		executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code);
-int			pipex(t_cmd *cmdlist, int cmdlist_len, int **pipesarray, t_env **env, char **envp, int *exit_code);
+int			pipex(t_pipex_data *data, int *exit_code);
+//int			pipex(t_cmd *cmdlist, int cmdlist_len, int **pipesarray, t_env **env, char **envp, int *exit_code);
 void		cmdex(t_cmd *cmd, t_env **env, int *exit_code);
 int			builtinex(t_cmd *cmd, t_env **env, int *exit_code);
 //executor utils
 void		ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, char **envp, int *exit_code);
 int			**generate_array_of_pipes_with_fd(int num_of_cmd);
-int 		**pipesalloc(int cmdlist_len);
-int 		pipecheck(char **matrix);
+int			**pipesalloc(int cmdlist_len);
+int			pipecheck(char **matrix);
 void		piperead(int **pipematrix, int i);
 void		pipewrite(int **pipematrix, int i);
 void		pipeclose(int **pipematrix, int cmdlist_len);
+//void		pipefork(t_pipex_data *data, int i, int *exit_code);
 void		pipefork(int **pipematrix,t_cmd *tmp_cmdlist, int i, int cmdlist_len, t_env **env, char **envp, int *exit_code);
 int			check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
 t_cmd 		*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);

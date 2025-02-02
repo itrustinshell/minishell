@@ -1,0 +1,16 @@
+Makefile
+builtins
+executor
+libft
+main.c
+main.o
+minishell
+minishell.h
+minishell_subject.pdf
+parser
+parser copy.c
+test
+test.c
+tokenizer
+utils
+www

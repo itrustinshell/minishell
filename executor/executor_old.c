@@ -3,27 +3,27 @@
 /*execute pipes
 stats all forks in a while, then the father waits.
 */
-
-int	pipex(t_pipex_data *data, int *exit_code)
+int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, char **envp, int *exit_code)
 {
 	int		i;
 	t_cmd	*tmp_cmdlist;
 	int		status;
 
-	tmp_cmdlist = data->cmdlist;
+	//printf("pipex: vediamo cosa succede\n");
+	tmp_cmdlist = cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
+	//i'm goingo to go through all the commands forking all of them
 	i = -1;
-	while (++i < data->cmdlist_len)
+	while (++i < cmdlist_len)
 	{
-		if (i > 0)
+		if (i > 0) //if there is only one node this if winn never be executed and we will never have a next
 			tmp_cmdlist = tmp_cmdlist->next;
-		pipefork(data->pipematrix, tmp_cmdlist, 
-		 i,  data->cmdlist_len,  data->env,  data->envp,  exit_code);
+		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env, envp, exit_code);
 	}
-	pipeclose(data->pipematrix, data->cmdlist_len);
+	pipeclose(pipematrix, cmdlist_len);
 	i = 0;
-	while (i < data->cmdlist_len)
+	while (i < cmdlist_len)
 	{
 		wait(&status);
 		*exit_code = WEXITSTATUS(status);
@@ -32,22 +32,18 @@ int	pipex(t_pipex_data *data, int *exit_code)
 	return (0);
 }
 
-int	arguments_count(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	return (i);
-}
-
 /*execute builtins*/
+
 int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 {
+	int	argc;
+
 	if (strcmp(cmd->cmd, "echo") == 0)
 	{
-		ft_echo(arguments_count(cmd->args), cmd->args, exit_code);
+		argc = 0;
+		while (cmd->args[argc])
+			argc++;
+		ft_echo(argc, cmd->args, exit_code);
 		return (1);
 	}
 	else if (strcmp(cmd->cmd, "pwd") == 0)
@@ -63,18 +59,21 @@ int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 		return (ft_env(*env));
 	else if (strcmp(cmd->cmd, "exit") == 0)
 	{
-		ft_exit(arguments_count(cmd->args), cmd->args);
-		return (1);
+		argc = 0;
+		while (cmd->args[argc])
+			argc++;
+		ft_exit(argc, cmd->args);
+		return (1); //probablimente va tolto perche'sei dopo exit...ma vedi bene
 	}
-	else if (strcmp(cmd->cmd, "unset") == 0)
+	else if(strcmp(cmd->cmd, "unset") == 0)
 	{
-		ft_unset(cmd->args[1], env);
-		return (1);
-	}
+		ft_unset(cmd->args[1], env);	
+		return(1);	
+	}	
 	return (0);
 }
 
-int	check_builtin(t_cmd *cmd)
+int check_builtin(t_cmd *cmd)
 {
 	if (strcmp(cmd->cmd, "echo") == 0)
 			return (1);
@@ -254,21 +253,19 @@ void	heredoc(t_cmd *cmd, int n_heredoc)
 */
 void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {
-	int				cmdlist_len;
-	int				**pipematrix;
-	int				n_heredoc;
-	t_pipex_data	data;
+	int	cmdlist_len;
+	int	**pipematrix;
+	int	n_heredoc;
 
 	n_heredoc = count_heredoc(cmdlist);
 	heredoc(cmdlist, n_heredoc);
 	cmdlist_len = listlen(cmdlist);
 	if (cmdlist_len == 0)
-		return ;
+		return;
 	if (cmdlist_len > 1)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
-		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix, env, envp};
-		pipex(&data, exit_code);
+		pipex(cmdlist, cmdlist_len, pipematrix, env, envp, exit_code);
 	}
 	else
 	{

@@ -8,10 +8,10 @@
 - con gli apici doppi si rompe (sono riconosciute le pipe)
 - con gli apici singoli si rompe
 - le variabili $ non sono espanse nei doppi apici (non viene restituito alcun token)
-- le pipe non vanno
 - aaa:se premo piu volte tab mi fa ls
+- non ho provato unset $PATH
+- quando faccio cd .. e poi torno indientro non esegue piu redirection e vompgni bella
 */
-
 
 /*TODO: 
 - isspace
