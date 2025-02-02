@@ -72,9 +72,10 @@ char	**litoma(t_env *envlist)
 	int		i;
 	int		n;
 	int		m;
-
+	//printf("litoma: procedo alla conversione in  matrice\n");
 	tmp_envlist = envlist;
 	lenlist = envlist_len(tmp_envlist);
+	//printf("il numero degli elementi della matrice: %d\n", lenlist);
 	env_matrix = (char **)malloc((lenlist + 1) * sizeof(char *));
 	if (!env_matrix)
 		return (NULL);
@@ -82,24 +83,44 @@ char	**litoma(t_env *envlist)
 	while (tmp_envlist)
 	{
 		len_name = ft_strlen(tmp_envlist->name);
-		len_value = ft_strlen(tmp_envlist->value);
+		if (tmp_envlist->value)
+			len_value = ft_strlen(tmp_envlist->value);
+		else
+			len_value = 0;
 		env_matrix[i] = (char *)malloc((len_name + len_value + 2)
-				* sizeof(char));
+				* sizeof(char)); //uno per /0 e uno per uguale
 		if (!env_matrix[i])
 			return (NULL);
+		//env_matrix[i][len_name + len_value + 2] = '\0';
 		n = 0;
 		m = 0;
 		while (tmp_envlist->name[n])
-			env_matrix[i][m++] = tmp_envlist->name[n++];
-		env_matrix[i][m++] = '=';
+		{
+			env_matrix[i][m] = tmp_envlist->name[n];
+			m++;
+			n++;
+		}
+		env_matrix[i][m] = '=';
+		m++;
 		n = 0;
-		while (tmp_envlist->value[n])
-			env_matrix[i][m++] = tmp_envlist->value[n++];
+		if (tmp_envlist->value)
+		{
+			while (tmp_envlist->value[n])
+			{
+				env_matrix[i][m] = tmp_envlist->value[n];
+				m++;
+				n++;
+			}
+
+		}
 		env_matrix[i][m] = '\0';
+		
+		//printf("ecco env_matrix[%d]: %s\n", i, env_matrix[i]);
 		i++;
 		tmp_envlist = tmp_envlist->next;
 	}
 	env_matrix[i] = NULL;
+	//print_matrix_of_char(env_matrix);
 	return (env_matrix);
 }
 

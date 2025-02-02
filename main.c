@@ -99,7 +99,7 @@ int main(int argc, char **argv, char **envp)
     t_cmd   *cmdlist;    
     t_env   *env;
     int     exit_code;    
-
+	(void)envp;
     exit_code = 0;
     (void)argc;
     (void)argv;
@@ -125,7 +125,9 @@ int main(int argc, char **argv, char **envp)
             //printlist(cmdlist);
             if (cmdlist)
             {
-                executor(cmdlist, &env, &exit_code);
+                executor(cmdlist, &env, envp, &exit_code);
+				//executor(cmdlist, envp, &exit_code);
+
                 if (g_signal_received == 2)  // If SIGQUIT was received
                 {
                     printf("Quit (core dumped)\n");

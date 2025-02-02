@@ -3,12 +3,13 @@
 /*execute pipes
 stats all forks in a while, then the father waits.
 */
-int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *exit_code)
+int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, char **envp, int *exit_code)
 {
 	int		i;
 	t_cmd	*tmp_cmdlist;
 	int		status;
 
+	//printf("pipex: vediamo cosa succede\n");
 	tmp_cmdlist = cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
@@ -18,7 +19,7 @@ int	pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, int *e
 	{
 		if (i > 0) //if there is only one node this if winn never be executed and we will never have a next
 			tmp_cmdlist = tmp_cmdlist->next;
-		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env, exit_code);
+		pipefork(pipematrix, tmp_cmdlist, i, cmdlist_len, env, envp, exit_code);
 	}
 	pipeclose(pipematrix, cmdlist_len);
 	i = 0;
@@ -88,7 +89,6 @@ void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 	saved_stdout = dup(STDOUT_FILENO);
 	if (builtinex(cmd, env, exit_code))
 		return ;
-
 	cmd->path = get_cmdpath(cmd->cmd);
 	pid = fork();
 	if (pid == 0)
@@ -170,6 +170,7 @@ void	build_heredoclist(char *inputstr, t_heredoc **heredoclist)
 	listappend_heredoc(node, heredoclist);
 }
 
+
 void	heredoc(t_cmd *cmd, int n_heredoc)
 {
 	char	*inputstr;
@@ -223,7 +224,7 @@ void	heredoc(t_cmd *cmd, int n_heredoc)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
-void	executor(t_cmd *cmdlist, t_env **env, int *exit_code)
+void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {
 	int	cmdlist_len;
 	int	**pipematrix;
@@ -237,7 +238,7 @@ void	executor(t_cmd *cmdlist, t_env **env, int *exit_code)
 	if (cmdlist_len > 1)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
-		pipex(cmdlist, cmdlist_len, pipematrix, env, exit_code);
+		pipex(cmdlist, cmdlist_len, pipematrix, env, envp, exit_code);
 	}
 	else
 	{
