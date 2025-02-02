@@ -48,28 +48,28 @@ void free_matrix(char **tokenmatrix)
 
 char *create_token_wordled(char *inputstr, int *iterator)
 {
-		int i;
-		int len;
-		char *token;
+	int	i;
+	int len;
+	char *token;
 
-		token = NULL;
-		i = *iterator;
-		len = 0;
-		while (
-			inputstr[i + len] &&
-			!ft_isspace(inputstr[i + len]) &&
-			!ft_issymbol(inputstr[i + len])
-		)
-			len++;
-		if (len > 0)
-		{
-			token = tokenalloc(inputstr, i, len);
-			if (token == NULL)
-				return (NULL);
-			i = i + len;
-		}
-		*iterator = i;
-		return (token);
+	token = NULL;
+	i = *iterator;
+	len = 0;
+	while (
+		inputstr[i + len] &&
+		!ft_isspace(inputstr[i + len]) &&
+		!ft_issymbol(inputstr[i + len])
+	)
+		len++;
+	if (len > 0)
+	{
+		token = tokenalloc(inputstr, i, len);
+		if (token == NULL)
+			return (NULL);
+		i = i + len;
+	}
+	*iterator = i;
+	return (token);
 }
 
 char *create_token_symbolled(char *inputstr, int *iterator)

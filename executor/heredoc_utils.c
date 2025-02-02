@@ -1,34 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/02 19:34:08 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/02 19:34:20 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+void	print_heredoc_entries(t_heredoc *heredoc)
+{
+	while (heredoc)
+	{
+		printf("- %s", heredoc->input);
+		heredoc = heredoc->next;
+	}
+}
+
+void	print_heredoc_for_redir(t_redir *redir)
+{
+	while (redir)
+	{
+		if (redir->type == HEREDOC && redir->heredoclist)
+			print_heredoc_entries(redir->heredoclist);
+		redir = redir->next;
+	}
+}
 
 void	printallheredoclists(t_cmd *cmd)
 {
-	t_cmd		*tmp_cmdlist;
-	t_redir		*tmp_redir;
-	t_heredoc	*tmp_heredoc;
+	t_cmd	*tmp_cmdlist;
 
 	tmp_cmdlist = cmd;
-	//printf("sto per stampare la lista di heredoc: %s\n", tmp_cmdlist->cmd);
-	if (tmp_cmdlist)
+	while (tmp_cmdlist)
 	{
-		while (tmp_cmdlist)
-		{
-			if (tmp_cmdlist->redirlist)
-				tmp_redir = tmp_cmdlist->redirlist;
-			while (tmp_redir && tmp_redir->type != HEREDOC)
-				tmp_redir = tmp_redir->next;
-			if(tmp_redir && tmp_redir->heredoclist)
-			{
-				//printf("questa è la lista con delimiter: %s\n", tmp_redir->delimiter);
-				tmp_heredoc = tmp_redir->heredoclist;
-				while (tmp_heredoc)
-				{
-					printf("- %s", tmp_heredoc->input);
-					tmp_heredoc = tmp_heredoc->next;
-				}
-				tmp_redir = tmp_redir->next;
-			}
-			tmp_cmdlist = tmp_cmdlist->next;
-		}
+		if (tmp_cmdlist->redirlist)
+			print_heredoc_for_redir(tmp_cmdlist->redirlist);
+		tmp_cmdlist = tmp_cmdlist->next;
 	}
 }
 
@@ -58,8 +70,3 @@ int	count_heredoc(t_cmd *cmd)
 	}
 	return (n_heredoc);
 }
-/*
-TEST:
-ls | ls < dd << d | ls < e > s | ls << d << d < d << f | ls < k << l < kkk | ls << l << p < a
-ls << d << z| grep a < a << we < a | sort << haha < a << pp < a
-*/

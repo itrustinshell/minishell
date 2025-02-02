@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser copy.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 11:29:03 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/01/31 15:55:53 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/02 19:00:51 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>

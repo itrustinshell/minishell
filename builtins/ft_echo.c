@@ -1,49 +1,69 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/02 21:06:54 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/02 22:52:15 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
-//TODO: gestire gli exit code...il momento in cui agirnare o stampare con echo, e il ritorno di tutti gli altri.
-
-/*
-	DESCRIPTION
-		simula il comportamento di echo.
-*/
-int	ft_echo(int argc, char **argv, int *exit_code)
+void	handle_echo_n(int argc, char **argv)
 {
 	int	i;
 
-	if (argv[1] && strcmp(argv[1], "-n") == 0)
+	i = 2;
+	while (i < argc - 1)
 	{
-		i = 2;
-		while (i < argc - 1)
-		{
-			printf("%s ", argv[i]);
-			i++;
-		}
-		printf("%s", argv[i]);
+		printf("%s ", argv[i]);
+		i++;
 	}
-	else if (argc == 2 && strcmp(argv[1], "$?") == 0)
-		printf("Last process exit-code: %d\n", *exit_code);
-	else
+	printf("%s", argv[i]);
+}
+
+/* Handle echo $? case */
+void	handle_echo_exit_code(int *exit_code)
+{
+	printf("Last process exit-code: %d\n", *exit_code);
+}
+
+/* Handle echo without -n */
+void	handle_echo_default(int argc, char **argv, int *exit_code)
+{
+	int	i;
+
+	if (argc == 1)
 	{
-		if (argc == 1)
-		{
-			printf("\n");
-			return (1);
-		}
-		i = 1;
-		while (i < argc - 1)
-		{
-			if (argv[i][0] == '$' && argv[i][1] == '?')
-				printf("%d ", *exit_code);
-			else
-				printf("%s ", argv[i]);
-			i++;
-		}
+		printf("\n");
+		return ;
+	}
+	i = 1;
+	while (i < argc - 1)
+	{
 		if (argv[i][0] == '$' && argv[i][1] == '?')
-				printf("%d\n", *exit_code);
+			printf("%d ", *exit_code);
 		else
-			printf("%s\n", argv[i]);
+			printf("%s ", argv[i]);
+		i++;
 	}
+	if (argv[i][0] == '$' && argv[i][1] == '?')
+		printf("%d\n", *exit_code);
+	else
+		printf("%s\n", argv[i]);
+}
+
+/* Main echo function */
+int	ft_echo(int argc, char **argv, int *exit_code)
+{
+	if (argv[1] && strcmp(argv[1], "-n") == 0)
+		handle_echo_n(argc, argv);
+	else if (argc == 2 && strcmp(argv[1], "$?") == 0)
+		handle_echo_exit_code(exit_code);
+	else
+		handle_echo_default(argc, argv, exit_code);
 	return (1);
 }

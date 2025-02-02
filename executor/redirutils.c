@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirutils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/02 19:57:13 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/02 20:05:00 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 /*write in all output and append redirections*/
@@ -79,13 +91,15 @@ t_redir	*ih_redirlast(t_redir *redirlist)
 {
 	t_redir	*tmp_redirlist;
 	t_redir	*ret;
+
 	if (!redirlist)
 		return (NULL);
 	ret = NULL;
 	tmp_redirlist = redirlist;
 	while (tmp_redirlist)
 	{
-		if (tmp_redirlist->type == INPUT_REDIRECTION || tmp_redirlist->type == HEREDOC)
+		if (tmp_redirlist->type == INPUT_REDIRECTION
+			|| tmp_redirlist->type == HEREDOC)
 			ret = tmp_redirlist;
 		tmp_redirlist = tmp_redirlist->next;
 	}

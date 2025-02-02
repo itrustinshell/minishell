@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_env_lists.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/02 22:37:09 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/02 22:52:13 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	init_envnode(t_env *env)
@@ -42,85 +54,3 @@ void	envlist_append(t_env *node, t_env **list)
 		node->next = NULL;
 	}
 }
-
-int	envlist_len(t_env *list)
-{
-	int		i;
-	t_env	*current;
-
-	if (list == NULL)
-		return (0);
-	current = list;
-	i = 0;
-	while (current->next)
-	{
-		current = current->next;
-		i++;
-	}
-	i++;
-	return (i);
-}
-
-/*list to matrix*/
-char	**litoma(t_env *envlist)
-{
-	int		lenlist;
-	t_env	*tmp_envlist;
-	char	**env_matrix;
-	int		len_name;
-	int		len_value;
-	int		i;
-	int		n;
-	int		m;
-	//printf("litoma: procedo alla conversione in  matrice\n");
-	tmp_envlist = envlist;
-	lenlist = envlist_len(tmp_envlist);
-	//printf("il numero degli elementi della matrice: %d\n", lenlist);
-	env_matrix = (char **)malloc((lenlist + 1) * sizeof(char *));
-	if (!env_matrix)
-		return (NULL);
-	i = 0;
-	while (tmp_envlist)
-	{
-		len_name = ft_strlen(tmp_envlist->name);
-		if (tmp_envlist->value)
-			len_value = ft_strlen(tmp_envlist->value);
-		else
-			len_value = 0;
-		env_matrix[i] = (char *)malloc((len_name + len_value + 2)
-				* sizeof(char)); //uno per /0 e uno per uguale
-		if (!env_matrix[i])
-			return (NULL);
-		//env_matrix[i][len_name + len_value + 2] = '\0';
-		n = 0;
-		m = 0;
-		while (tmp_envlist->name[n])
-		{
-			env_matrix[i][m] = tmp_envlist->name[n];
-			m++;
-			n++;
-		}
-		env_matrix[i][m] = '=';
-		m++;
-		n = 0;
-		if (tmp_envlist->value)
-		{
-			while (tmp_envlist->value[n])
-			{
-				env_matrix[i][m] = tmp_envlist->value[n];
-				m++;
-				n++;
-			}
-
-		}
-		env_matrix[i][m] = '\0';
-		
-		//printf("ecco env_matrix[%d]: %s\n", i, env_matrix[i]);
-		i++;
-		tmp_envlist = tmp_envlist->next;
-	}
-	env_matrix[i] = NULL;
-	//print_matrix_of_char(env_matrix);
-	return (env_matrix);
-}
-
