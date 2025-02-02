@@ -13,7 +13,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <strings.h>
-#include "minishell.h"
+#include "../minishell.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -189,17 +189,17 @@ void	expand(char **env_var)
 
 	if (!env_var || !*env_var)
 		return ;
-	expanded = getenv(*env_var);
+	expanded = getenv((char *)*env_var);
 	if (!expanded)
 	{
 		free(*env_var);
 		*env_var = (char *)calloc(1, sizeof(char));
-		(*env_var)[0] = '\0';
+		*env_var[0] = '\0';
 	}
 	else
 	{
 		free(*env_var);
-		*env_var = (char *)calloc(ft_strlen(expanded) + 1, sizeof(char));
+		*env_var = (char *)ft_calloc(ft_strlen(expanded) + 1, sizeof(char));
 		ft_strncpy(*env_var, expanded, ft_strlen(expanded));
 	}
 }
@@ -281,6 +281,7 @@ t_cmd	*parse_command(char *command_string)
 			token->value = (char *)calloc(token->len + 1, sizeof(char));
 			strncpy(token->value, beginning, token->len);
 			expand(&token->value);
+			token->len = ft_strlen(token->value);
 		}
 		else if (*command_string)
 		{
