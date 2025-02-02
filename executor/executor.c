@@ -73,6 +73,26 @@ int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 	return (0);
 }
 
+int check_builtin(t_cmd *cmd)
+{
+	if (strcmp(cmd->cmd, "echo") == 0)
+			return (1);
+	else if (strcmp(cmd->cmd, "pwd") == 0)
+			return (1);
+	else if (strcmp(cmd->cmd, "export") == 0)
+		return (1);
+	else if (strcmp(cmd->cmd, "cd") == 0)
+		return (1);
+	else if (strcmp(cmd->cmd, "env") == 0)
+		return (1);
+	else if (strcmp(cmd->cmd, "exit") == 0)
+		return (1);
+	else if(strcmp(cmd->cmd, "unset") == 0)
+		return (1);
+	else
+		return (0);
+}
+
 /*
 	DESCRIPTION
 		execute single command it first try for builtin.
@@ -87,8 +107,15 @@ void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
 	int		saved_stdout;
 
 	saved_stdout = dup(STDOUT_FILENO);
-	if (builtinex(cmd, env, exit_code))
+	if (check_builtin(cmd))
+	{
+		ret = ihoa_redirops(cmd->redirlist, saved_stdout);
+		if (ret == 0)
+			exit(1);
+		builtinex(cmd, env, exit_code);
+		dup2(saved_stdout, STDOUT_FILENO);
 		return ;
+	}
 	cmd->path = get_cmdpath(cmd->cmd);
 	pid = fork();
 	if (pid == 0)
