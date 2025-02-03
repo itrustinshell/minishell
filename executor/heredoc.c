@@ -12,14 +12,6 @@
 
 #include "../minishell.h"
 
-void	build_heredoclist(char *inputstr, t_heredoc **heredoclist)
-{
-	t_heredoc	*node;
-
-	node = create_heredocnode(inputstr);
-	listappend_heredoc(node, heredoclist);
-}
-
 void	handle_heredoc_input(t_redir *tmp_redirlist)
 {
 	char	*inputstr;

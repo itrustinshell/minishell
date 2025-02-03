@@ -11,11 +11,70 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*Execute builtins or external command*/
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
+			char **envp, int *exit_code)
+{
+	char	**envlist;
+
+	if (execute_builtin(tmp_cmdlist, &genvlist, exit_code) == 1)
+		return ;
+	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
+	envlist = litoma(genvlist);
+	(void)envp;
+	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
+}
+
+/* Handle child process execution */
+void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
+		int saved_stdout)
+{
+	int		n_heredoc;
+	int		ret;
+	t_env	**env;
+
+	n_heredoc = 0;
+	if (i > 0)
+	{
+		piperead(data->pipematrix, i);
+		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+		if (ret == 0)
+			exit(1);
+	}
+	if (tmp_cmdlist->next)
+	{
+		pipewrite(data->pipematrix, i);
+		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+		printf("Sono stati rilevati %d heredoc\n", n_heredoc);
+		if (ret == 0)
+			exit(1);
+	}
+	pipeclose(data->pipematrix, data->cmdlist_len);
+	env = data->env;
+	ft_execve(tmp_cmdlist, *env, data->envp, data->exit_code);
+	exit(1);
+}
+
+/* Fork along the pipes */
+void	pipefork(t_pipex_data *data, t_cmd *cmdlist, int i)
+{
+	int		pid;
+	int		saved_stdout;
+	t_cmd	*tmp_cmdlist;
+
+	tmp_cmdlist = cmdlist;
+	pid = fork();
+	saved_stdout = dup(STDOUT_FILENO);
+	if (pid == 0)
+		handle_child_process(data, tmp_cmdlist, i,
+			saved_stdout);
+}
+
 /*execute pipes
 stats all forks in a while, then the father waits.
 */
-
-int	pipex(t_pipex_data *data, int *exit_code)
+int	pipex(t_pipex_data *data)
 {
 	int		i;
 	t_cmd	*tmp_cmdlist;
@@ -29,14 +88,14 @@ int	pipex(t_pipex_data *data, int *exit_code)
 	{
 		if (i > 0)
 			tmp_cmdlist = tmp_cmdlist->next;
-		pipefork(data->pipematrix, tmp_cmdlist, i, data->cmdlist_len,data->env, data->envp, exit_code);
+		pipefork(data, tmp_cmdlist, i);
 	}
 	pipeclose(data->pipematrix, data->cmdlist_len);
 	i = 0;
 	while (i < data->cmdlist_len)
 	{
 		wait(&status);
-		*exit_code = WEXITSTATUS(status);
+		*(data)->exit_code = WEXITSTATUS(status);
 		i++;
 	}
 	return (0);

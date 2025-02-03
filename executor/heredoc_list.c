@@ -12,15 +12,6 @@
 
 #include "../minishell.h"
 
-void	heredoc_prompt(char **inputstr)
-{
-	size_t	len;
-
-	len = 0;
-	printf(">: ");
-	getline(inputstr, &len, stdin);
-}
-
 void	heredocinit(t_heredoc *node)
 {
 	if (node)
@@ -60,4 +51,12 @@ void	listappend_heredoc(t_heredoc *node, t_heredoc **list)
 		last_node = last_heredocnode(*list);
 		last_node->next = node;
 	}
+}
+
+void	build_heredoclist(char *inputstr, t_heredoc **heredoclist)
+{
+	t_heredoc	*node;
+
+	node = create_heredocnode(inputstr);
+	listappend_heredoc(node, heredoclist);
 }

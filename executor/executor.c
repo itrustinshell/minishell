@@ -12,12 +12,6 @@
 
 #include "../minishell.h"
 
-/*
-	DESCRIPTION
-		execute single command it first try for builtin.
-		If there are no builtin it  continues executind 
-		external command.
-*/
 void	execute_builtin_command(t_cmd *cmd, t_env **env,
 		int *exit_code, int saved_stdout)
 {
@@ -26,7 +20,7 @@ void	execute_builtin_command(t_cmd *cmd, t_env **env,
 	ret = ihoa_redirops(cmd->redirlist, saved_stdout);
 	if (ret == 0)
 		exit(1);
-	builtinex(cmd, env, exit_code);
+	execute_builtin(cmd, env, exit_code);
 	dup2(saved_stdout, STDOUT_FILENO);
 }
 
@@ -49,7 +43,7 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 	*exit_code = WEXITSTATUS(status);
 }
 
-void	cmdex(t_cmd *cmd, t_env **env, int *exit_code)
+void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	saved_stdout;
 
@@ -88,12 +82,14 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 	if (cmdlist_len > 1)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
-		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix, env, envp};
-		pipex(&data, exit_code);
+		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix,
+			env, envp, exit_code};
+		pipex(&data);
+		//exit_code = data.exit_code;
 	}
 	else
 	{
-		cmdex(cmdlist, env, exit_code);
+		singlecmdex(cmdlist, env, exit_code);
 		printf("comando eseguito\n");
 	}
 }
