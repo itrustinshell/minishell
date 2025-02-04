@@ -18,7 +18,7 @@ void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
 {
 	char	**envlist;
 
-	if (execute_builtin(tmp_cmdlist, &genvlist, exit_code) == 1)
+	if (builtinex(tmp_cmdlist, &genvlist, exit_code) == 1)
 		return ;
 	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
 	envlist = litoma(genvlist);
@@ -33,19 +33,25 @@ void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 	int		n_heredoc;
 	int		ret;
 	t_env	**env;
+	int		is_builtin;
 
 	n_heredoc = 0;
 	if (i > 0)
 	{
 		piperead(data->pipematrix, i);
-		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+		if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
+			is_builtin = 1;
+		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
 		if (ret == 0)
 			exit(1);
 	}
 	if (tmp_cmdlist->next)
 	{
 		pipewrite(data->pipematrix, i);
-		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout);
+		if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
+			is_builtin = 1;
+
+		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
 		printf("Sono stati rilevati %d heredoc\n", n_heredoc);
 		if (ret == 0)
 			exit(1);

@@ -58,7 +58,7 @@ char *get_cmdpath(char *cmd)
 		i++;
 	}
 	free(splitted_path);
-	printf("NON HO TROVATO IL COMANDO!!!\n");
+	printf("aaaaaaaaaNON HO TROVATO IL COMANDO!!!\n");
 	return (NULL);
 }
 

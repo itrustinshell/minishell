@@ -42,11 +42,10 @@ int	handle_input_redirection(t_redir *latest_input_redir, int saved_stdout)
 	return (0);
 }
 
-int	handle_heredoc(t_redir *latest_input_redir)
+int	handle_heredoc(t_redir *latest_input_redir, int is_builtin)
 {
 	int			fdpipe[2];
 	t_heredoc	*current;
-
 	pipe(fdpipe);
 	if (latest_input_redir->heredoclist)
 	{
@@ -58,12 +57,13 @@ int	handle_heredoc(t_redir *latest_input_redir)
 		}
 		close(fdpipe[1]);
 	}
-	dup2(fdpipe[0], STDIN_FILENO);
+	if (is_builtin == 0)
+		dup2(fdpipe[0], STDIN_FILENO);
 	close(fdpipe[0]);
 	return (4);
 }
 
-int	ih_redirops(t_redir *redirlist, int saved_stdout)
+int	ih_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 {
 	t_redir	*latest_input_redir;
 
@@ -75,16 +75,16 @@ int	ih_redirops(t_redir *redirlist, int saved_stdout)
 	if (latest_input_redir->type == INPUT_REDIRECTION)
 		return (handle_input_redirection(latest_input_redir, saved_stdout));
 	else if (latest_input_redir->type == HEREDOC)
-		return (handle_heredoc(latest_input_redir));
+		return (handle_heredoc(latest_input_redir, is_builtin));
 	return (1);
 }
 
 /* O'mast of  input-heredoc-output-append (IHOA) operations */
-int	ihoa_redirops(t_redir *redirlist, int saved_stdout)
+int	ihoa_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 {
 	int	ih_ret;
 
-	ih_ret = ih_redirops(redirlist, saved_stdout);
+	ih_ret = ih_redirops(redirlist, saved_stdout, is_builtin);
 	if (ih_ret == 0)
 		return (0);
 	oa_redirops(redirlist);

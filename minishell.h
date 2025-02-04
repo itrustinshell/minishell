@@ -157,14 +157,11 @@ int		listlen(t_cmd *list);
 void	listappend_redir(t_redir *node, t_redir **list);
 
 //EXECUTOR
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code);
+void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code, int *has_heredoc);
 int		pipex(t_pipex_data *data);
 //int		pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, char **envp, int *exit_code);
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code);
-int		execute_builtin(t_cmd *cmd, t_env **env, int *exit_code);
-
-
-
+void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code, int *has_heredoc);
+int		builtinex(t_cmd *cmd, t_env **env, int *exit_code);
 
 //HEREDOC
 void	heredoc(t_cmd *cmd, int n_heredoc);
@@ -188,7 +185,7 @@ int		check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
 t_cmd	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
 void	commandnode_management_for_pipe(char **tokenmatrix, int *pipe_index, int *generictoken_index, t_cmd **commandlist);
 t_redir	*redirlist_for_pipe(char **tokenmatrix, int token_index);
-int		ihoa_redirops(t_redir *redirlist, int saved_stdout);
+int		ihoa_redirops(t_redir *redirlist, int saved_stdout, int is_builtin);
 void	oa_redirops(t_redir *redirlist);
 int		oa_rediropen(t_redir *redirlist);
 void	oa_redirwrite(t_redir *redirnode);

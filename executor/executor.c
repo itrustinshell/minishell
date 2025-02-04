@@ -12,15 +12,44 @@
 
 #include "../minishell.h"
 
+
+
+/*
+void ignore_heredoc(char *delimiter) {
+	char *line;
+(void)delimiter;
+	while (1) 
+	{
+		line = readline("...leggo il buffer heredoc: "); // Simula il prompt del heredoc
+		if (!line) 
+		{
+			break;  // EOF, uscire dal loop
+		}
+		free(line); // Libera la memoria della riga
+	}
+}
+*/
+
 void	execute_builtin_command(t_cmd *cmd, t_env **env,
-		int *exit_code, int saved_stdout)
+		int *exit_code, int saved_stdout, int *has_heredoc)
 {
 	int	ret;
-
-	ret = ihoa_redirops(cmd->redirlist, saved_stdout);
+	int is_builtin;
+	
+	is_builtin = 1;
+	ret = ihoa_redirops(cmd->redirlist, saved_stdout, is_builtin);
 	if (ret == 0)
 		exit(1);
-	execute_builtin(cmd, env, exit_code);
+	if (ret == 4)
+	{
+		//printf("execute_builtin_command: ci sono\n");
+		//printf("imposto has _heredoc a 1\n");
+		*has_heredoc = 1;
+	}
+	//ignore_heredoc(cmd->redirlist->delimiter); //TODO
+	//printf("sto per eseguire builtinex\n");
+	builtinex(cmd, env, exit_code);
+	//printf("sono iuscito da builtinex\n");
 	dup2(saved_stdout, STDOUT_FILENO);
 }
 
@@ -29,11 +58,14 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 	pid_t	pid;
 	int		status;
 	int		ret;
+	int		is_builtin;
+
+	is_builtin = 0;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		ret = ihoa_redirops(cmd->redirlist, saved_stdout);
+		ret = ihoa_redirops(cmd->redirlist, saved_stdout, is_builtin);
 		if (ret == 0)
 			exit(1);
 		execve(cmd->path, cmd->args, NULL);
@@ -43,14 +75,14 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 	*exit_code = WEXITSTATUS(status);
 }
 
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
+void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code, int *has_heredoc)
 {
 	int	saved_stdout;
 
 	saved_stdout = dup(STDOUT_FILENO);
 	if (check_builtin(cmd))
 	{
-		execute_builtin_command(cmd, env, exit_code, saved_stdout);
+		execute_builtin_command(cmd, env, exit_code, saved_stdout, has_heredoc);
 		return ;
 	}
 	cmd->path = get_cmdpath(cmd->cmd);
@@ -67,7 +99,7 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
+void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code, int *has_heredoc)
 {
 	int				cmdlist_len;
 	int				**pipematrix;
@@ -89,7 +121,7 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 	}
 	else
 	{
-		singlecmdex(cmdlist, env, exit_code);
-		printf("comando eseguito\n");
+		singlecmdex(cmdlist, env, exit_code, has_heredoc);
+		//printf("executor: sono uscito dal singlecmdex. Comando eseguito\n");
 	}
 }

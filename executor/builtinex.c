@@ -48,7 +48,7 @@ int	handle_exit(t_cmd *cmd)
 	return (1);
 }
 
-int	execute_builtin(t_cmd *cmd, t_env **env, int *exit_code)
+int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	if (strcmp(cmd->cmd, "echo") == 0)
 	{

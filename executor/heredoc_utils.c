@@ -12,23 +12,23 @@
 
 #include "../minishell.h"
 
-void	heredoc_prompt(char **inputstr)
-{
-	size_t	len;
+// void	heredoc_prompt(char **inputstr)
+// {
+// 	size_t	len;
 
-	len = 0;
-	printf(">: ");
-	getline(inputstr, &len, stdin);
-}
+// 	len = 0;
+// 	printf(">: ");
+// 	getline(inputstr, &len, stdin);
+// }
 
-void	print_heredoc_entries(t_heredoc *heredoc)
-{
-	while (heredoc)
-	{
-		printf("- %s", heredoc->input);
-		heredoc = heredoc->next;
-	}
-}
+// void	print_heredoc_entries(t_heredoc *heredoc)
+// {
+// 	while (heredoc)
+// 	{
+// 		printf("- %s", heredoc->input);
+// 		heredoc = heredoc->next;
+// 	}
+// }
 
 int	count_heredoc(t_cmd *cmd)
 {
