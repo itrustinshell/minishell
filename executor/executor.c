@@ -31,25 +31,16 @@ void ignore_heredoc(char *delimiter) {
 */
 
 void	execute_builtin_command(t_cmd *cmd, t_env **env,
-		int *exit_code, int saved_stdout, int *has_heredoc)
+		int *exit_code, int saved_stdout)
 {
 	int	ret;
 	int is_builtin;
-	
+
 	is_builtin = 1;
 	ret = ihoa_redirops(cmd->redirlist, saved_stdout, is_builtin);
 	if (ret == 0)
 		exit(1);
-	if (ret == 4)
-	{
-		//printf("execute_builtin_command: ci sono\n");
-		//printf("imposto has _heredoc a 1\n");
-		*has_heredoc = 1;
-	}
-	//ignore_heredoc(cmd->redirlist->delimiter); //TODO
-	//printf("sto per eseguire builtinex\n");
 	builtinex(cmd, env, exit_code);
-	//printf("sono iuscito da builtinex\n");
 	dup2(saved_stdout, STDOUT_FILENO);
 }
 
@@ -75,14 +66,14 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 	*exit_code = WEXITSTATUS(status);
 }
 
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code, int *has_heredoc)
+void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	saved_stdout;
 
 	saved_stdout = dup(STDOUT_FILENO);
 	if (check_builtin(cmd))
 	{
-		execute_builtin_command(cmd, env, exit_code, saved_stdout, has_heredoc);
+		execute_builtin_command(cmd, env, exit_code, saved_stdout);
 		return ;
 	}
 	cmd->path = get_cmdpath(cmd->cmd);
@@ -99,7 +90,7 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code, int *has_heredoc)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code, int *has_heredoc)
+void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {
 	int				cmdlist_len;
 	int				**pipematrix;
@@ -121,7 +112,7 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code, int *has
 	}
 	else
 	{
-		singlecmdex(cmdlist, env, exit_code, has_heredoc);
+		singlecmdex(cmdlist, env, exit_code);
 		//printf("executor: sono uscito dal singlecmdex. Comando eseguito\n");
 	}
 }

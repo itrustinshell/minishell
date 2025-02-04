@@ -57,9 +57,9 @@ void setup_signals(void)
 
 void prompt(char **inputstr)
 {
-	char *cwdpath;
-	char *cwdpath_modified;
-	int   len;
+	char	*cwdpath;
+	char	*cwdpath_modified;
+	int		len;
 
 	cwdpath = getcwd(NULL, 0);
 	len = ft_strlen(cwdpath);
@@ -71,10 +71,10 @@ void prompt(char **inputstr)
 	cwdpath_modified[len + 2] = '\0';
 
 	*inputstr = readline(cwdpath_modified);
-	
+
 	free(cwdpath);
 	free(cwdpath_modified);
-	
+
 	if (*inputstr) 
 	{
 		size_t len = strlen(*inputstr);
@@ -94,65 +94,31 @@ void prompt(char **inputstr)
 }
 
 /*
-
 void ignore_heredoc(const char *delimiter) {
-    char *line;
+	char *line;
 
-    while (1) {
-        line = readline("> "); // Simula il prompt per il heredoc
-        if (!line) { 
-            printf("\nMinishell: EOF nel heredoc\n");
-            
-            // Riapre stdin usando open("/dev/tty", O_RDONLY)
-            int tty_fd = open("/dev/tty", O_RDONLY);
-            if (tty_fd != -1) {
-                dup2(tty_fd, STDIN_FILENO);
-                close(tty_fd);
-            }
-            return;
-        }
-        if (strcmp(line, delimiter) == 0) {
-            free(line);
-            break;
-        }
-        free(line);
-    }
-}
-*/
-
-
-/*
-void ignore_heredoc(const char *delimiter) {
-    char	c;
-	int		bytes_read;	
-	(void)delimiter;
-
-	bytes_read = 1;
-	
-    while (1) 
-	{
-		while (bytes_read > 0)
-		{
-			bytes_read = read(STDIN_FILENO, &c, 1);
+	while (1) {
+		line = readline("> "); // Simula il prompt per il heredoc
+		if (!line) { 
+			printf("\nMinishell: EOF nel heredoc\n");
+			
+			// Riapre stdin usando open("/dev/tty", O_RDONLY)
+			int tty_fd = open("/dev/tty", O_RDONLY);
+			if (tty_fd != -1) {
+				dup2(tty_fd, STDIN_FILENO);
+				close(tty_fd);
+			}
+			return;
 		}
-		if (!c) 
-		{  int tty_fd = open("/dev/tty", O_RDONLY);
-            if (tty_fd != -1) {
-                dup2(tty_fd, STDIN_FILENO);
-                close(tty_fd);
-            }
-            return;
-        }
-        if (strcmp(line, delimiter) == 0) {
-            free(line);
-            break;
-        }
-        free(line);
-    }
+		if (strcmp(line, delimiter) == 0) {
+			free(line);
+			break;
+		}
+		free(line);
+	}
 }
-
-
 */
+
 int main(int argc, char **argv, char **envp)
 {
 	char    *inputstr;
@@ -167,44 +133,25 @@ int main(int argc, char **argv, char **envp)
 	env = copy_envp(envp);
 	setup_signals();
 
-	int has_heredoc = 0;
-
 	while (1)
 	{  
  
 		g_signal_received = 0;
 		inputstr = NULL;
 
-		if (has_heredoc) {  // Se c'è un heredoc, lo leggiamo e lo ignoriamo
-//    ignore_heredoc("EOF");  // Sostituisci con il delimitatore reale
-    has_heredoc = 0;  // Resetta il flag dopo aver gestito il heredoc
-}
-	
 		prompt(&inputstr);
 
 		if (!inputstr) // Se readline riceve EOF
 		{
-			if (has_heredoc)
-			{
-				printf("EOF nel heredoc, riaprendo stdin...\n");
-				has_heredoc = 0;
-				continue;  // Torna al loop invece di uscire
-			}
-
 			printf("\nexit\n");
 			break;
 		}
-				
 		if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0) // Ignore empty lines
 		{
 			cmdlist = parse_input(inputstr);
-			//printlist(cmdlist);
 			if (cmdlist)
 			{
-				executor(cmdlist, &env, envp, &exit_code, &has_heredoc);
-				printf("sono uscito da executor\n");
-				//executor(cmdlist, envp, &exit_code);
-
+				executor(cmdlist, &env, envp, &exit_code);
 				if (g_signal_received == 2)  // If SIGQUIT was received
 				{
 					printf("Quit (core dumped)\n");

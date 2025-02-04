@@ -157,10 +157,10 @@ int		listlen(t_cmd *list);
 void	listappend_redir(t_redir *node, t_redir **list);
 
 //EXECUTOR
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code, int *has_heredoc);
+void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code);
 int		pipex(t_pipex_data *data);
 //int		pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, char **envp, int *exit_code);
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code, int *has_heredoc);
+void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code);
 int		builtinex(t_cmd *cmd, t_env **env, int *exit_code);
 
 //HEREDOC
