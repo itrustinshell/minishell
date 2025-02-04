@@ -11,6 +11,7 @@
 - aaa:se premo piu volte tab mi fa ls
 - non ho provato unset $PATH
 - quando faccio cd .. e poi torno indientro non esegue piu redirection e vompgni bella
+- nell'heredoc
 */
 
 /*TODO: 
@@ -82,7 +83,7 @@ void prompt(char **inputstr)
 		if (!with_newline) 
 		{
 			free(*inputstr);
-			return;
+			return ;
 		}
 		strcpy(with_newline, *inputstr);
 		with_newline[len] = '\0';
@@ -119,14 +120,18 @@ void ignore_heredoc(const char *delimiter) {
 }
 */
 
+
+
+
 int main(int argc, char **argv, char **envp)
 {
-	char    *inputstr;
-	t_cmd   *cmdlist;    
-	t_env   *env;
-	int     exit_code;    
-	(void)envp;
+	char	*inputstr;
+	t_cmd	*cmdlist;
+	t_env	*env;
+	int		exit_code;
+
 	exit_code = 0;
+	(void)envp;
 	(void)argc;
 	(void)argv;
 	env = NULL;
@@ -134,8 +139,7 @@ int main(int argc, char **argv, char **envp)
 	setup_signals();
 
 	while (1)
-	{  
- 
+	{
 		g_signal_received = 0;
 		inputstr = NULL;
 
@@ -163,11 +167,12 @@ int main(int argc, char **argv, char **envp)
 				//free_cmd(cmdlist); tolti a causa di double free
 			}
 		}
-		//free(inputstr); 
+		free(inputstr); 
 		inputstr = NULL;
+		//free_cmdlist(cmdlist);
 	}
 
 	if (env)
-		//ft_freelist(env);
+		ft_freelist(env);
 	return (exit_code);
 }

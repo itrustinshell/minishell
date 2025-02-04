@@ -15,21 +15,18 @@
 void	handle_heredoc_input(t_redir *tmp_redirlist)
 {
 	char	*inputstr;
-	size_t	len;
-	int		j;
+//size_t	len;
+	//sint		j;
 
-	len = 0;
+	//len = 0;s
 	while (1)
 	{
-		printf(">: ");
-		getline(&inputstr, &len, stdin);
-		j = 0;
-		while (inputstr[j] != '\n')
-			j++;
-		inputstr[j] = '\0';
+		inputstr = readline(">: ");
+		if (!inputstr)
+			return ;
 		if (strcmp(inputstr, tmp_redirlist->delimiter) == 0)
 			break ;
-		inputstr[j] = '\n';
+		inputstr[ft_strlen(inputstr) - 1] = '\n';
 		build_heredoclist(inputstr, &(tmp_redirlist->heredoclist));
 	}
 }

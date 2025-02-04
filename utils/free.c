@@ -62,3 +62,60 @@ void	free_cmd(t_cmd *cmd) //solo quando è singolo comando....uindi non frea le 
 		free(cmd);
 	}
 }
+
+
+
+/*
+
+	char				*cmd;
+	char				**args;
+	char				*path;
+	struct s_cmd		*next;
+	t_redir				*redirlist;
+	int					argc;
+
+
+*/
+
+
+// freeredir()
+// {
+
+// }
+
+// void	free_redirlist(t_redir *redirnode)
+// {
+// 	if (!redirnode)
+// 		return;
+// 	while (redirnode)
+// 	{
+// 		freeredir(redirnode);
+// 		redirnode = redirnode->next;
+// 	}
+// }
+
+
+// void	free_cmd(cmd)
+// {
+// 	if (!cmd)
+// 		return;
+// 	free(cmd->cmd);
+// 	if (cmd->args)
+// 		ft_freematrix(cmd->args);
+// 	if (cmd->path)
+// 		free(cmd->path);
+// 	if (cmd->redirlist)
+// 		free_redirlist(cmd->redirlist);
+// }
+
+// void	free_cmdlist(t_cmd *cmdnode)
+// {
+
+// 	if (!cmdnode)
+// 		return;
+// 	while (cmdnode)
+// 	{
+// 		freecmd(cmdnode);
+// 		cmdnode = cmdnode->next;
+// 	}
+// }
