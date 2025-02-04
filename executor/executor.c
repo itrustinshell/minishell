@@ -99,7 +99,9 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 
 	n_heredoc = count_heredoc(cmdlist);
 	heredoc(cmdlist, n_heredoc);
+
 	cmdlist_len = listlen(cmdlist);
+	printf("lunghezaaaaaa: %d\n", cmdlist_len);
 	if (cmdlist_len == 0)
 		return ;
 	if (cmdlist_len > 1)

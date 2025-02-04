@@ -11,7 +11,7 @@
 - aaa:se premo piu volte tab mi fa ls
 - non ho provato unset $PATH
 - quando faccio cd .. e poi torno indientro non esegue piu redirection e vompgni bella
-- nell'heredoc
+
 */
 
 /*TODO: 
