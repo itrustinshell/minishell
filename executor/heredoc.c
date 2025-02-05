@@ -15,7 +15,7 @@
 void	handle_heredoc_input(t_redir *tmp_redirlist)
 {
 	char	*inputstr;
-	char 	*str_realloc;
+	char	*str_realloc;
 
 	while (1)
 	{
@@ -24,17 +24,9 @@ void	handle_heredoc_input(t_redir *tmp_redirlist)
 			return ;
 		str_realloc = ft_calloc((ft_strlen(inputstr) + 1), sizeof(char));
 		ft_strncpy(str_realloc, inputstr, ft_strlen(inputstr));
-
-		str_realloc[ft_strlen(inputstr)]  = '\n';
-	
-
-
+		str_realloc[ft_strlen(inputstr)] = '\n';
 		if (strcmp(inputstr, tmp_redirlist->delimiter) == 0)
 			break ;
-
-		//printf("prima: %s\n", inputstr);
-		//inputstr[ft_strlen(inputstr)] = '\n';
-		//printf("dopo: %s\n", inputstr);
 		build_heredoclist(str_realloc, &(tmp_redirlist->heredoclist));
 	}
 }

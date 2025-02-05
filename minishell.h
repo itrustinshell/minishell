@@ -62,6 +62,9 @@
 #define APPEND_REDIR 3
 #define HEREDOC 4
 
+#define TRUE 1
+#define FALSE 0
+
 enum token_type
 {
 	INVALID,

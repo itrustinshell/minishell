@@ -46,6 +46,7 @@ int	handle_heredoc(t_redir *latest_input_redir, int is_builtin)
 {
 	int			fdpipe[2];
 	t_heredoc	*current;
+
 	pipe(fdpipe);
 	if (latest_input_redir->heredoclist)
 	{
