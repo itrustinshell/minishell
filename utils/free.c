@@ -13,10 +13,12 @@ void	ft_free_n_matrix(char **matrix, int n)
 	free(matrix);
 }
 
-void	ft_freematrix(char **matrix)
+void	free_matrix(char **matrix)
 {
 	int	i;
 
+	if (!matrix)
+		return ;		
 	i = 0;
 	while (matrix[i])
 	{
@@ -28,25 +30,21 @@ void	ft_freematrix(char **matrix)
 	matrix = NULL;
 }
 
-void	ft_freelist(t_env *envlist)
-{
-	t_env	*tmp_list;
-	t_env	*saved_tmplist;
 
-	if (!envlist)
-		return;
-	tmp_list = envlist;
-	while(tmp_list->next)
+void	free_envlist(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
 	{
-		saved_tmplist = tmp_list;
-		tmp_list = tmp_list->next;
-		free(saved_tmplist->name);
-		free(saved_tmplist->value);
-		free(saved_tmplist);
+		tmp = env->next;
+		if (env->name)
+			free(env->name);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = tmp;
 	}
-	free(tmp_list->name);
-	free(tmp_list->value);
-	free(tmp_list);
 }
 
 void	free_cmd(t_cmd *cmd) //solo quando è singolo comando....uindi non frea le liste di comandi....non fria i next...aaa dovrebbe friare la lista di redir perchè è fissa per  ogni comando...da implementare
@@ -56,7 +54,7 @@ void	free_cmd(t_cmd *cmd) //solo quando è singolo comando....uindi non frea le 
 		if (cmd->cmd)
 			free(cmd->cmd);
 		if (cmd->args)
-			ft_freematrix(cmd->args);
+			free_matrix(cmd->args);
 		if (cmd->path)
 			free(cmd->path);
 		free(cmd);

@@ -198,8 +198,8 @@ void	printallheredoclists(t_cmd *cmd);
 int		count_heredoc(t_cmd *cmd);
 
 //free
-void	ft_freematrix(char **matrix);
-void	ft_freelist(t_env *envlist);
+void	free_matrix(char **matrix);
+void	free_envlist(t_env *envlist);
 void	ft_free_n_matrix(char **matrix, int n);
 void	free_cmd(t_cmd *cmd);
 

@@ -33,18 +33,6 @@ char *tokenalloc(char *inputstr, int index, int len)
 	return (token);
 }
 
-void free_matrix(char **tokenmatrix)
-{
-	int t;
-
-	t = 0;
-	while (tokenmatrix[t])
-	{
-		free(tokenmatrix[t]);
-			t++;
-	}
-	free(tokenmatrix);
-}
 
 char *create_token_wordled(char *inputstr, int *iterator)
 {

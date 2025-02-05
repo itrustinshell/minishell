@@ -56,72 +56,42 @@ void setup_signals(void)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void prompt(char **inputstr)
+
+char	*create_prompt(void)
 {
-	char	*cwdpath;
-	char	*cwdpath_modified;
-	int		len;
+    char	*cwd;
+    char	*cwd_mod;
+    int		len;
 
-	cwdpath = getcwd(NULL, 0);
-	len = ft_strlen(cwdpath);
-
-	cwdpath_modified = malloc(len + 3);
-	strcpy(cwdpath_modified, cwdpath);
-	cwdpath_modified[len] = ' ';
-	cwdpath_modified[len + 1] = ':';
-	cwdpath_modified[len + 2] = '\0';
-
-	*inputstr = readline(cwdpath_modified);
-
-	free(cwdpath);
-	free(cwdpath_modified);
-
-	if (*inputstr) 
-	{
-		size_t len = strlen(*inputstr);
-		char *with_newline = malloc(len + 2);
-		if (!with_newline) 
-		{
-			free(*inputstr);
-			return ;
-		}
-		strcpy(with_newline, *inputstr);
-		with_newline[len] = '\0';
-		with_newline[len + 1] = '\0';
-		free(*inputstr);
-		*inputstr = with_newline;
-		add_history(*inputstr);
-	}
+    cwd = getcwd(NULL, 0);
+    if (!cwd)
+        return (NULL);
+    len = ft_strlen(cwd);
+    cwd_mod = malloc(len + 3);
+    if (!cwd_mod)
+    {
+        free(cwd);
+        return (NULL);
+    }
+    strcpy(cwd_mod, cwd);
+    strcat(cwd_mod, " :");
+    free(cwd);
+    return (cwd_mod);
 }
 
-/*
-void ignore_heredoc(const char *delimiter) {
-	char *line;
+void	prompt(char **inputstr)
+{
+    char	*cwd_mod;
 
-	while (1) {
-		line = readline("> "); // Simula il prompt per il heredoc
-		if (!line) { 
-			printf("\nMinishell: EOF nel heredoc\n");
-			
-			// Riapre stdin usando open("/dev/tty", O_RDONLY)
-			int tty_fd = open("/dev/tty", O_RDONLY);
-			if (tty_fd != -1) {
-				dup2(tty_fd, STDIN_FILENO);
-				close(tty_fd);
-			}
-			return;
-		}
-		if (strcmp(line, delimiter) == 0) {
-			free(line);
-			break;
-		}
-		free(line);
-	}
+    cwd_mod = create_prompt();
+    if (!cwd_mod)
+        return ;
+    *inputstr = readline(cwd_mod);
+  	free(cwd_mod);
+	if (!inputstr)
+		return ;
+    add_history(*inputstr); 
 }
-*/
-
-
-
 
 int main(int argc, char **argv, char **envp)
 {
@@ -173,6 +143,6 @@ int main(int argc, char **argv, char **envp)
 	}
 
 	if (env)
-		ft_freelist(env);
+		free_envlist(env);
 	return (exit_code);
 }
