@@ -25,7 +25,6 @@ t_redir	*new_redir(char *filename, int type)
 	redir = (t_redir *)calloc(1, sizeof(t_redir));
 	if (!redir)
 		return (NULL);
-	redirinit(redir);
 	redir->type = type;
 	redir->file = filename;
 	redir->next = NULL;
@@ -107,7 +106,6 @@ t_cmd	*create_command(t_list *tokens)
 	cmd = (t_cmd *)calloc(1, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmdinit(cmd);
 	current_node = tokens;
 	cmd->args = (char **)calloc(count_args(tokens) + 2, sizeof(char *));
 	if (!cmd->args)
