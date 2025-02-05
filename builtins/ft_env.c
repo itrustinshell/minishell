@@ -33,19 +33,22 @@ int	ft_env(t_env *lenvlist)
 	return (NULL);
 }
 */
-t_env	*copy_envp(char **envp)
+t_env	*envcpy(char **envp)
 {
-	t_env	*envlist;
-	t_env	*envnode;
-	int		i;
+    t_env	*envlist = NULL;
+    t_env	*envnode;
+    int		i = 0;
 
-	envlist = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		envnode = create_lenvnode(envp[i]);
-		envlist_append(envnode, &envlist);
-		i++;
-	}
-	return (envlist);
+    while (envp[i])
+    {
+        envnode = create_lenvnode(envp[i]);
+        if (!envnode)
+        {
+            free_envlist(envlist);
+            return (NULL);
+        }
+        envlist_append(envnode, &envlist);
+        i++;
+    }
+    return (envlist);
 }

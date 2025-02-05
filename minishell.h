@@ -198,8 +198,8 @@ void	printallheredoclists(t_cmd *cmd);
 int		count_heredoc(t_cmd *cmd);
 
 //free
-void	ft_freematrix(char **matrix);
-void	ft_freelist(t_env *envlist);
+void	free_matrix(char **matrix);
+void	free_envlist(t_env *envlist);
 void	ft_free_n_matrix(char **matrix, int n);
 void	free_cmd(t_cmd *cmd);
 
@@ -221,12 +221,13 @@ t_env	*last_envlist(t_env *envlist);
 t_env	*create_lenvnode(char *str);
 void	envlist_append(t_env *node, t_env **list);
 int		envlist_len(t_env *list);
-t_env	*copy_envp(char **envp);
+t_env	*envcpy(char **envp);
 char	*is_valid_lvar(char *lvar, char **l_envp);
 char	*is_valid_lvar(char *lvar, char **l_envp);
 void	init_envnode(t_env *env);
 t_env	*access_envar(char *envar, t_env *envlist);
 int	check_builtin(t_cmd *cmd);
+t_env	*create_lenvnode(char *str);
 
 //CMD utils
 char	*find_external_cmd(char *cmd);	

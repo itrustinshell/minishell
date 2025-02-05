@@ -352,13 +352,13 @@ t_cmd *parse_input(char *input)
         current_cmd = parse_command(command_strings[i]);
         if (!current_cmd)
         {
-            ft_freematrix(command_strings);
+            free_matrix(command_strings);
             free_cmd(cmd_list);
             return (NULL);
         }
         listappend_command(current_cmd, &cmd_list);
         i++;
     }
-    ft_freematrix(command_strings);
+    free_matrix(command_strings);
     return (cmd_list);
 }
