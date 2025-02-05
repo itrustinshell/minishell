@@ -30,32 +30,19 @@ void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
 void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 		int saved_stdout)
 {
-	int		n_heredoc;
 	int		ret;
 	t_env	**env;
 	int		is_builtin;
 
-	n_heredoc = 0;
 	if (i > 0)
-	{
 		piperead(data->pipematrix, i);
-		if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
-			is_builtin = 1;
-		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
-		if (ret == 0)
-			exit(1);
-	}
 	if (tmp_cmdlist->next)
-	{
 		pipewrite(data->pipematrix, i);
-		if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
-			is_builtin = 1;
-
-		ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
-		printf("Sono stati rilevati %d heredoc\n", n_heredoc);
-		if (ret == 0)
-			exit(1);
-	}
+	if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
+		is_builtin = 1;
+	ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
+	if (ret == 0)
+		exit(1);
 	pipeclose(data->pipematrix, data->cmdlist_len);
 	env = data->env;
 	ft_execve(tmp_cmdlist, *env, data->envp, data->exit_code);
