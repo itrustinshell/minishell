@@ -38,26 +38,6 @@ t_env	*access_envar(char *namevar, t_env *list)
 	return (NULL);
 }
 
-t_env	*create_lenvnode(char *str)
-{
-	t_env	*new;
-	char	**splittedstr;
-
-	new = NULL;
-	splittedstr = NULL;
-	splittedstr = ft_split(str, '=');
-	if (!splittedstr)
-		return (NULL);
-	new = (t_env *)malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	init_envnode(new);
-	new->name = strdup(splittedstr[0]);
-	if (splittedstr[1] != NULL)
-		new->value = strdup(splittedstr[1]);
-	return (new);
-}
-
 //free(envar_value);
 void	update_envar_value(t_env *found_global_envar, char *envar_value)
 {

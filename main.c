@@ -105,7 +105,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = NULL;
-	env = copy_envp(envp);
+	env = envcpy(envp);
 	setup_signals();
 
 	while (1)
@@ -141,8 +141,8 @@ int main(int argc, char **argv, char **envp)
 		inputstr = NULL;
 		//free_cmdlist(cmdlist);
 	}
-
 	if (env)
 		free_envlist(env);
+	rl_clear_history();
 	return (exit_code);
 }
