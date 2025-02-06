@@ -49,31 +49,26 @@ BOOL	has_command(t_list *tokens)
 
 void	get_token_type(t_tkn *token, t_list *tokens)
 {
-	t_list	*last_node;
-	t_tkn	*last_token;
+	t_list			*last_node;
+	t_tkn			*last_token;
+	enum token_type	type;
 
-	if (token->len == 2 && ft_strncmp(token->value, "<<", 2) == 0)
-		token->type = DOUBLE_LEFT;
-	else if (token->len == 2 && ft_strncmp(token->value, ">>", 2) == 0)
-		token->type = DOUBLE_RIGHT;
-	else if (token->len == 1 && ft_strncmp(token->value, "<", 1) == 0)
-		token->type = LEFT;
-	else if (token->len == 1 && ft_strncmp(token->value, ">", 1) == 0)
-		token->type = RIGHT;
+	if (tkn_is_redir(token))
+		set_redir_tkn(token);
 	else
 	{
 		last_node = ft_lstlast(tokens);
 		if (last_node)
-			last_token = (t_tkn *)last_node->content;
-		if (last_node && last_token->type == LEFT)
+			type = ((t_tkn *)last_node->content)->type;
+		if (last_node && type == LEFT)
 			token->type = LEFT_ARG;
-		else if (last_node && (last_token->type == DOUBLE_LEFT))
+		else if (last_node && (type == DOUBLE_LEFT))
 			token->type = HEREDOC_ARG;
-		else if (last_node && last_token->type == RIGHT)
+		else if (last_node && type == RIGHT)
 			token->type = RIGHT_ARG;
-		else if (last_node && last_token->type == DOUBLE_RIGHT)
+		else if (last_node && type == DOUBLE_RIGHT)
 			token->type = APPEND_ARG;
-		else if (last_node && (last_token->type == COMMAND || last_token->type == ARG))
+		else if (last_node && (type == COMMAND || type == ARG))
 			token->type = ARG;
 		else if (!last_node || !has_command(tokens))
 			token->type = COMMAND;
@@ -121,9 +116,7 @@ t_cmd	*create_command(t_list *tokens)
 			if (!cmd->cmd)
 				return (NULL);
 			ft_strncpy(cmd->cmd, current_tok->value, token_size);
-			//printf("eh\n");
 			cmd->path = get_cmdpath(cmd->cmd);
-			//printf("wa\n");
 			cmd->args[0] = ft_strdup(cmd->cmd);
 		}
 		else if (current_tok->type == ARG)
@@ -315,7 +308,7 @@ t_cmd *parse_input(char *input)
     int   i;
 
     cmd_list = NULL;
-    command_strings = ft_split(input, PIPE);
+    command_strings = ft_split(input, PIPE); //TODO: use the right split
     if (!command_strings)
         return (NULL);
     

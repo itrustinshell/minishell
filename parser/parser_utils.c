@@ -1,51 +1,40 @@
-// #include "../minishell.h"
+#include "../minishell.h"
 
-// #include <stdlib.h>
-// #include <string.h>
-// #include <stdbool.h>
+int tkn_is_redir(t_tkn *token)
+{
+    int     result;
+    int     len;
+    char    *value;
 
-// int count_pipes(const char *input)
-// {
-//     int     count;
+    len = token->len;
+    value = token->value;
+    result = FALSE;
+    if (len == 2)
+    {
+        result = ft_strncmp(value, "<<", 2) == 0;
+        result = result || ft_strncmp(value, ">>", 2) == 0;
+    }
+    else if (len == 1)
+    {
+        result = ft_strncmp(value, "<", 1) == 0;
+        result = result || ft_strncmp(token->value, ">", 1) == 0;
+    }
+    return (result);
+}
 
+void    set_redir_tkn(t_tkn *token)
+{
+    int     len;
+    char    *value;
 
-//     if (!input)
-//         return NULL;
-//     count = 0;
-//     while (*input)
-//     {
-//         if (*input == '\\')
-//         {
-//             input += 2;
-//             continue ;
-//         }
-//         if (*input == '"')
-//             while (*(++input) != '"');
-//         if (*input[i] == '\'')
-//             while (input[++i] != '\'');
-//         if (input[i] == '|')
-//             count++;
-//     }
-// }
-
-// char** shell_split(const char* input) {
-//     char    **result;
-//     int     i;
-
-//     if (!input)
-//         return NULL;
-//     i = 0;
-//     while (input[i])
-//     {
-//         if ()
-//     }
-// }
-
-// // Funzione di utilità per liberare la memoria
-// void free_shell_split(char** tokens, int count) {
-//     if (!tokens) return;
-//     for (int i = 0; i < count; i++) {
-//         free(tokens[i]);
-//     }
-//     free(tokens);
-// }
+    len = token->len;
+    value = token->value;
+    if (len == 2 && ft_strncmp(value, "<<", 2) == 0)
+	    token->type = DOUBLE_LEFT;
+    else if (len == 2 && ft_strncmp(value, ">>", 2) == 0)
+		token->type = DOUBLE_RIGHT;
+    else if (len == 1 && ft_strncmp(value, "<", 1) == 0)
+		token->type = LEFT;
+    else if (len == 1 && ft_strncmp(value, ">", 1) == 0)
+		token->type = RIGHT;
+}
