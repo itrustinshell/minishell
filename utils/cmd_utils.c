@@ -24,6 +24,7 @@ char *build_cmd(char *root_path, char *cmd)
 	path = ft_strjoin(root_path, "/");
 	if (!path)
 		return NULL;
+
 	full_cmd = ft_strjoin(path, cmd);
 	free(path);
 	return (full_cmd);
@@ -84,15 +85,15 @@ t_cmd *create_cmd(char **matrix)
 	cmd->cmd = strdup(matrix[0]);
 	if (!cmd->cmd)
 	{
-		free(cmd);
+		free_cmd(cmd);
 		return (NULL);
 	}
 	matrix_len = matrixlen(matrix);
 	cmd->args = (char **)malloc((matrix_len + 1) * sizeof(char *));
 	if (!cmd->args)
 	{
-		free(cmd->cmd);
-		free(cmd);
+		//free(cmd->cmd);
+		free_cmd(cmd);
 		return (NULL);
 	}
 	i = 0;
@@ -105,9 +106,9 @@ t_cmd *create_cmd(char **matrix)
 			{
 				free(cmd->args[--i]);
 			}
-			free(cmd->args);
-			free(cmd->cmd);
-			free(cmd);
+			//free(cmd->args);
+			//free(cmd->cmd);
+			free_cmd(cmd);
 			return (NULL);
 		}
 		i++;

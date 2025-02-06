@@ -47,17 +47,57 @@ void	free_envlist(t_env *env)
 	}
 }
 
-void	free_cmd(t_cmd *cmd) //solo quando è singolo comando....uindi non frea le liste di comandi....non fria i next...aaa dovrebbe friare la lista di redir perchè è fissa per  ogni comando...da implementare
+
+void	free_heredoclist(t_heredoc *heredoclist)
 {
-	if (cmd)
+	t_heredoc *tmp;
+	while (heredoclist)
 	{
+		tmp = heredoclist->next;
+		if (heredoclist->input)
+			free(heredoclist->input);
+		free(heredoclist);
+		heredoclist = tmp;
+	}
+}
+
+
+void	free_redirlist(t_redir *redirlist)
+{
+	t_redir *tmp;
+	while (redirlist)
+	{
+		tmp = redirlist->next;
+		if (redirlist->file)
+			free(redirlist->file);
+		if (redirlist->delimiter)
+			free(redirlist->delimiter);
+		if (redirlist->heredoclist)
+			free_heredoclist(redirlist->heredoclist); // ✅ Libera la lista degli heredoc
+		free(redirlist);
+		redirlist = tmp;
+	}
+}
+
+
+
+void	free_cmd(t_cmd *cmd)
+{
+	t_cmd *tmp;
+
+	while (cmd)
+	{
+		tmp = cmd->next;
 		if (cmd->cmd)
 			free(cmd->cmd);
 		if (cmd->args)
 			free_matrix(cmd->args);
 		if (cmd->path)
 			free(cmd->path);
+		if (cmd->redirlist)
+			free_redirlist(cmd->redirlist);
 		free(cmd);
+		cmd = tmp;
 	}
 }
 

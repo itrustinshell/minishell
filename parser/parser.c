@@ -101,10 +101,14 @@ t_cmd	*create_command(t_list *tokens)
 	cmd = (t_cmd *)calloc(1, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
+	cmdinit(cmd); //ho aggiunto una inizializzazione; Ha risolto i problemi di memrory leak in fase di testing
 	current_node = tokens;
 	cmd->args = (char **)calloc(count_args(tokens) + 2, sizeof(char *));
 	if (!cmd->args)
+	{
+		free_cmd(cmd);
 		return (NULL);
+	}
 	cmd->args[count_args(tokens) + 1] = NULL;
 	while (current_node)
 	{
@@ -114,7 +118,10 @@ t_cmd	*create_command(t_list *tokens)
 			token_size = ft_strlen(current_tok->value);
 			cmd->cmd = (char *)calloc(token_size + 1, sizeof(char));
 			if (!cmd->cmd)
+			{
+				free_cmd(cmd);
 				return (NULL);
+			}
 			ft_strncpy(cmd->cmd, current_tok->value, token_size);
 			cmd->path = get_cmdpath(cmd->cmd);
 			cmd->args[0] = ft_strdup(cmd->cmd);
@@ -123,7 +130,10 @@ t_cmd	*create_command(t_list *tokens)
 		{
 			cmd->args[cmd->argc + 1] = calloc(current_tok->len + 1, sizeof(char));
 			if (!cmd->args[cmd->argc + 1])
+			{
+				free_cmd(cmd);
 				return (NULL);
+			}
 			ft_strncpy(cmd->args[cmd->argc + 1], current_tok->value, current_tok->len);
 			cmd->argc++;
 		}
@@ -132,7 +142,10 @@ t_cmd	*create_command(t_list *tokens)
 			token_size = ft_strlen(current_tok->value);
 			t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), INPUT_REDIRECTION);
 			if (!redir || !redir->file)
+			{
+				free_cmd(cmd);
 				return (NULL);
+			}
 			ft_strncpy(redir->file, current_tok->value, token_size);
 			listappend_redir(redir, &cmd->redirlist);
 		}
@@ -141,7 +154,10 @@ t_cmd	*create_command(t_list *tokens)
 			token_size = ft_strlen(current_tok->value);
 			t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), OUTPUT_REDIRECTION);
 			if (!redir || !redir->file)
+			{
+				free_cmd(cmd);
 				return (NULL);
+			}
 			ft_strncpy(redir->file, current_tok->value, token_size);
 			listappend_redir(redir, &cmd->redirlist);
 		}
@@ -151,7 +167,10 @@ t_cmd	*create_command(t_list *tokens)
 			t_redir *redir = new_redir(NULL, HEREDOC);
 			redir->delimiter = (char *)calloc(token_size + 1, sizeof(char));
 			if (!redir || !redir->delimiter)
+			{
 				return (NULL);
+				free_cmd(cmd);
+			}
 			ft_strncpy(redir->delimiter, current_tok->value, token_size);
 			listappend_redir(redir, &cmd->redirlist);
 		}
@@ -194,6 +213,37 @@ void	expand(char **env_var)
 		ft_strncpy(*env_var, expanded, ft_strlen(expanded));
 	}
 }
+
+
+/* Funzione per liberare un token */
+void free_tkn(void *token)
+{
+	t_tkn *t = (t_tkn *)token;
+	if (t)
+	{
+		free(t->value);
+		free(t);
+	}
+}
+
+void free_tokenslist(t_list *tokens)
+{
+	t_list *tmp;
+
+	while (tokens)
+	{
+		tmp = tokens->next;
+		if (tokens->content)
+		{
+			if (((t_tkn *)tokens->content)->value)
+				free(((t_tkn *)tokens->content)->value);
+			free(tokens->content);
+		}
+		free(tokens);
+		tokens = tmp;
+	}
+}
+
 
 t_cmd	*parse_command(char *command_string)
 {
@@ -292,7 +342,14 @@ t_cmd	*parse_command(char *command_string)
 		ft_lstadd_back(&tokens, ft_lstnew(token));
 	}
 	//printf("Now we have the tokens, lets create a cmd to execute\n");
-	return (create_command(tokens));
+	
+	//return(create_command(tokens)); //tokens qui non veniva liberato. dopo aver comentato e aggiungto 
+	//le tre righe sotto, ho risolto quel memory leak.
+
+	t_cmd *cmdlist = create_command(tokens);
+	free_tokenslist(tokens);
+	return (cmdlist);
+
 }
 
 void print_redir(void *redir_node)
