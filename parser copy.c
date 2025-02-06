@@ -52,7 +52,7 @@ BOOL	has_command(t_list *tokens)
 void	get_token_type(t_tkn *token, t_list *tokens)
 {
 	t_list	*last_node;
-	t_tkn	*last_token;
+	//t_tkn	*last_token;
 
 	if (token->len == 2 && ft_strncmp(token->value, "<<", 2) == 0)
 		token->type = DOUBLE_LEFT;

@@ -1,65 +1,72 @@
 #include "../minishell.h"
 
-/*	DESCRIPTION:
-		Ottieni il percorso del comando.
-		Qusta funzione si applica a prescindere a tutti i comandi.
-		Pertanto si applica anche alle builtins.
-		Ovviamente se il comando non e'un comando esterno,
-		non verra' trovata alcuna corrispondenza.
-		Attenzione ai casi in cui come echo ci sono comandi esterni.
-		In questo ultimo caso e'trovato effettivamente un path.
-		Tuttavia al momento della esecuzione verra'eseguito 
-		ft_echo (come builtin).
+char **split_pathvariable(void)
+{
+    char **splitted_path;
+	char *path;
+
+    path = getenv("PATH");
+    if (!path)
+        return (NULL);
+    splitted_path = ft_split(path, ':');
+    if (!splitted_path)
+        return (NULL);
+    return (splitted_path);
+}
+
+char *build_cmd(char *root_path, char *cmd)
+{
+	char *full_cmd;
+	char *path;
+
+	if (!root_path || !cmd)
+		return (NULL);
+	path = ft_strjoin(root_path, "/");
+	if (!path)
+		return NULL;
+	full_cmd = ft_strjoin(path, cmd);
+	free(path);
+	return (full_cmd);
+}
+
+/*
+prima o poi farai un free dell'input.
+Se Hai passato qualcosa di statico come "ls"
+Puoi avee qualche probeminio nel freeare quello.
+Ecco perchè ritorni uno strdup(stringa)
 */
 char *get_cmdpath(char *cmd)
 {
-	char *path;
-	char **splitted_path;
-	char *finalpath;
-	int i;
-	int access_result;
-
+    char **splitted_path;
+    int i;
+	char *full_cmd;
+	
 	if (!cmd)
-		return (NULL);
-	access_result = access(cmd, X_OK);
-	if (access_result == 0)
-	{
-		//printf("ho trovato il comando solo con cmd\n");
-		return (cmd);
-	}
-	path = getenv("PATH");
-	if (!path)
-		return (NULL);
-	splitted_path = ft_split(path, ':');
+    	return (NULL);
+	if (access(cmd, X_OK) == 0)
+		return strdup(cmd);
+	splitted_path = split_pathvariable();
 	if (!splitted_path)
 		return (NULL);
-	i = 0;
-	while (splitted_path[i])
-	{
-		finalpath = strjoin(splitted_path[i], "/");
-		if (!finalpath)
+    i = 0;
+    while (splitted_path[i])
+    {	
+		full_cmd = build_cmd(splitted_path[i], cmd);
+		if (!full_cmd)
 		{
-			free(splitted_path);
+       		free_matrix(splitted_path);
 			return (NULL);
 		}
-		finalpath = strjoin(finalpath, cmd);
-		if (!finalpath)
-		{
-			free(splitted_path);
-			return (NULL);
-		}
-		access_result = access(finalpath, X_OK);
-		if (access_result == 0)
-		{
-			free(splitted_path);
-			return (finalpath);
-		}
-		free(finalpath);
-		i++;
-	}
-	free(splitted_path);
-	printf("aaaaaaaaaNON HO TROVATO IL COMANDO!!!\n");
-	return (NULL);
+        if (access(full_cmd, X_OK) == 0)
+        {
+            free_matrix(splitted_path);
+            return (full_cmd);
+        }
+		free(full_cmd);
+        i++;
+    }
+    free_matrix(splitted_path);
+    return (NULL);
 }
 
 /* Crea un nuovo nodo t_cmd dalla matrice di comandi */

@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -gdwarf-4 -Wall -Wextra -Werror
 
 SRC =   tokenizer/fill_tokenmatrix.c tokenizer/get_tokens_number.c tokenizer/tokenizer.c\
 		builtins/ft_export.c builtins/ft_export_utils.c builtins/litoma.c builtins/ft_unset.c builtins/ft_env.c builtins/ft_env_lists.c builtins/ft_cd.c builtins/ft_echo.c builtins/ft_exit.c builtins/ft_pwd.c parser/parser.c parser/parser_utils.c\

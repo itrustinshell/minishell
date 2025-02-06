@@ -34,6 +34,7 @@ void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 	t_env	**env;
 	int		is_builtin;
 
+	is_builtin = 0;
 	if (i > 0)
 		piperead(data->pipematrix, i);
 	if (tmp_cmdlist->next)

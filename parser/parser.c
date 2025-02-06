@@ -50,7 +50,7 @@ BOOL	has_command(t_list *tokens)
 void	get_token_type(t_tkn *token, t_list *tokens)
 {
 	t_list			*last_node;
-	t_tkn			*last_token;
+	//t_tkn			*last_token;
 	enum token_type	type;
 
 	if (tkn_is_redir(token))
