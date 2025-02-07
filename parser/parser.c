@@ -19,19 +19,6 @@
 #define TRUE 1
 #define FALSE 0
 
-t_redir	*new_redir(char *filename, int type)
-{
-	t_redir	*redir;
-
-	redir = (t_redir *)calloc(1, sizeof(t_redir));
-	if (!redir)
-		return (NULL);
-	redir->type = type;
-	redir->file = filename;
-	redir->next = NULL;
-	return (redir);
-}
-
 BOOL	has_command(t_list *tokens)
 {
 	t_list	*node;
@@ -109,40 +96,13 @@ t_cmd	*create_command(t_list *tokens)
 		if (curr_tok->type == COMMAND)
 			add_cmd(cmd, curr_tok);
 		else if (curr_tok->type == ARG)
-		{
-			cmd->args[cmd->argc + 1] = calloc(curr_tok->len + 1, sizeof(char));
-			if (!cmd->args[cmd->argc + 1])
-			{
-				free_cmd(cmd);
-				return (NULL);
-			}
-			ft_strncpy(cmd->args[cmd->argc + 1], curr_tok->value, curr_tok->len);
-			cmd->argc++;
-		}
+			add_arg(cmd, curr_tok);
 		else if (curr_tok->type == LEFT_ARG)
-		{
-			token_size = ft_strlen(curr_tok->value);
-			t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), INPUT_REDIRECTION);
-			if (!redir || !redir->file)
-			{
-				free_cmd(cmd);
-				return (NULL);
-			}
-			ft_strncpy(redir->file, curr_tok->value, token_size);
-			listappend_redir(redir, &cmd->redirlist);
-		}
+			add_redir(cmd, curr_tok, INPUT_REDIRECTION);
 		else if (curr_tok->type == RIGHT_ARG)
-		{
-			token_size = ft_strlen(curr_tok->value);
-			t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), OUTPUT_REDIRECTION);
-			if (!redir || !redir->file)
-			{
-				free_cmd(cmd);
-				return (NULL);
-			}
-			ft_strncpy(redir->file, curr_tok->value, token_size);
-			listappend_redir(redir, &cmd->redirlist);
-		}
+			add_redir(cmd, curr_tok, OUTPUT_REDIRECTION);
+		else if (curr_tok->type == APPEND_ARG)
+			add_redir(cmd, curr_tok, APPEND_REDIRECTION);
 		else if (curr_tok->type == HEREDOC_ARG)
 		{
 			token_size = ft_strlen(curr_tok->value);
@@ -154,15 +114,6 @@ t_cmd	*create_command(t_list *tokens)
 				free_cmd(cmd);
 			}
 			ft_strncpy(redir->delimiter, curr_tok->value, token_size);
-			listappend_redir(redir, &cmd->redirlist);
-		}
-		else if (curr_tok->type == APPEND_ARG)
-		{
-			token_size = ft_strlen(curr_tok->value);
-			t_redir *redir = new_redir((char *)calloc(token_size + 1, sizeof(char)), APPEND_REDIRECTION);
-			if (!redir || !redir->file)
-				return (NULL);
-			ft_strncpy(redir->file, curr_tok->value, token_size);
 			listappend_redir(redir, &cmd->redirlist);
 		}
 		current_node = current_node->next;

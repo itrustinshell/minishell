@@ -247,6 +247,9 @@ char**	shell_split(const char* input);
 char	**matrixalloc(int n_tokens);
 
 // Mattia Parser Utils
+t_redir	*new_redir(char *filename, int type);
 int		tkn_is_redir(t_tkn *token);
 void    set_redir_tkn(t_tkn *token);
 void    add_cmd(t_cmd *cmd, t_tkn *token);
+void    add_arg(t_cmd *cmd, t_tkn *token);
+void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type);
