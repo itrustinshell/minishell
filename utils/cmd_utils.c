@@ -18,7 +18,12 @@ char *build_cmd(char *root_path, char *cmd)
 {
 	char *full_cmd;
 	char *path;
-
+	/*MM: rootpath viene da get_cmd()
+		in get_cmd c'è un char **splitted
+		e in buildcmd viene passato splitted[i].
+		quindi root_path è un elemaento malloccato
+		di matrix
+	*/
 	if (!root_path || !cmd)
 		return (NULL);
 	path = ft_strjoin(root_path, "/");

@@ -22,13 +22,16 @@ void	handle_heredoc_input(t_redir *tmp_redirlist)
 		inputstr = readline(">: ");
 		if (!inputstr)
 			return ;
-		str_realloc = ft_calloc((ft_strlen(inputstr) + 1), sizeof(char));
+		str_realloc = ft_calloc(ft_strlen(inputstr) + 2, sizeof(char));	
 		ft_strncpy(str_realloc, inputstr, ft_strlen(inputstr));
-		str_realloc[ft_strlen(inputstr)] = '\n';
+	str_realloc[ft_strlen(inputstr)] = '\0';	
+		str_realloc[ft_strlen(inputstr + 1)] = '\n';
 		if (strcmp(inputstr, tmp_redirlist->delimiter) == 0)
 			break ;
+		free(inputstr);
 		build_heredoclist(str_realloc, &(tmp_redirlist->heredoclist));
 	}
+	free(inputstr);
 }
 
 void	process_heredoc_redirlist(t_redir *tmp_redirlist)

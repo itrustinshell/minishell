@@ -123,7 +123,7 @@ t_cmd	*create_command(t_list *tokens)
 				return (NULL);
 			}
 			ft_strncpy(cmd->cmd, current_tok->value, token_size);
-			cmd->path = get_cmdpath(cmd->cmd);
+			cmd->path = get_cmdpath(cmd->cmd);	
 			cmd->args[0] = ft_strdup(cmd->cmd);
 		}
 		else if (current_tok->type == ARG)

@@ -84,10 +84,13 @@ int	ih_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 int	ihoa_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 {
 	int	ih_ret;
+	
+	t_redir *tmp_redirlist;
 
-	ih_ret = ih_redirops(redirlist, saved_stdout, is_builtin);
+	tmp_redirlist = redirlist;
+	ih_ret = ih_redirops(tmp_redirlist, saved_stdout, is_builtin);
 	if (ih_ret == 0)
 		return (0);
-	oa_redirops(redirlist);
+	oa_redirops(tmp_redirlist);
 	return (ih_ret);
 }

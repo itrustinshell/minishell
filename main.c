@@ -126,6 +126,9 @@ int main(int argc, char **argv, char **envp)
 			if (cmdlist)
 			{
 				executor(cmdlist, &env, envp, &exit_code);
+				free_cmd(cmdlist); //tolti a causa di double free
+				cmdlist = NULL;	
+
 				if (g_signal_received == 2)  // If SIGQUIT was received
 				{
 					printf("Quit (core dumped)\n");
@@ -134,13 +137,17 @@ int main(int argc, char **argv, char **envp)
 					//free(inputstr); tolti a causa di double free
 					break;
 				}
-				//free_cmd(cmdlist); tolti a causa di double free
+				
 			}
 		}
 		free(inputstr); 
 		inputstr = NULL;
 		//free_cmdlist(cmdlist);
 	}
+	if (inputstr) // risolve memoryleaks
+		free(inputstr);
+	if (cmdlist) //risolve memoryleaks
+		free_cmd(cmdlist);
 	if (env)
 		free_envlist(env);
 	rl_clear_history();
