@@ -253,3 +253,4 @@ void    set_redir_tkn(t_tkn *token);
 void    add_cmd(t_cmd *cmd, t_tkn *token);
 void    add_arg(t_cmd *cmd, t_tkn *token);
 void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type);
+void    add_heredoc(t_cmd *cmd, t_tkn *token);

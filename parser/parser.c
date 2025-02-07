@@ -104,18 +104,7 @@ t_cmd	*create_command(t_list *tokens)
 		else if (curr_tok->type == APPEND_ARG)
 			add_redir(cmd, curr_tok, APPEND_REDIRECTION);
 		else if (curr_tok->type == HEREDOC_ARG)
-		{
-			token_size = ft_strlen(curr_tok->value);
-			t_redir *redir = new_redir(NULL, HEREDOC);
-			redir->delimiter = (char *)calloc(token_size + 1, sizeof(char));
-			if (!redir || !redir->delimiter)
-			{
-				return (NULL);
-				free_cmd(cmd);
-			}
-			ft_strncpy(redir->delimiter, curr_tok->value, token_size);
-			listappend_redir(redir, &cmd->redirlist);
-		}
+			add_heredoc(cmd, curr_tok);
 		current_node = current_node->next;
 	}
 	return (cmd);

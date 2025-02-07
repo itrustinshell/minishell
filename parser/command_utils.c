@@ -35,3 +35,11 @@ void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type)
 	ft_strncpy(redir->file, token->value, token->len);
 	listappend_redir(redir, &cmd->redirlist);
 }
+
+void    add_heredoc(t_cmd *cmd, t_tkn *token)
+{
+	t_redir *redir = new_redir(NULL, HEREDOC);
+	redir->delimiter = (char *)calloc(token->len + 1, sizeof(char));
+	ft_strncpy(redir->delimiter, token->value, token->len);
+	listappend_redir(redir, &cmd->redirlist);
+}
