@@ -246,6 +246,7 @@ t_cmd	*parse_input(char *input);
 char**	shell_split(const char* input);
 char	**matrixalloc(int n_tokens);
 
-int tkn_is_redir(t_tkn *token);
+// Mattia Parser Utils
+int		tkn_is_redir(t_tkn *token);
 void    set_redir_tkn(t_tkn *token);
-
+void    add_cmd(t_cmd *cmd, t_tkn *token);

@@ -9,6 +9,7 @@
 /*   Updated: 2025/01/31 15:55:53 by dpalmese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -106,18 +107,7 @@ t_cmd	*create_command(t_list *tokens)
 	{
 		curr_tok = (t_tkn *)current_node->content;
 		if (curr_tok->type == COMMAND)
-		{
-			token_size = ft_strlen(curr_tok->value);
-			cmd->cmd = (char *)calloc(token_size + 1, sizeof(char));
-			if (!cmd->cmd)
-			{
-				free_cmd(cmd);
-				return (NULL);
-			}
-			ft_strncpy(cmd->cmd, curr_tok->value, token_size);
-			cmd->path = get_cmdpath(cmd->cmd);
-			cmd->args[0] = ft_strdup(cmd->cmd);
-		}
+			add_cmd(cmd, curr_tok);
 		else if (curr_tok->type == ARG)
 		{
 			cmd->args[cmd->argc + 1] = calloc(curr_tok->len + 1, sizeof(char));
@@ -389,6 +379,7 @@ t_cmd *parse_input(char *input)
             return (NULL);
         }
         listappend_command(current_cmd, &cmd_list);
+		printf("Oilloc o comand :%s %s\n", current_cmd->cmd, current_cmd->args[1]);
         i++;
     }
     free_matrix(command_strings);

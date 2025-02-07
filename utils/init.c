@@ -24,10 +24,8 @@ t_cmd	*new_cmd(unsigned int argc)
 			free(cmd);
 			return (NULL);
 		}
-		cmd->argc = argc;
 	}
-	else
-		argc = 0;
+	argc = 0;
 	return (cmd);
 }
 
