@@ -233,7 +233,7 @@ t_env	*create_lenvnode(char *str);
 char	*find_external_cmd(char *cmd);	
 t_cmd	*create_cmd(char **matrix);
 char	*get_cmdpath(char *cmd);
-void	cmdinit(t_cmd *cmd);
+t_cmd	*new_cmd(unsigned int argc);
 void	redirinit(t_redir *node);
 void	printlist(t_cmd *cmdlist);
 

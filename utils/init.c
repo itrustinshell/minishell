@@ -9,14 +9,26 @@
 	int					argc;
  */
 
-void cmdinit(t_cmd *cmd)
+t_cmd	*new_cmd(unsigned int argc)
 {
-	cmd->cmd = NULL;
-	cmd->args = NULL;
-	cmd->path = NULL;
-	cmd->next = NULL;
-	cmd->redirlist = NULL;
-	cmd->argc = 0;
+	t_cmd	*cmd;
+
+	cmd = (t_cmd *)ft_calloc(1, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	if (argc > 0)
+	{
+		cmd->args = (char **)ft_calloc(argc, sizeof(char *));
+		if (!cmd->args)
+		{
+			free(cmd);
+			return (NULL);
+		}
+		cmd->argc = argc;
+	}
+	else
+		argc = 0;
+	return (cmd);
 }
 
 
