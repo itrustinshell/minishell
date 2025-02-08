@@ -140,6 +140,7 @@ t_cmd	*parse_command(char *command_string)
 	char			*beginning;
 	t_tkn			*token;
 	t_list			*tokens;
+	t_cmd			*cmd;
 
 	tokens = NULL;
 	while (*command_string)
@@ -259,10 +260,9 @@ t_cmd	*parse_command(char *command_string)
 	/*TOKENS: deve essere fiato qui. Non si può terminare con return (create_command(tokens));
 		a meno che non ci sia un modo per lierare contestualmente
 	*/
-	t_cmd *cmd = create_command(tokens);
+	cmd = create_command(tokens);
 	free_tokenslist(tokens);
 	return (cmd);
-
 }
 
 void print_redir(void *redir_node)
@@ -272,30 +272,30 @@ void print_redir(void *redir_node)
 
 t_cmd *parse_input(char *input)
 {
-    char **command_strings;
-    t_cmd *cmd_list;
-    t_cmd *current_cmd;
-    int   i;
+	char	**command_strings;
+	t_cmd	*cmd_list;
+	t_cmd	*current_cmd;
+	int		i;
 
-    cmd_list = NULL;
-    command_strings = ft_split(input, PIPE); //TODO: use the right split
-    if (!command_strings)
-        return (NULL);
-    
-    i = 0;
-    while (command_strings[i])
-    {
-        current_cmd = parse_command(command_strings[i]);
-        if (!current_cmd)
-        {
-            free_matrix(command_strings);
-            free_cmd(cmd_list);
-            return (NULL);
-        }
-        listappend_command(current_cmd, &cmd_list);
+	cmd_list = NULL;
+	command_strings = ft_split(input, PIPE); //TODO: use the right split
+	if (!command_strings)
+		return (NULL);
+	i = 0;
+	while (command_strings[i])
+	{
+		current_cmd = parse_command(command_strings[i]);
+		if (!current_cmd)
+		{
+			free_matrix(command_strings);
+			free_cmd(cmd_list);
+			return (NULL);
+		}
+		listappend_command(current_cmd, &cmd_list);
 		printf("Oilloc o comand :%s %s\n", current_cmd->cmd, current_cmd->args[1]);
-        i++;
-    }
-    free_matrix(command_strings);
-    return (cmd_list);
+		i++;
+	}
+	free_matrix(command_strings);
+	return (cmd_list);
 }
+
