@@ -6,27 +6,12 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 22:52:42 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/08 20:54:59 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
-void ignore_heredoc(char *delimiter) {
-	char *line;
-(void)delimiter;
-	while (1) 
-	{
-		line = readline("...leggo il buffer heredoc: ");
-		if (!line) 
-		{
-			break;  // EOF, uscire dal loop
-		}
-		free(line); // Libera la memoria della riga
-	}
-}
-*/
 void	execute_builtin(t_cmd *cmd, t_env **env, int *exit_code, int sstdout)
 {
 	int	ret;
@@ -81,20 +66,18 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
-
 void free_pipes(int **pipematrix, int num_of_pipes)
 {
-    int i;
+	int i;
 
-    if (!pipematrix)
-        return;
-    for (i = 0; i < num_of_pipes; i++)
-    {
-        free(pipematrix[i]);
-    }
-    free(pipematrix);
+	if (!pipematrix)
+		return;
+	for (i = 0; i < num_of_pipes; i++)
+	{
+		free(pipematrix[i]);
+	}
+	free(pipematrix);
 }
-
 
 void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {

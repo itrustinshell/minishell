@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:47:13 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 19:53:00 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/08 19:52:49 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,8 @@ int	ih_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 /* O'mast of  input-heredoc-output-append (IHOA) operations */
 int	ihoa_redirops(t_redir *redirlist, int saved_stdout, int is_builtin)
 {
-	int	ih_ret;
-	
-	t_redir *tmp_redirlist;
+	int		ih_ret;
+	t_redir	*tmp_redirlist;
 
 	tmp_redirlist = redirlist;
 	ih_ret = ih_redirops(tmp_redirlist, saved_stdout, is_builtin);

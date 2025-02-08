@@ -1,76 +1,59 @@
 #include "../minishell.h"
 
-char **split_pathvariable(void)
+char	**split_pathvariable(void)
 {
-    char **splitted_path;
-	char *path;
+	char	**splitted_path;
+	char	*path;
 
-    path = getenv("PATH");
-    if (!path)
-        return (NULL);
-    splitted_path = ft_split(path, ':');
-    if (!splitted_path)
-        return (NULL);
-    return (splitted_path);
+	path = getenv("PATH");
+	if (!path)
+		return (NULL);
+	splitted_path = ft_split(path, ':');
+	if (!splitted_path)
+		return (NULL);
+	return (splitted_path);
 }
 
-char *build_cmd(char *root_path, char *cmd)
+char	*build_cmd(char *root_path, char *cmd)
 {
-	char *full_cmd;
-	char *path;
-	/*MM: rootpath viene da get_cmd()
-		in get_cmd c'è un char **splitted
-		e in buildcmd viene passato splitted[i].
-		quindi root_path è un elemaento malloccato
-		di matrix
-	*/
+	char	*full_cmd;
+	char	*path;
+
 	if (!root_path || !cmd)
 		return (NULL);
 	path = ft_strjoin(root_path, "/");
 	if (!path)
-		return NULL;
-
+		return (NULL);
 	full_cmd = ft_strjoin(path, cmd);
 	free(path);
 	return (full_cmd);
 }
 
-/*
-prima o poi farai un free dell'input.
-Se Hai passato qualcosa di statico come "ls"
-Puoi avee qualche probeminio nel freeare quello.
-Ecco perchè ritorni uno strdup(stringa)
-*/
-char *get_cmdpath(char *cmd)
+char	*get_cmdpath(char *cmd)
 {
-    char **splitted_path;
-    int i;
-	char *full_cmd;
-	
+	char	**splitted_path;
+	int		i;
+	char	*full_cmd;
+
 	if (!cmd)
-    	return (NULL);
+		return (NULL);
 	if (access(cmd, X_OK) == 0)
-		return strdup(cmd);
+		return (strdup(cmd));
 	splitted_path = split_pathvariable();
 	if (!splitted_path)
 		return (NULL);
-    i = 0;
-    while (splitted_path[i])
-    {	
+	i = -1;
+	while (splitted_path[++i])
+	{
 		full_cmd = build_cmd(splitted_path[i], cmd);
 		if (!full_cmd)
 		{
-       		free_matrix(splitted_path);
+			free_matrix(splitted_path);
 			return (NULL);
 		}
-        if (access(full_cmd, X_OK) == 0)
-        {
-            free_matrix(splitted_path);
-            return (full_cmd);
-        }
+		if (access(full_cmd, X_OK) == 0)
+			return (free_matrix(splitted_path), full_cmd);
 		free(full_cmd);
-        i++;
-    }
-    free_matrix(splitted_path);
-    return (NULL);
+	}
+	return (free_matrix(splitted_path), NULL);
 }

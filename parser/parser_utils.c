@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:09:14 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/06 14:10:27 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/08 20:03:23 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	tkn_is_redir(t_tkn *token)
@@ -48,4 +49,30 @@ void	set_redir_tkn(t_tkn *token)
 		token->type = LEFT;
 	else if (len == 1 && ft_strncmp(value, ">", 1) == 0)
 		token->type = RIGHT;
+}
+
+int	count_args(t_list *tokens)
+{
+	t_tkn	*current_tok;
+	int		arguments;
+
+	arguments = 0;
+	while (tokens)
+	{
+		current_tok = (t_tkn *)tokens->content;
+		if (current_tok->type == ARG)
+			arguments++;
+		tokens = tokens->next;
+	}
+	return (arguments);
+}
+
+void	print_redir(void *redir_node)
+{
+	printf("%s\n", ((t_redir *)redir_node)->file);
+}
+
+BOOL	is_valid_arg_char(char c)
+{
+	return (!ft_isspace(c) && !ft_strchr("|<>\"\'$", c));
 }

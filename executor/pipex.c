@@ -39,7 +39,7 @@ void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 		piperead(data->pipematrix, i);
 	if (tmp_cmdlist->next)
 		pipewrite(data->pipematrix, i);
-	if (strcmp(tmp_cmdlist->cmd, "echo") == 0)
+	if (check_builtin(tmp_cmdlist) == 1)
 		is_builtin = 1;
 	ret = ihoa_redirops(tmp_cmdlist->redirlist, saved_stdout, is_builtin);
 	if (ret == 0)

@@ -201,6 +201,8 @@ void	free_matrix(char **matrix);
 void	free_envlist(t_env *envlist);
 void	ft_free_n_matrix(char **matrix, int n);
 void	free_cmd(t_cmd *cmd);
+void	free_tkn(void *token);
+void	free_tokenslist(t_list *tokens);
 
 ///BUILTINS
 int		ft_echo(int argc, char **argv, int *exit_code);
@@ -252,6 +254,14 @@ void    add_cmd(t_cmd *cmd, t_tkn *token);
 void    add_arg(t_cmd *cmd, t_tkn *token);
 void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type);
 void    add_heredoc(t_cmd *cmd, t_tkn *token);
+int		count_args(t_list *tokens);
+BOOL	is_valid_arg_char(char c);
 
-void	free_tkn(void *token);
-void	free_tokenslist(t_list *tokens);
+// Mattia Parser handelers
+void	handle_redirection(char **command_string, t_tkn *token);
+void	handle_quotes(char **command_string, t_tkn *token);
+void	handle_env_var(char **command_string, t_tkn *token);
+void	handle_plain_text(char **command_string, t_tkn *token);
+
+// Mattia Parser tokenize
+t_list	*tokenize(char *command_string);

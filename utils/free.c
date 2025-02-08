@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/08 22:40:43 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/08 22:40:46 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-/* Funzione per liberare un token */
 void	free_tkn(void *token)
 {
-	t_tkn *t = (t_tkn *)token;
+	t_tkn	*t;
+
+	t = (t_tkn *)token;
 	if (t)
 	{
 		free(t->value);
@@ -11,45 +24,25 @@ void	free_tkn(void *token)
 	}
 }
 
-
-void free_tokenslist(t_list *tokens)
-{
-    t_list *tmp;
-    t_tkn *token;
-
-    while (tokens)
-    {
-        tmp = tokens->next;
-        token = (t_tkn *)tokens->content;
-        if (token)
-        {
-            free(token->value); // Libera il valore del token
-            free(token);        // Libera il token stesso
-        }
-        free(tokens); // Libera il nodo della lista
-        tokens = tmp;
-    }
-}
-
-/*
 void	free_tokenslist(t_list *tokens)
 {
 	t_list	*tmp;
+	t_tkn	*token;
 
 	while (tokens)
 	{
 		tmp = tokens->next;
-		if (tokens->content)
+		token = (t_tkn *)tokens->content;
+		if (token)
 		{
-			if (((t_tkn *)tokens->content)->value)
-				free(((t_tkn *)tokens->content)->value);
-			free(tokens->content);
+			free(token->value);
+			free(token);
 		}
 		free(tokens);
 		tokens = tmp;
 	}
 }
-*/
+
 void	ft_free_n_matrix(char **matrix, int n)
 {
 	int	j;
@@ -68,7 +61,7 @@ void	free_matrix(char **matrix)
 	int	i;
 
 	if (!matrix)
-		return;		
+		return ;
 	i = 0;
 	while (matrix[i])
 	{
@@ -95,112 +88,3 @@ void	free_envlist(t_env *env)
 		env = tmp;
 	}
 }
-
-void	free_heredoclist(t_heredoc *heredoclist)
-{
-	t_heredoc *tmp;
-	while (heredoclist)
-	{
-		tmp = heredoclist->next;
-		if (heredoclist->input)
-			free(heredoclist->input);
-		free(heredoclist);
-		heredoclist = tmp;
-	}
-	heredoclist = NULL;
-}
-
-void	free_redirlist(t_redir *redirlist)
-{
-	t_redir	*tmp;
-
-	while (redirlist)
-	{
-		tmp = redirlist->next;
-		if (redirlist->file)
-			free(redirlist->file);
-		if (redirlist->delimiter)
-			free(redirlist->delimiter);
-		if (redirlist->heredoclist)
-			free_heredoclist(redirlist->heredoclist);
-		free(redirlist);
-		redirlist = tmp;
-	}
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	t_cmd	*tmp;
-
-	while (cmd)
-	{
-		tmp = cmd->next;
-		if (cmd->cmd)
-			free(cmd->cmd);
-		if (cmd->args)
-			free_matrix(cmd->args);
-		if (cmd->path)
-			free(cmd->path);
-		if (cmd->redirlist)
-			free_redirlist(cmd->redirlist);
-		free(cmd);
-		cmd = tmp;
-	}
-}
-
-
-
-/*
-
-	char				*cmd;
-	char				**args;
-	char				*path;
-	struct s_cmd		*next;
-	t_redir				*redirlist;
-	int					argc;
-
-
-*/
-
-
-// freeredir()
-// {
-
-// }
-
-// void	free_redirlist(t_redir *redirnode)
-// {
-// 	if (!redirnode)
-// 		return;
-// 	while (redirnode)
-// 	{
-// 		freeredir(redirnode);
-// 		redirnode = redirnode->next;
-// 	}
-// }
-
-
-// void	free_cmd(cmd)
-// {
-// 	if (!cmd)
-// 		return;
-// 	free(cmd->cmd);
-// 	if (cmd->args)
-// 		ft_freematrix(cmd->args);
-// 	if (cmd->path)
-// 		free(cmd->path);
-// 	if (cmd->redirlist)
-// 		free_redirlist(cmd->redirlist);
-// }
-
-// void	free_cmdlist(t_cmd *cmdnode)
-// {
-
-// 	if (!cmdnode)
-// 		return;
-// 	while (cmdnode)
-// 	{
-// 		freecmd(cmdnode);
-// 		cmdnode = cmdnode->next;
-// 	}
-// }
