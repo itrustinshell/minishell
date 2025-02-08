@@ -270,6 +270,16 @@ void print_redir(void *redir_node)
 	printf("%s\n", ((t_redir *)redir_node)->file);
 }
 
+	void free_command_structure(Command *cmd) {
+    if (cmd) {
+        free(cmd->args);  // Free dynamically allocated argument list
+        free(cmd);        // Free the command struct itself
+    }
+}
+
+// Call this function at the end of parse_input or where commands are no longer needed.
+
+
 t_cmd *parse_input(char *input)
 {
 	char	**command_strings;

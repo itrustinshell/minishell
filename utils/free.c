@@ -11,6 +11,27 @@ void	free_tkn(void *token)
 	}
 }
 
+
+void free_tokenslist(t_list *tokens)
+{
+    t_list *tmp;
+    t_tkn *token;
+
+    while (tokens)
+    {
+        tmp = tokens->next;
+        token = (t_tkn *)tokens->content;
+        if (token)
+        {
+            free(token->value); // Libera il valore del token
+            free(token);        // Libera il token stesso
+        }
+        free(tokens); // Libera il nodo della lista
+        tokens = tmp;
+    }
+}
+
+/*
 void	free_tokenslist(t_list *tokens)
 {
 	t_list	*tmp;
@@ -28,7 +49,7 @@ void	free_tokenslist(t_list *tokens)
 		tokens = tmp;
 	}
 }
-
+*/
 void	ft_free_n_matrix(char **matrix, int n)
 {
 	int	j;

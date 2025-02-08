@@ -88,9 +88,10 @@ void	prompt(char **inputstr)
         return ;
     *inputstr = readline(cwd_mod);
   	free(cwd_mod);
-	if (!inputstr)
+	if (!*inputstr)
 		return ;
-    add_history(*inputstr); 
+	if (**inputstr)
+    	add_history(*inputstr); 
 }
 
 int main(int argc, char **argv, char **envp)
@@ -133,8 +134,6 @@ int main(int argc, char **argv, char **envp)
 				{
 					printf("Quit (core dumped)\n");
 					exit_code = 131;
-					//free_cmd(cmdlist); tolti a causa di double free
-					//free(inputstr); tolti a causa di double free
 					break;
 				}
 				

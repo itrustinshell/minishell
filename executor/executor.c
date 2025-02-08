@@ -82,6 +82,20 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		- printallheredoclists(cmdlist, n_heredoc);
 */
 
+void free_pipes(int **pipematrix, int num_of_pipes)
+{
+    int i;
+
+    if (!pipematrix)
+        return;
+    for (i = 0; i < num_of_pipes; i++)
+    {
+        free(pipematrix[i]);
+    }
+    free(pipematrix);
+}
+
+
 void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {
 	int				cmdlist_len;
@@ -101,6 +115,7 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix,
 			env, envp, exit_code};
 		pipex(&data);
+		free_pipes(pipematrix, cmdlist_len - 1);
 	}
 	else
 	{
