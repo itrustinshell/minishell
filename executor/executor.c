@@ -81,6 +81,7 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
+
 void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 {
 	int				cmdlist_len;

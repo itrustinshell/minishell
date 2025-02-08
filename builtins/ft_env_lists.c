@@ -59,22 +59,19 @@ void	envlist_append(t_env *node, t_env **list)
 
 t_env	*create_lenvnode(char *str)
 {
-    t_env	*new;
-    char	**splittedstr;
+	t_env	*new;
+	char	**splittedstr;
 
-    splittedstr = ft_split(str, '=');
-    if (!splittedstr)
-        return (NULL);
-
-    new = (t_env *)malloc(sizeof(t_env));
-    if (!new)
-        return (free_matrix(splittedstr), NULL);
-
-    init_envnode(new);
-    new->name = strdup(splittedstr[0]);
-    if (splittedstr[1] != NULL)
-        new->value = strdup(splittedstr[1]);
-
-    free_matrix(splittedstr);  // ✅ Libera la memoria di splittedstr
-    return (new);
+	splittedstr = ft_split(str, '=');
+	if (!splittedstr)
+		return (NULL);
+	new = (t_env *)malloc(sizeof(t_env));
+	if (!new)
+		return (free_matrix(splittedstr), NULL);
+	init_envnode(new);
+	new->name = strdup(splittedstr[0]);
+	if (splittedstr[1] != NULL)
+		new->value = strdup(splittedstr[1]);
+	free_matrix(splittedstr);
+	return (new);
 }

@@ -83,7 +83,6 @@ t_cmd	*create_command(t_list *tokens)
 	t_list	*current_node;
 	t_tkn	*curr_tok;
 	t_cmd	*cmd;
-	int		token_size;
 
 	cmd = new_cmd(count_args(tokens) + 2);
 	if (!cmd)
@@ -135,37 +134,6 @@ void	expand(char **env_var)
 		ft_strncpy(*env_var, expanded, ft_strlen(expanded));
 	}
 }
-
-
-/* Funzione per liberare un token */
-void free_tkn(void *token)
-{
-	t_tkn *t = (t_tkn *)token;
-	if (t)
-	{
-		free(t->value);
-		free(t);
-	}
-}
-
-void free_tokenslist(t_list *tokens)
-{
-	t_list *tmp;
-
-	while (tokens)
-	{
-		tmp = tokens->next;
-		if (tokens->content)
-		{
-			if (((t_tkn *)tokens->content)->value)
-				free(((t_tkn *)tokens->content)->value);
-			free(tokens->content);
-		}
-		free(tokens);
-		tokens = tmp;
-	}
-}
-
 
 t_cmd	*parse_command(char *command_string)
 {
@@ -288,7 +256,13 @@ t_cmd	*parse_command(char *command_string)
 		ft_lstadd_back(&tokens, ft_lstnew(token));
 	}
 	//printf("Now we have the tokens, lets create a cmd to execute\n");
-	return (create_command(tokens));
+	/*TOKENS: deve essere fiato qui. Non si può terminare con return (create_command(tokens));
+		a meno che non ci sia un modo per lierare contestualmente
+	*/
+	t_cmd *cmd = create_command(tokens);
+	free_tokenslist(tokens);
+	return (cmd);
+
 }
 
 void print_redir(void *redir_node)

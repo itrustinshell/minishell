@@ -1,5 +1,34 @@
 #include "../minishell.h"
 
+/* Funzione per liberare un token */
+void	free_tkn(void *token)
+{
+	t_tkn *t = (t_tkn *)token;
+	if (t)
+	{
+		free(t->value);
+		free(t);
+	}
+}
+
+void	free_tokenslist(t_list *tokens)
+{
+	t_list	*tmp;
+
+	while (tokens)
+	{
+		tmp = tokens->next;
+		if (tokens->content)
+		{
+			if (((t_tkn *)tokens->content)->value)
+				free(((t_tkn *)tokens->content)->value);
+			free(tokens->content);
+		}
+		free(tokens);
+		tokens = tmp;
+	}
+}
+
 void	ft_free_n_matrix(char **matrix, int n)
 {
 	int	j;
@@ -18,7 +47,7 @@ void	free_matrix(char **matrix)
 	int	i;
 
 	if (!matrix)
-		return ;		
+		return;		
 	i = 0;
 	while (matrix[i])
 	{
@@ -29,7 +58,6 @@ void	free_matrix(char **matrix)
 	free(matrix);
 	matrix = NULL;
 }
-
 
 void	free_envlist(t_env *env)
 {
@@ -47,7 +75,6 @@ void	free_envlist(t_env *env)
 	}
 }
 
-
 void	free_heredoclist(t_heredoc *heredoclist)
 {
 	t_heredoc *tmp;
@@ -59,12 +86,13 @@ void	free_heredoclist(t_heredoc *heredoclist)
 		free(heredoclist);
 		heredoclist = tmp;
 	}
+	heredoclist = NULL;
 }
-
 
 void	free_redirlist(t_redir *redirlist)
 {
-	t_redir *tmp;
+	t_redir	*tmp;
+
 	while (redirlist)
 	{
 		tmp = redirlist->next;
@@ -73,17 +101,15 @@ void	free_redirlist(t_redir *redirlist)
 		if (redirlist->delimiter)
 			free(redirlist->delimiter);
 		if (redirlist->heredoclist)
-			free_heredoclist(redirlist->heredoclist); // ✅ Libera la lista degli heredoc
+			free_heredoclist(redirlist->heredoclist);
 		free(redirlist);
 		redirlist = tmp;
 	}
 }
 
-
-
 void	free_cmd(t_cmd *cmd)
 {
-	t_cmd *tmp;
+	t_cmd	*tmp;
 
 	while (cmd)
 	{

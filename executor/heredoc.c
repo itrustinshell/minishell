@@ -12,6 +12,9 @@
 
 #include "../minishell.h"
 
+
+
+
 void	handle_heredoc_input(t_redir *tmp_redirlist)
 {
 	char	*inputstr;
@@ -21,18 +24,33 @@ void	handle_heredoc_input(t_redir *tmp_redirlist)
 	{
 		inputstr = readline(">: ");
 		if (!inputstr)
-			return ;
+			return;
+
 		str_realloc = ft_calloc(ft_strlen(inputstr) + 2, sizeof(char));	
+		if (!str_realloc)
+		{
+			free(inputstr);
+			return;
+		}
+
 		ft_strncpy(str_realloc, inputstr, ft_strlen(inputstr));
-	str_realloc[ft_strlen(inputstr)] = '\0';	
-		str_realloc[ft_strlen(inputstr + 1)] = '\n';
+		str_realloc[ft_strlen(inputstr)] = '\n';
+		//str_realloc[ft_strlen(inputstr) + 1] = '\0';
+
 		if (strcmp(inputstr, tmp_redirlist->delimiter) == 0)
-			break ;
-		free(inputstr);
+		{
+			free(str_realloc);
+			free(inputstr);
+			break;
+		}
+
 		build_heredoclist(str_realloc, &(tmp_redirlist->heredoclist));
+		free(str_realloc);
+		free(inputstr);
 	}
-	free(inputstr);
 }
+
+
 
 void	process_heredoc_redirlist(t_redir *tmp_redirlist)
 {
@@ -41,10 +59,15 @@ void	process_heredoc_redirlist(t_redir *tmp_redirlist)
 		while (tmp_redirlist && tmp_redirlist->type != HEREDOC)
 			tmp_redirlist = tmp_redirlist->next;
 		if (tmp_redirlist)
+		{
 			handle_heredoc_input(tmp_redirlist);
-		tmp_redirlist = tmp_redirlist->next;
+			tmp_redirlist = tmp_redirlist->next;
+		}
 	}
 }
+
+
+
 
 void	heredoc(t_cmd *cmd, int n_heredoc)
 {

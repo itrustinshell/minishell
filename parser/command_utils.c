@@ -14,7 +14,7 @@ t_redir	*new_redir(char *filename, int type)
 }
 
 // Se non riusciamo ad allocare la stringa per il comando Amen
-void    add_cmd(t_cmd *cmd, t_tkn *token)
+void	add_cmd(t_cmd *cmd, t_tkn *token)
 {
 	cmd->cmd = (char *)calloc(token->len + 1, sizeof(char));
 	ft_strncpy(cmd->cmd, token->value, token->len);
@@ -22,23 +22,27 @@ void    add_cmd(t_cmd *cmd, t_tkn *token)
 	cmd->args[0] = ft_strdup(cmd->cmd);
 }
 
-void    add_arg(t_cmd *cmd, t_tkn *token)
+void	add_arg(t_cmd *cmd, t_tkn *token)
 {
 	cmd->args[cmd->argc + 1] = calloc(token->len + 1, sizeof(char));
 	ft_strncpy(cmd->args[cmd->argc + 1], token->value, token->len);
 	cmd->argc++;
 }
 
-void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type)
+void	add_redir(t_cmd *cmd, t_tkn *token, unsigned int type)
 {
-	t_redir *redir = new_redir((char *)calloc(token->len + 1, sizeof(char)), type);
+	t_redir	*redir;
+
+	redir = new_redir((char *)calloc(token->len + 1, sizeof(char)), type);
 	ft_strncpy(redir->file, token->value, token->len);
 	listappend_redir(redir, &cmd->redirlist);
 }
 
-void    add_heredoc(t_cmd *cmd, t_tkn *token)
+void	add_heredoc(t_cmd *cmd, t_tkn *token)
 {
-	t_redir *redir = new_redir(NULL, HEREDOC);
+	t_redir	*redir;
+
+	redir = new_redir(NULL, HEREDOC);
 	redir->delimiter = (char *)calloc(token->len + 1, sizeof(char));
 	ft_strncpy(redir->delimiter, token->value, token->len);
 	listappend_redir(redir, &cmd->redirlist);

@@ -162,17 +162,17 @@ void	listappend_redir(t_redir *node, t_redir **list);
 //EXECUTOR
 void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code);
 int		pipex(t_pipex_data *data);
-//int		pipex(t_cmd *cmdlist, int cmdlist_len, int **pipematrix, t_env **env, char **envp, int *exit_code);
 void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code);
 int		builtinex(t_cmd *cmd, t_env **env, int *exit_code);
 
 //HEREDOC
-void	heredoc(t_cmd *cmd, int n_heredoc);
+void		heredoc(t_cmd *cmd, int n_heredoc);
 t_heredoc	*create_heredocnode(char *inputstr);
 t_heredoc	*last_heredocnode(t_heredoc *list);
-void	listappend_heredoc(t_heredoc *node, t_heredoc **list);
-void	heredocinit(t_heredoc *node);
-void	build_heredoclist(char *inputstr, t_heredoc **heredoclist);
+void		listappend_heredoc(t_heredoc *node, t_heredoc **list);
+void		heredocinit(t_heredoc *node);
+void		build_heredoclist(char *inputstr, t_heredoc **heredoclist);
+void		free_heredoclist(t_heredoc *list);
 
 //executor utils
 void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, char **envp, int *exit_code);
@@ -182,7 +182,6 @@ int		pipecheck(char **matrix);
 void	piperead(int **pipematrix, int i);
 void	pipewrite(int **pipematrix, int i);
 void	pipeclose(int **pipematrix, int cmdlist_len);
-//void	pipefork(int **pipematrix,t_cmd *tmp_cmdlist, int i, int cmdlist_len, t_env **env, char **envp, int *exit_code);
 void	pipefork(t_pipex_data *data, t_cmd *tmp_cmdlist, int i);
 int		check_builtin_in_cmdlist(t_cmd *tmp_cmdlist, t_env *genvlist);
 t_cmd	*create_commandnode_for_pipe(char **tokenmatrix, int current_pipe_index, int current_generictoken_index);
@@ -226,12 +225,11 @@ char	*is_valid_lvar(char *lvar, char **l_envp);
 char	*is_valid_lvar(char *lvar, char **l_envp);
 void	init_envnode(t_env *env);
 t_env	*access_envar(char *envar, t_env *envlist);
-int	check_builtin(t_cmd *cmd);
+int		check_builtin(t_cmd *cmd);
 t_env	*create_lenvnode(char *str);
 
 //CMD utils
 char	*find_external_cmd(char *cmd);	
-t_cmd	*create_cmd(char **matrix);
 char	*get_cmdpath(char *cmd);
 t_cmd	*new_cmd(unsigned int argc);
 void	redirinit(t_redir *node);
@@ -254,3 +252,6 @@ void    add_cmd(t_cmd *cmd, t_tkn *token);
 void    add_arg(t_cmd *cmd, t_tkn *token);
 void    add_redir(t_cmd *cmd, t_tkn *token, unsigned int type);
 void    add_heredoc(t_cmd *cmd, t_tkn *token);
+
+void	free_tkn(void *token);
+void	free_tokenslist(t_list *tokens);
