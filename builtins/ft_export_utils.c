@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:38:27 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 22:51:22 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 19:11:09 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ int	exportcheck(char **matrix)
 	if (len > 3)
 		return (printf("ci sono piu di 3 pezzi con l'export\n"), 0);
 	if (!matrix[1])
-		return (printf("non c'è il pezzo con l'uguale\n"), 0);
+		return (printf("Hei! you shoud insert an equal symbol\n"), 0);
 	if (!ends_with_equal_sign(matrix[1]))
 	{
 		if (!there_is_equal_before_end(matrix[1]))
 			return (0);
 		if (len >= 3)
-			return (printf("ci sono piu di 3 pezzi con l'export\n"), 0);
-		return (printf("ok\n"), 1);
+			return (printf("AAA: Hey! You insertet more than three args\n"), 0);
+		return (printf("Ok! A new variable has been inserted\n"), 1);
 	}
 	if (len > 3)
-		return (printf("troppi argomenti\n"), 0);
-	return (printf("ok solo con '='\n"), 2);
+		return (printf("Hey Bro! Too much args\n"), 0);
+	return (printf("lesgosky!\n'='\n"), 2);
 }
