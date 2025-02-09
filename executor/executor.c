@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 14:26:34 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 18:19:54 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	saved_stdout;
-
 	saved_stdout = dup(STDOUT_FILENO);
 	if (check_builtin(cmd))
 	{
@@ -53,6 +52,11 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		return ;
 	}
 	cmd->path = get_cmdpath(cmd->cmd);
+	if (!cmd->path)
+	{
+		printf("command not found\n");
+		return ;
+	}
 	execute_external_command(cmd, saved_stdout, exit_code);
 }
 

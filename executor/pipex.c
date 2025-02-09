@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:46:22 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 23:16:41 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 19:01:53 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,20 @@ void	pipefork(t_pipex_data *data, t_cmd *cmdlist, int i)
 			saved_stdout);
 }
 
+int	check_cmdpath(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		if (!tmp->path)
+			return (0);
+		tmp = tmp->next;
+	}
+	return (1);
+}
+
 /*execute pipes
 stats all forks in a while, then the father waits.
 */
@@ -77,6 +91,11 @@ int	pipex(t_pipex_data *data)
 	tmp_cmdlist = data->cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
+	if (check_cmdpath(data->cmdlist) == 0)
+	{
+		printf("Hei!! Command not found :) \n");
+		return (0);
+	}
 	i = -1;
 	while (++i < data->cmdlist_len)
 	{
