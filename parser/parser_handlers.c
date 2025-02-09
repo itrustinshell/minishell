@@ -1,6 +1,6 @@
 
 #include "../minishell.h"
-
+/*
 void	expand(char **env_var)
 {
 	char	*expanded;
@@ -89,3 +89,4 @@ void	handle_plain_text(char **command_string, t_tkn *token)
 	token->value = (char *)ft_calloc(token->len + 1, sizeof(char));
 	ft_strncpy(token->value, beginning, token->len);
 }
+*/

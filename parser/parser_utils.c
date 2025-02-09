@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:09:14 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/08 20:03:23 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:57:31 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	set_redir_tkn(t_tkn *token)
 	else if (len == 1 && ft_strncmp(value, ">", 1) == 0)
 		token->type = RIGHT;
 }
-
+/*
 int	count_args(t_list *tokens)
 {
 	t_tkn	*current_tok;
@@ -76,3 +76,4 @@ BOOL	is_valid_arg_char(char c)
 {
 	return (!ft_isspace(c) && !ft_strchr("|<>\"\'$", c));
 }
+*/

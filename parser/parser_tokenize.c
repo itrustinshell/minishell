@@ -1,6 +1,6 @@
 
 #include "../minishell.h"
-
+/*
 BOOL	has_command(t_list *tokens)
 {
 	t_list	*node;
@@ -80,3 +80,5 @@ t_list	*tokenize(char *command_string)
 	}
 	return (tokens);
 }
+
+*/
