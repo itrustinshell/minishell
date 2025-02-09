@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/08 20:54:59 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:26:34 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 	n_heredoc = count_heredoc(cmdlist);
 	heredoc(cmdlist, n_heredoc);
 	cmdlist_len = listlen(cmdlist);
-	ft_printf("lunghezaaaaaa: %d\n", cmdlist_len);
+	//ft_printf("lunghezaaaaaa: %d\n", cmdlist_len);
 	if (cmdlist_len == 0)
 		return ;
 	if (cmdlist_len > 1)

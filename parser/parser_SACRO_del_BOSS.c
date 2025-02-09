@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser_SACRO_del_BOSS.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 11:29:03 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/01/31 15:55:53 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:26:11 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -302,7 +302,7 @@ t_cmd *parse_input(char *input)
 			return (NULL);
 		}
 		listappend_command(current_cmd, &cmd_list);
-		printf("Oilloc o comand :%s %s\n", current_cmd->cmd, current_cmd->args[1]);
+		//printf("Oilloc o comand :%s %s\n", current_cmd->cmd, current_cmd->args[1]);
 		i++;
 	}
 	free_matrix(command_strings);

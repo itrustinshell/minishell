@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:06:54 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/08 22:31:41 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/09 14:35:43 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@ void	handle_echo_n(int argc, char **argv)
 	int	i;
 
 	i = 2;
-	while (strcmp(argv[i], "-n") == 0)
+	while (argv[i] && strcmp(argv[i], "-n") == 0)
 		i++;
 	while (i < argc - 1)
 	{
 		printf("%s ", argv[i]);
 		i++;
 	}
-	printf("%s", argv[i]);
+	if (argv[i])
+		printf("%s", argv[i]);
 }
 
 /* Handle echo $? case */
