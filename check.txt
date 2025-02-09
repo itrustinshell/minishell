@@ -1,1 +1,4 @@
 tab mi restituisce precedetni comandi.....
+
+- echo (comportamento con -n)
+- exit (stampa messaggi errore exit)
