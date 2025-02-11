@@ -1,12 +1,7 @@
 #include "../minishell.h"
 
 /* Inizializza la struttura t_cmd
-	char				*cmd;
-	char				**args;
-	char				*path;
-	struct s_cmd		*next;
-	t_redir				*redirlist;
-	int					argc;
+t_redir				*redirlist;c;
  */
 
 t_cmd	*new_cmd(unsigned int argc)
@@ -28,7 +23,6 @@ t_cmd	*new_cmd(unsigned int argc)
 	argc = 0;
 	return (cmd);
 }
-
 
 
 

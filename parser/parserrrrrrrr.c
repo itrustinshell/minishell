@@ -78,7 +78,9 @@ t_cmd	*parse_input(char *input)
 	int		i;
 
 	cmd_list = NULL;
-	command_strings = ft_split(input, PIPE); //TODO: use the right split
+	printf("A..%s\n", input);
+	command_strings = ft_split_for_pipe(input, PIPE);
+//TODO: use the right split
 	if (!command_strings)
 		return (NULL);
 	i = 0;

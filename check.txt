@@ -7,7 +7,7 @@ tab mi restituisce precedetni comandi.....
 - ctrol -\ dopo che sviro qualcosa torna indietro
 - cat seguito da ctr-c ti scrive tutto il path del prompt
 - la pipe continua ad esser un problema nella stampa del ""
-
+- quando inizia minishell se nn faccio nulla e premo cotr d va in core dump abortef
 
 
 PROSEGUIRE DA SINGLE QUOTES

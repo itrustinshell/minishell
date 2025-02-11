@@ -96,7 +96,7 @@ char			*ft_substr(char const *s, unsigned int start, size_t len);
 void			ft_striteri(char *s, void (*f)(unsigned int, char *));
 char			*ft_strtrim(char const *s1, char const *set);
 void			ft_putnbr_fd(int n, int fd);
-char			**ft_split(char const *s, char c);
+char			**ft_split(char *s, char c);
 size_t			ft_putnstr_fd(char *s, int len, int fd);
 int				ft_putpointer_fd(void *p, int fd);
 int				ft_putnbrbase_fd(long number, int base, int fd, int capital);

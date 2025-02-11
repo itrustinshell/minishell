@@ -102,11 +102,13 @@ int main(int argc, char **argv, char **envp)
 	int		exit_code;
 
 	exit_code = 0;
+	//cmdlist = NULL;
+	
 	(void)envp;
 	(void)argc;
 	(void)argv;
 	env = NULL;
-	env = envcpy(envp);
+	//env = envcpy(envp);
 	setup_signals();
 
 	while (1)

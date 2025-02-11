@@ -265,3 +265,6 @@ void	handle_plain_text(char **command_string, t_tkn *token);
 
 // Mattia Parser tokenize
 t_list	*tokenize(char *command_string);
+char	**ft_split_for_pipe(char *str, char c);
+void cmd_init(t_cmd *cmd);
+

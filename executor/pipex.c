@@ -91,11 +91,12 @@ int	pipex(t_pipex_data *data)
 	tmp_cmdlist = data->cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
-	if (check_cmdpath(data->cmdlist) == 0)
-	{
-		printf("Hei!! Command not found :) \n");
-		return (0);
-	}
+	//AAAAAAAAAAA NON BISOGNA CANCELLARE QUESTA QUI SOTTO...DA IMPLEMENTARE EVENTUALMENTE ESCLUDENDO LA RICERCA QUANDO CI SONO BUILTIN O VEDI MEGLIO CODICE
+	// if (check_cmdpath(data->cmdlist) == 0)
+	// {
+	// 	printf("Hei!! Command not found :) \n");
+	// 	return (0);
+	// }
 	i = -1;
 	while (++i < data->cmdlist_len)
 	{
