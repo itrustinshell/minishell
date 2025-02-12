@@ -260,6 +260,7 @@ BOOL	is_valid_arg_char(char c);
 // Mattia Parser handelers
 void	handle_redirection(char **command_string, t_tkn *token);
 void	handle_quotes(char **command_string, t_tkn *token);
+void	handle_squotes(char **command_string, t_tkn *token);
 void	handle_env_var(char **command_string, t_tkn *token);
 void	handle_plain_text(char **command_string, t_tkn *token);
 

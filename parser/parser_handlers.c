@@ -67,6 +67,21 @@ void	handle_quotes(char **command_string, t_tkn *token)
 	(*command_string)++;
 }
 
+void	handle_squotes(char **command_string, t_tkn *token)
+{
+	char	*beginning;
+
+	beginning = ++(*command_string);
+	while (**command_string && **command_string != '\'')
+	{
+		(*command_string)++;
+		token->len++;
+	}
+	token->value = (char *)ft_calloc(token->len + 1, sizeof(char));
+	ft_strncpy(token->value, beginning, token->len);
+	(*command_string)++;
+}
+
 void	handle_env_var(char **command_string, t_tkn *token)
 {
 	char	*beginning;
