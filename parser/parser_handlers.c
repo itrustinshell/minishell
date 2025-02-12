@@ -1,7 +1,7 @@
 
 #include "../minishell.h"
 
-/*
+
 void	expand(char **env_var)
 {
 	char	*expanded;
@@ -50,6 +50,7 @@ void	handle_redirection(char **command_string, t_tkn *token)
 void	handle_quotes(char **command_string, t_tkn *token)
 {
 	char	*beginning;
+	char	*expanded;
 
 	beginning = ++(*command_string);
 	while (**command_string && **command_string != '"')
@@ -59,6 +60,10 @@ void	handle_quotes(char **command_string, t_tkn *token)
 	}
 	token->value = (char *)ft_calloc(token->len + 1, sizeof(char));
 	ft_strncpy(token->value, beginning, token->len);
+	expanded = handle_env_vars(token->value);
+	free(token->value);
+	token->value = expanded;
+	token->len = ft_strlen(expanded);
 	(*command_string)++;
 }
 
@@ -90,5 +95,3 @@ void	handle_plain_text(char **command_string, t_tkn *token)
 	token->value = (char *)ft_calloc(token->len + 1, sizeof(char));
 	ft_strncpy(token->value, beginning, token->len);
 }
-
-*/

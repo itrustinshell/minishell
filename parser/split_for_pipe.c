@@ -70,7 +70,7 @@ static void	my_aux(char **arr,  char *str, char sep, int n_words)
                 }
                 j++;
             }
-			printf("ecco la lunghezza della parola: %d\n", j);
+			//printf("ecco la lunghezza della parola: %d\n", j);
             arr[z] = (char *)malloc(sizeof(char) * (j + 1));
 			if (!arr[z])
 				return ;
@@ -83,7 +83,7 @@ static void	my_aux(char **arr,  char *str, char sep, int n_words)
 			// 	x++;
 
 			// }
-			printf("ecco la nuov stringa: %s\n", arr[z]);
+			//printf("ecco la nuov stringa: %s\n", arr[z]);
 			z++;
 			i += j;
 		}
@@ -98,7 +98,6 @@ char	**ft_split_for_pipe( char *str, char c)
 	if (!str)
 		return (NULL);
 	n_words = my_count_words(str, c);
-    printf("numero di toen divisi da pipe: %d\n", n_words);
 	arr = ft_calloc(n_words + 1, sizeof(char *));
 	arr[n_words] = NULL;
 	if (!arr)

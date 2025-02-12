@@ -1,0 +1,77 @@
+#include "../minishell.h"
+
+static int is_env_char(char c)
+{
+    return (ft_isalnum(c) || c == '_');
+}
+
+static char *join_and_free(char *s1, char *s2, int free_s2)
+{
+    char *result;
+
+    if (!s1)
+        return (free_s2 ? NULL : s2);
+    result = ft_strjoin(s1, s2);
+    free(s1);
+    if (free_s2)
+        free(s2);
+    return (result);
+}
+
+static char *copy_until_dollar(const char **str)
+{
+    const char *dollar;
+    char *result;
+
+    dollar = ft_strchr(*str, '$');
+    if (!dollar)
+    {
+        result = ft_strdup(*str);
+        *str += ft_strlen(*str);
+        return (result);
+    }
+    result = ft_substr(*str, 0, dollar - *str);
+    *str = dollar;
+    return (result);
+}
+
+static char *get_env_var(const char **str)
+{
+    char *var_name;
+    size_t len;
+    
+    (*str)++;
+    len = 0;
+    while ((*str)[len] && is_env_char((*str)[len]))
+        len++;
+    if (len == 0)
+        return (ft_strdup("$"));
+    var_name = ft_substr(*str, 0, len);
+    *str += len;
+    if (var_name)
+        expand(&var_name);
+    return (var_name);
+}
+
+char *handle_env_vars(const char *input)
+{
+    char *result;
+    char *tmp;
+    const char *current;
+
+    if (!input)
+        return (NULL);
+    result = ft_strdup("");
+    current = input;
+    while (*current)
+    {
+        tmp = copy_until_dollar(&current);
+        result = join_and_free(result, tmp, 1);
+        if (*current == '$')
+        {
+            tmp = get_env_var(&current);
+            result = join_and_free(result, tmp, 1);
+        }
+    }
+    return (result);
+}

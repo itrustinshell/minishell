@@ -50,7 +50,7 @@ void	set_redir_tkn(t_tkn *token)
 	else if (len == 1 && ft_strncmp(value, ">", 1) == 0)
 		token->type = RIGHT;
 }
-/*
+
 int	count_args(t_list *tokens)
 {
 	t_tkn	*current_tok;
@@ -76,4 +76,3 @@ BOOL	is_valid_arg_char(char c)
 {
 	return (!ft_isspace(c) && !ft_strchr("|<>\"\'$", c));
 }
-*/
