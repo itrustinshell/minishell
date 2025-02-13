@@ -271,3 +271,4 @@ char	**ft_split_for_pipe(char *str, char c);
 void cmd_init(t_cmd *cmd);
 void	expand(char **env_var);
 char *handle_env_vars(const char *input);
+int	is_env_char(char c);

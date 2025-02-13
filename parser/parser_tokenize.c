@@ -84,7 +84,7 @@ t_list	*tokenize(char *command_string)
 			handle_quotes(&command_string, token);
 		else if (*command_string == '\'')
 			handle_squotes(&command_string, token);
-		else if (*command_string == '$' && *(command_string + 1) != '?')
+		else if (*command_string == '$')
 			handle_env_var(&command_string, token);
 		else
 			handle_plain_text(&command_string, token);

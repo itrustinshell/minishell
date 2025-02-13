@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static int	is_env_char(char c)
+int	is_env_char(char c)
 {
 	return (ft_isalnum(c) || c == '_' || c == '?');
 }

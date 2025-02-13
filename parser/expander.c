@@ -18,17 +18,25 @@ void	expand(char **env_var)
 
 	if (!env_var || !*env_var)
 		return ;
-	expanded = getenv((char *)*env_var);
-	if (!expanded)
+	if (ft_strncmp(*env_var, "?", 1) == 0)
 	{
 		free(*env_var);
-		*env_var = (char *)calloc(1, sizeof(char));
-		*env_var[0] = '\0';
+		*env_var = ft_itoa(g_exit);
 	}
 	else
 	{
-		free(*env_var);
-		*env_var = (char *)ft_calloc(ft_strlen(expanded) + 1, sizeof(char));
-		ft_strncpy(*env_var, expanded, ft_strlen(expanded));
+		expanded = getenv((char *)*env_var);
+		if (!expanded)
+		{
+			free(*env_var);
+			*env_var = (char *)calloc(1, sizeof(char));
+			*env_var[0] = '\0';
+		}
+		else
+		{
+			free(*env_var);
+			*env_var = (char *)ft_calloc(ft_strlen(expanded) + 1, sizeof(char));
+			ft_strncpy(*env_var, expanded, ft_strlen(expanded));
+		}
 	}
 }

@@ -75,7 +75,7 @@ void	handle_env_var(char **command_string, t_tkn *token)
 	char	*beginning;
 
 	beginning = ++(*command_string);
-	while (**command_string && is_valid_arg_char(**command_string))
+	while (**command_string && is_env_char(**command_string))
 	{
 		(*command_string)++;
 		token->len++;
