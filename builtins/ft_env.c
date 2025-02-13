@@ -6,10 +6,9 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:43:12 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 22:52:11 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:06:40 by dpalmese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 int	ft_env(t_env *lenvlist)
@@ -35,20 +34,22 @@ int	ft_env(t_env *lenvlist)
 */
 t_env	*envcpy(char **envp)
 {
-    t_env	*envlist = NULL;
-    t_env	*envnode;
-    int		i = 0;
+	t_env	*envlist;
+	t_env	*envnode;
+	int		i;
 
-    while (envp[i])
-    {
-        envnode = create_lenvnode(envp[i]);
-        if (!envnode)
-        {
-            free_envlist(envlist);
-            return (NULL);
-        }
-        envlist_append(envnode, &envlist);
-        i++;
-    }
-    return (envlist);
+	envlist = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		envnode = create_lenvnode(envp[i]);
+		if (!envnode)
+		{
+			free_envlist(envlist);
+			return (NULL);
+		}
+		envlist_append(envnode, &envlist);
+		i++;
+	}
+	return (envlist);
 }

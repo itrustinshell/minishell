@@ -2,7 +2,7 @@
 
 static int is_env_char(char c)
 {
-    return (ft_isalnum(c) || c == '_');
+    return (ft_isalnum(c) || c == '_' || c == '?');
 }
 
 static char *join_and_free(char *s1, char *s2, int free_s2)

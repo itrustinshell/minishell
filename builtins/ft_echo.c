@@ -31,7 +31,7 @@ void	handle_echo_n(int argc, char **argv)
 /* Handle echo $? case */
 void	handle_echo_exit_code(int *exit_code)
 {
-	printf("Last process exit-code: %d\n", *exit_code);
+	printf("%d", *exit_code);
 }
 
 /* Handle echo without -n */

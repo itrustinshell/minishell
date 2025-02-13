@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:44:13 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 14:43:17 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:07:50 by dpalmese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	ft_exit(int n_args, char **args)
 		{
 			if (isdigit(args[1][i]) == 0)
 			{
-				printf("exit\nminishell: exit: %s: numeric argument required\n", args[1]);
+				printf("exit\nminishell: ");
+				printf("exit: %s: numeric argument required\n", args[1]);
 				return ;
 			}
 			i++;
