@@ -1,27 +1,15 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_handlers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 12:22:50 by dpalmese          #+#    #+#             */
+/*   Updated: 2025/02/13 12:23:57 by dpalmese         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
-
-
-void	expand(char **env_var)
-{
-	char	*expanded;
-
-	if (!env_var || !*env_var)
-		return ;
-	expanded = getenv((char *)*env_var);
-	if (!expanded)
-	{
-		free(*env_var);
-		*env_var = (char *)calloc(1, sizeof(char));
-		*env_var[0] = '\0';
-	}
-	else
-	{
-		free(*env_var);
-		*env_var = (char *)ft_calloc(ft_strlen(expanded) + 1, sizeof(char));
-		ft_strncpy(*env_var, expanded, ft_strlen(expanded));
-	}
-}
 
 void	handle_redirection(char **command_string, t_tkn *token)
 {

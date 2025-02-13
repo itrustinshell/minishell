@@ -9,7 +9,7 @@ SRC =   builtins/ft_export.c builtins/ft_export_utils.c builtins/litoma.c builti
 		test/pipe_test.c test/printmatrix.c\
 		utils/free.c utils/free_cmd.c utils/list_utils.c utils/cmd_utils.c utils/init.c utils/general_utils.c\
 		main.c \
-		parser/handle_env_var.c
+		parser/handle_env_var.c parser/expander.c
 
 OBJ = $(SRC:.c=.o)
 
