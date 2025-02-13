@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 18:19:54 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:11:23 by dpalmese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 {
 	int	saved_stdout;
+
 	saved_stdout = dup(STDOUT_FILENO);
 	if (check_builtin(cmd))
 	{
@@ -70,15 +71,17 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		- printf("n_heredoc: %d\n", n_heredoc);
 		- printallheredoclists(cmdlist, n_heredoc);
 */
-void free_pipes(int **pipematrix, int num_of_pipes)
+void	free_pipes(int **pipematrix, int num_of_pipes)
 {
-	int i;
+	int	i;
 
+	i = 0;
 	if (!pipematrix)
-		return;
-	for (i = 0; i < num_of_pipes; i++)
+		return ;
+	while (i < num_of_pipes)
 	{
 		free(pipematrix[i]);
+		i++;
 	}
 	free(pipematrix);
 }
@@ -93,7 +96,6 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 	n_heredoc = count_heredoc(cmdlist);
 	heredoc(cmdlist, n_heredoc);
 	cmdlist_len = listlen(cmdlist);
-	//ft_printf("lunghezaaaaaa: %d\n", cmdlist_len);
 	if (cmdlist_len == 0)
 		return ;
 	if (cmdlist_len > 1)
