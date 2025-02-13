@@ -59,8 +59,22 @@ static char	*get_env_var(const char **str)
 
 	(*str)++;
 	len = 0;
+	if ((*str)[len] == '?')
+	{
+		//printf("eccp %c\n",(*str)[len]);
+		char *exit_str = ft_itoa(g_exit);
+		//printf("questa e'la var glob: %d\n", g_exit);
+		(*str)++;
+		return ft_strdup(exit_str);
+	}	
+	
+	//printf("%c\n", (*str)[len]);
+
 	while ((*str)[len] && is_env_char((*str)[len]))
 		len++;
+	//printf("%c\n", (*str)[len]);
+
+
 	if (len == 0)
 		return (ft_strdup("$"));
 	var_name = ft_substr(*str, 0, len);

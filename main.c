@@ -3,7 +3,8 @@
 #include<readline/history.h>
 
 
-/* PROBLEMATICHE RISCONTRATE
+/* 
+PROBLEMATICHE RISCONTRATE
 - nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
 - con gli apici doppi si rompe (sono riconosciute le pipe)
 - con gli apici singoli si rompe
@@ -11,15 +12,16 @@
 - aaa:se premo piu volte tab mi fa ls
 - non ho provato unset $PATH
 - quando faccio cd .. e poi torno indientro non esegue piu redirection e vompgni bella
-
 */
 
-/*TODO: 
+/*
+TODO: 
 - isspace
 - strcmp
 - atoi
 - isdigit
 */
+
 static int g_signal_received = 0;
 
 int g_exit = 0;
@@ -57,7 +59,6 @@ void setup_signals(void)
 	sa_quit.sa_flags = 0;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
-
 
 char	*create_prompt(void)
 {
@@ -101,16 +102,12 @@ int main(int argc, char **argv, char **envp)
 	char	*inputstr;
 	t_cmd	*cmdlist;
 	t_env	*env;
-	//int		exit_code;
-
-	//exit_code = 0;
-	//cmdlist = NULL;
 	
 	(void)envp;
 	(void)argc;
 	(void)argv;
 	env = NULL;
-	//env = envcpy(envp);
+	env = envcpy(envp);
 	setup_signals();
 
 	while (1)
