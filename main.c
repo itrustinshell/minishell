@@ -22,6 +22,8 @@
 */
 static int g_signal_received = 0;
 
+int g_exit = 0;
+
 void handle_sigint(int sig)
 {
 	(void)sig;
@@ -99,9 +101,9 @@ int main(int argc, char **argv, char **envp)
 	char	*inputstr;
 	t_cmd	*cmdlist;
 	t_env	*env;
-	int		exit_code;
+	//int		exit_code;
 
-	exit_code = 0;
+	//exit_code = 0;
 	//cmdlist = NULL;
 	
 	(void)envp;
@@ -128,14 +130,14 @@ int main(int argc, char **argv, char **envp)
 			cmdlist = parse_input(inputstr);
 			if (cmdlist)
 			{
-				executor(cmdlist, &env, envp, &exit_code);
+				executor(cmdlist, &env, envp);
 				free_cmd(cmdlist); //tolti a causa di double free
 				cmdlist = NULL;	
 
 				if (g_signal_received == 2)  // If SIGQUIT was received
 				{
 					printf("Quit (core dumped)\n");
-					exit_code = 131;
+					g_exit = 131;
 					break;
 				}
 				
@@ -152,5 +154,5 @@ int main(int argc, char **argv, char **envp)
 	if (env)
 		free_envlist(env);
 	rl_clear_history();
-	return (exit_code);
+	return (g_exit);
 }

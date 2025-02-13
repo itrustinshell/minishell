@@ -12,18 +12,18 @@
 
 #include "../minishell.h"
 
-void	execute_builtin(t_cmd *cmd, t_env **env, int *exit_code, int sstdout)
+void	execute_builtin(t_cmd *cmd, t_env **env, int sstdout)
 {
 	int	ret;
 
 	ret = ihoa_redirops(cmd->redirlist, sstdout, TRUE);
 	if (ret == 0)
 		exit(1);
-	builtinex(cmd, env, exit_code);
+	builtinex(cmd, env);
 	dup2(sstdout, STDOUT_FILENO);
 }
 
-void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
+void	execute_external_command(t_cmd *cmd, int saved_stdout)
 {
 	pid_t	pid;
 	int		status;
@@ -39,17 +39,17 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout, int *exit_code)
 		exit(1);
 	}
 	waitpid(pid, &status, 0);
-	*exit_code = WEXITSTATUS(status);
+	g_exit = WEXITSTATUS(status);
 }
 
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
+void	singlecmdex(t_cmd *cmd, t_env **env)
 {
 	int	saved_stdout;
 
 	saved_stdout = dup(STDOUT_FILENO);
 	if (check_builtin(cmd))
 	{
-		execute_builtin(cmd, env, exit_code, saved_stdout);
+		execute_builtin(cmd, env, saved_stdout);
 		return ;
 	}
 	cmd->path = get_cmdpath(cmd->cmd);
@@ -58,7 +58,7 @@ void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code)
 		printf("command not found\n");
 		return ;
 	}
-	execute_external_command(cmd, saved_stdout, exit_code);
+	execute_external_command(cmd, saved_stdout);
 }
 
 /*	
@@ -86,7 +86,7 @@ void	free_pipes(int **pipematrix, int num_of_pipes)
 	free(pipematrix);
 }
 
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
+void	executor(t_cmd *cmdlist, t_env **env, char **envp)
 {
 	int				cmdlist_len;
 	int				**pipematrix;
@@ -102,12 +102,12 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
 		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix,
-			env, envp, exit_code};
+			env, envp};
 		pipex(&data);
 		free_pipes(pipematrix, cmdlist_len - 1);
 	}
 	else
 	{
-		singlecmdex(cmdlist, env, exit_code);
+		singlecmdex(cmdlist, env);
 	}
 }

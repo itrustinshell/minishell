@@ -21,3 +21,21 @@ ripeter la correione con la nuova impostazione fino a exit
 - i numeri di exit code di expand sbagliati sono sempre zero ? 
 
 - ctr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

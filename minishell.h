@@ -65,6 +65,8 @@
 #define TRUE 1
 #define FALSE 0
 
+extern int g_exit; 
+
 enum token_type
 {
 	INVALID,
@@ -135,7 +137,6 @@ typedef struct s_pipex_data
 	int		**pipematrix;
 	t_env	**env;
 	char	**envp;
-	int		*exit_code;
 }	t_pipex_data;
 
 /*-----tests---------*/
@@ -160,10 +161,10 @@ int		listlen(t_cmd *list);
 void	listappend_redir(t_redir *node, t_redir **list);
 
 //EXECUTOR
-void	executor(t_cmd *cmdlist, t_env **env, char **envp, int *exit_code);
+void	executor(t_cmd *cmdlist, t_env **env, char **envp);
 int		pipex(t_pipex_data *data);
-void	singlecmdex(t_cmd *cmd, t_env **env, int *exit_code);
-int		builtinex(t_cmd *cmd, t_env **env, int *exit_code);
+void	singlecmdex(t_cmd *cmd, t_env **env);
+int		builtinex(t_cmd *cmd, t_env **env);
 
 //HEREDOC
 void		heredoc(t_cmd *cmd, int n_heredoc);
@@ -175,7 +176,7 @@ void		build_heredoclist(char *inputstr, t_heredoc **heredoclist);
 void		free_heredoclist(t_heredoc *list);
 
 //executor utils
-void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, char **envp, int *exit_code);
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist, char **envp);
 int		**generate_array_of_pipes_with_fd(int num_of_cmd);
 int		**pipesalloc(int cmdlist_len);
 int		pipecheck(char **matrix);
@@ -205,7 +206,7 @@ void	free_tkn(void *token);
 void	free_tokenslist(t_list *tokens);
 
 ///BUILTINS
-int		ft_echo(int argc, char **argv, int *exit_code);
+int		ft_echo(int argc, char **argv);
 int		ft_pwd();
 int		ft_cd(char **argv);
 void	ft_exit(int n_args, char **args);

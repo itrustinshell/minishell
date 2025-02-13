@@ -77,6 +77,8 @@ t_cmd	*parse_input(char *input)
 	t_cmd	*current_cmd;
 	int		i;
 
+	printf("glbloal exit: %d\n", g_exit);
+
 	cmd_list = NULL;
 	command_strings = ft_split_for_pipe(input, PIPE);
 	if (!command_strings)

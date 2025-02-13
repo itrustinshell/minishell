@@ -48,11 +48,11 @@ int	handle_exit(t_cmd *cmd)
 	return (1);
 }
 
-int	builtinex(t_cmd *cmd, t_env **env, int *exit_code)
+int	builtinex(t_cmd *cmd, t_env **env)
 {
 	if (strcmp(cmd->cmd, "echo") == 0)
 	{
-		ft_echo(arguments_count(cmd->args), cmd->args, exit_code);
+		ft_echo(arguments_count(cmd->args), cmd->args);
 		return (1);
 	}
 	if (strcmp(cmd->cmd, "pwd") == 0)

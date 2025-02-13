@@ -29,13 +29,13 @@ void	handle_echo_n(int argc, char **argv)
 }
 
 /* Handle echo $? case */
-void	handle_echo_exit_code(int *exit_code)
+void	handle_echo_exit_code()
 {
-	printf("%d", *exit_code);
+	printf("%d", g_exit);
 }
 
 /* Handle echo without -n */
-void	handle_echo_default(int argc, char **argv, int *exit_code)
+void	handle_echo_default(int argc, char **argv)
 {
 	int	i;
 
@@ -48,25 +48,25 @@ void	handle_echo_default(int argc, char **argv, int *exit_code)
 	while (i < argc - 1)
 	{
 		if (argv[i][0] == '$' && argv[i][1] == '?')
-			printf("%d ", *exit_code);
+			printf("%d ", g_exit);
 		else
 			printf("%s ", argv[i]);
 		i++;
 	}
 	if (argv[i][0] == '$' && argv[i][1] == '?')
-		printf("%d\n", *exit_code);
+		printf("%d\n", g_exit);
 	else
 		printf("%s\n", argv[i]);
 }
 
 /* Main echo function */
-int	ft_echo(int argc, char **argv, int *exit_code)
+int	ft_echo(int argc, char **argv)
 {
 	if (argv[1] && strcmp(argv[1], "-n") == 0)
 		handle_echo_n(argc, argv);
 	else if (argc == 2 && strcmp(argv[1], "$?") == 0)
-		handle_echo_exit_code(exit_code);
+		handle_echo_exit_code();
 	else
-		handle_echo_default(argc, argv, exit_code);
+		handle_echo_default(argc, argv);
 	return (1);
 }

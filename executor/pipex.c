@@ -14,11 +14,11 @@
 
 /*Execute builtins or external command*/
 void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
-			char **envp, int *exit_code)
+			char **envp)
 {
 	char	**envlist;
 
-	if (builtinex(tmp_cmdlist, &genvlist, exit_code) == 1)
+	if (builtinex(tmp_cmdlist, &genvlist) == 1)
 		return ;
 	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
 	envlist = litoma(genvlist);
@@ -46,7 +46,7 @@ void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 		exit(1);
 	pipeclose(data->pipematrix, data->cmdlist_len);
 	env = data->env;
-	ft_execve(tmp_cmdlist, *env, data->envp, data->exit_code);
+	ft_execve(tmp_cmdlist, *env, data->envp);
 	exit(1);
 }
 
@@ -109,7 +109,8 @@ int	pipex(t_pipex_data *data)
 	while (i < data->cmdlist_len)
 	{
 		wait(&status);
-		*(data)->exit_code = WEXITSTATUS(status);
+		//*(data)->exit_code = WEXITSTATUS(status);
+		g_exit = WEXITSTATUS(status);
 		i++;
 	}
 	return (0);
