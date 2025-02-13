@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 11:29:03 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/09 14:27:09 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/13 12:22:08 by dpalmese         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ t_cmd	*parse_input(char *input)
 			return (NULL);
 		}
 		listappend_command(current_cmd, &cmd_list);
-		//printf("Oilloc o comand :%s %s\n", current_cmd->cmd, current_cmd->args[1]);
 		i++;
 	}
 	free_matrix(command_strings);
