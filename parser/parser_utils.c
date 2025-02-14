@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:09:14 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/14 16:29:43 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:54:55 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	count_args(t_list *tokens)
 
 void	print_redir(void *redir_node)
 {
-	printf("%s\n", ((t_redir *)redir_node)->file);
+	ft_printf("%s\n", ((t_redir *)redir_node)->file);
 }
 
 t_bool	is_valid_arg_char(char c)

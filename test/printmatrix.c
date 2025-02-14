@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:37:50 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/14 15:38:11 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:56:44 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_matrix_of_char(char **matrix)
 	i = 0;
 	while (matrix[i])
 	{
-		printf("%s\n", matrix[i]);
+		ft_printf("%s\n", matrix[i]);
 		i++;
 	}
 }
@@ -36,10 +36,10 @@ void	print_matrix_of_int(int **matrix, int limit_row, int limit_column)
 		j = 0;
 		while (j < limit_column)
 		{
-			printf("[%d]", matrix[i][j]);
+			ft_printf("[%d]", matrix[i][j]);
 			j++;
 		}
-		printf("\n");
+		ft_printf("\n");
 		i++;
 	}
 }

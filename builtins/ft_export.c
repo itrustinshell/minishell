@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:44:25 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/02 22:51:11 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:49:15 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_env	*access_envar(char *namevar, t_env *list)
 	tmp_list = list;
 	while (tmp_list)
 	{
-		if (strcmp(tmp_list->name, namevar) == 0)
+		if (ft_strcmp(tmp_list->name, namevar) == 0)
 			return (tmp_list);
 		tmp_list = tmp_list->next;
 	}
@@ -41,7 +41,7 @@ t_env	*access_envar(char *namevar, t_env *list)
 //free(envar_value);
 void	update_envar_value(t_env *found_global_envar, char *envar_value)
 {
-	if (strcmp(found_global_envar->value, envar_value) == 0)
+	if (ft_strcmp(found_global_envar->value, envar_value) == 0)
 		return ;
 	free(found_global_envar->value);
 	found_global_envar->value = strdup(envar_value);

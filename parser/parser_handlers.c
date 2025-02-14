@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:22:50 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/13 12:23:57 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/14 19:23:54 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	handle_redirection(char **command_string, t_tkn *token)

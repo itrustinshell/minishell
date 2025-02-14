@@ -6,7 +6,7 @@ CFLAGS = -g -gdwarf-4 -Wall -Wextra -Werror
 
 SRC =   builtins/ft_export.c builtins/ft_export_utils.c builtins/litoma.c builtins/ft_unset.c builtins/ft_env.c builtins/ft_env_lists.c builtins/ft_cd.c builtins/ft_echo.c builtins/ft_exit.c builtins/ft_pwd.c parser/parser2.c parser/parser_utils.c parser/parser_handlers.c parser/parser_tokenize.c parser/split_for_pipe.c parser/command_utils.c\
 		executor/executor.c executor/pipex.c executor/builtinex.c executor/heredoc.c executor/heredoc_list.c executor/heredoc_utils.c executor/redirutils.c executor/redirops.c executor/pipex_utils.c\
-		test/pipe_test.c test/printmatrix.c\
+		test/printmatrix.c\
 		utils/free.c utils/free_cmd.c utils/list_utils.c utils/list_utils_2.c utils/cmd_utils.c utils/init.c utils/main_utils.c utils/general_utils.c\
 		main.c \
 		parser/handle_env_var.c parser/expander.c

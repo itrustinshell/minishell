@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:23 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/08 19:50:56 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:49:52 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	handle_heredoc_input(t_redir *tmp_redirlist)
 		str_realloc = allocate_heredoc_str(inputstr);
 		if (!str_realloc)
 			return (free(inputstr));
-		if (strcmp(inputstr, tmp_redirlist->delimiter) == 0)
+		if (ft_strcmp(inputstr, tmp_redirlist->delimiter) == 0)
 		{
 			free_and_exit(inputstr, str_realloc);
 			break ;

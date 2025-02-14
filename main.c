@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:21:45 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/14 16:47:53 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:52:11 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,17 @@
 
 /*
 PROBLEMATICHE RISCONTRATE
- - se premo piu volte tab parte un ls.
- - tra i singoli apici viene gestito $? e non deve accadere questp
- -
 
 
 
+eho
 
-- nel tentativo di fixare echo $? mi sono 
-accorto che $PATH non stampa tutto il PATH
-- con gli apici doppi si rompe (sono riconosciute le pipe)
-- con gli apici singoli si rompe
-- le variabili $ non sono espanse nei 
-doppi apici (non viene restituito alcun token)
-- aaa:se premo piu volte tab mi fa ls
-- non ho provato unset $PATH
-- quando faccio cd .. e poi torno indientro non 
-esegue piu redirection e vompgni bella
-*/
+ft_ft_printf
 
-/*
+
 TODO: 
-- isspace
-- strcmp
-- atoi
+
+
 - isdigit
 
 */
@@ -49,7 +36,7 @@ void	handle_sigint(int sig)
 {
 	(void)sig;
 	g_signal_received = 1;
-	printf("\n");
+	ft_printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -88,7 +75,7 @@ int	core_shell(char *inputstr, t_cmd *cmdlist, t_env **env)
 			cmdlist = NULL;
 			if (g_signal_received == 2)
 			{
-				printf("Quit (core dumped)\n");
+				ft_printf("Quit (core dumped)\n");
 				g_exit = 131;
 				return (0);
 			}
@@ -114,7 +101,7 @@ int	main(int argc, char **argv, char **envp)
 		prompt(&inputstr);
 		if (!inputstr)
 		{
-			printf("\nexit\n");
+			ft_printf("\nexit\n");
 			break ;
 		}
 		if (core_shell(inputstr, cmdlist, &env) == 0)

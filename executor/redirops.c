@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:47:13 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/08 19:52:49 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:55:01 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	handle_input_redirection(t_redir *latest_input_redir, int saved_stdout)
 		return (3);
 	}
 	dup2(saved_stdout, STDOUT_FILENO);
-	printf("ERROREEEEEEEEE\n");
 	return (0);
 }
 

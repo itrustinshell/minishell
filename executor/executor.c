@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/14 16:39:08 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:55:13 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,12 @@ void	singlecmdex(t_cmd *cmd, t_env **env)
 	cmd->path = get_cmdpath(cmd->cmd);
 	if (!cmd->path)
 	{
-		printf("command not found\n");
+		ft_printf("command not found\n");
 		return ;
 	}
 	execute_external_command(cmd, saved_stdout, env);
 }
 
-/*	
-	DESCRIPTION
-		execute cmdlist
-	
-	UTILITY
-		usefull functions for debug:
-		- printlist(cmdlist);
-		- printf("n_heredoc: %d\n", n_heredoc);
-		- printallheredoclists(cmdlist, n_heredoc);
-*/
 void	free_pipes(int **pipematrix, int num_of_pipes)
 {
 	int	i;

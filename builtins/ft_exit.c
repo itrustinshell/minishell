@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:44:13 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/13 12:07:50 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:53:32 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_exit(int n_args, char **args)
 	exit_code = 0;
 	if (n_args > 2)
 	{
-		printf("minishell: exit: too many arguments\n");
+		ft_printf("minishell: exit: too many arguments\n");
 		return ;
 	}
 	if (n_args == 2)
@@ -28,15 +28,15 @@ void	ft_exit(int n_args, char **args)
 		i = 0;
 		while (args[1][i])
 		{
-			if (isdigit(args[1][i]) == 0)
+			if (ft_isdigit(args[1][i]) == 0)
 			{
-				printf("exit\nminishell: ");
-				printf("exit: %s: numeric argument required\n", args[1]);
+				ft_printf("exit\nminishell: ");
+				ft_printf("exit: %s: numeric argument required\n", args[1]);
 				return ;
 			}
 			i++;
 		}
-		exit_code = atoi(args[1]);
+		exit_code = ft_atoi(args[1]);
 	}
 	exit(exit_code);
 }

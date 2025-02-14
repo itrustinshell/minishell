@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:34:06 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 19:28:56 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:52:30 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_cd(char **argv)
 	if (!strmaps)
 		return (0);
 	if (chdir(strmaps) != 0)
-		printf("minishell: cd: %s: No such file or directory\n", strmaps);
+		ft_printf("minishell: cd: %s: No such file or directory\n", strmaps);
 	str = getcwd(NULL, 0);
 	return (1);
 }
