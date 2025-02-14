@@ -84,6 +84,7 @@ void	handle_env_var(char **command_string, t_tkn *token)
 	token->value = (char *)ft_calloc(token->len + 1, sizeof(char));
 	ft_strncpy(token->value, beginning, token->len);
 	expand(&token->value);
+	token->len = ft_strlen(token->value);
 }
 
 void	handle_plain_text(char **command_string, t_tkn *token)
