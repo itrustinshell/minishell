@@ -1,15 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_for_pipe.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 13:05:51 by dpalmese          #+#    #+#             */
+/*   Updated: 2025/02/14 13:05:57 by dpalmese         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <strings.h>
 #include "../minishell.h"
 
-
 static int	my_count_words( char *str, char c)
 {
 	int	i;
 	int	words;
-	//printf("but what....\n");
 
 	i = 0;
 	words = 0;
@@ -17,12 +27,11 @@ static int	my_count_words( char *str, char c)
 	{
         if (str[i] == '"')
         {
-            i++; //tras nta sti c..z e virgolett
-            while (str[i] != '"') //cicl fin a che nun ce sta nata virgolett (se non mettono la seconda virgoletta....gestire)
+            i++;
+            while (str[i] != '"')
                 i++;
-            // è sciut ro cicl. A truat a virgolett!
         }
-		if (str[i] != c && (str[i + 1] == c || str[i + 1] == '\0')) //si si asciut ro cicl, mo stai ncopp a siconda virgolett.
+		if (str[i] != c && (str[i + 1] == c || str[i + 1] == '\0'))
 			words++;
 		i++;
 	}
@@ -47,7 +56,6 @@ static void	my_aux(char **arr,  char *str, char sep, int n_words)
 	int	i;
 	int	j;
 	int	z;
-	//int x;
   
 	i = 0;
 	z = 0;
@@ -70,20 +78,10 @@ static void	my_aux(char **arr,  char *str, char sep, int n_words)
                 }
                 j++;
             }
-			//printf("ecco la lunghezza della parola: %d\n", j);
             arr[z] = (char *)malloc(sizeof(char) * (j + 1));
 			if (!arr[z])
 				return ;
 			my_new_string(str, i, j, arr[z]);
-
-			// x = 0;
-			// while (x < j) 
-			// {
-			// 	arr[z][x] = str[i + x];
-			// 	x++;
-
-			// }
-			//printf("ecco la nuov stringa: %s\n", arr[z]);
 			z++;
 			i += j;
 		}
