@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenize.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dpalmese <dpalmese@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 12:21:11 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/13 12:21:23 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:29:35 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-BOOL	has_command(t_list *tokens)
+t_bool	has_command(t_list *tokens)
 {
 	t_list	*node;
 
@@ -30,8 +30,8 @@ BOOL	has_command(t_list *tokens)
 
 void	get_token_type(t_tkn *token, t_list *tokens)
 {
-	t_list			*last_node;
-	enum token_type	type;
+	t_list				*last_node;
+	enum e_token_type	type;
 
 	if (tkn_is_redir(token))
 		set_redir_tkn(token);

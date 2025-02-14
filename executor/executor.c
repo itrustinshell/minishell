@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 19:36:04 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/13 12:11:23 by dpalmese         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:39:08 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ void	execute_builtin(t_cmd *cmd, t_env **env, int sstdout)
 	dup2(sstdout, STDOUT_FILENO);
 }
 
-void	execute_external_command(t_cmd *cmd, int saved_stdout)
+void	execute_external_command(t_cmd *cmd, int saved_stdout, t_env **env)
 {
 	pid_t	pid;
 	int		status;
 	int		ret;
+	char	**envlist;
 
 	pid = fork();
 	if (pid == 0)
@@ -35,7 +36,8 @@ void	execute_external_command(t_cmd *cmd, int saved_stdout)
 		ret = ihoa_redirops(cmd->redirlist, saved_stdout, FALSE);
 		if (ret == 0)
 			exit(1);
-		execve(cmd->path, cmd->args, NULL);
+		envlist = litoma(*env);
+		execve(cmd->path, cmd->args, envlist);
 		exit(1);
 	}
 	waitpid(pid, &status, 0);
@@ -58,7 +60,7 @@ void	singlecmdex(t_cmd *cmd, t_env **env)
 		printf("command not found\n");
 		return ;
 	}
-	execute_external_command(cmd, saved_stdout);
+	execute_external_command(cmd, saved_stdout, env);
 }
 
 /*	
@@ -86,7 +88,7 @@ void	free_pipes(int **pipematrix, int num_of_pipes)
 	free(pipematrix);
 }
 
-void	executor(t_cmd *cmdlist, t_env **env, char **envp)
+void	executor(t_cmd *cmdlist, t_env **env)
 {
 	int				cmdlist_len;
 	int				**pipematrix;
@@ -102,7 +104,7 @@ void	executor(t_cmd *cmdlist, t_env **env, char **envp)
 	{
 		pipematrix = pipesalloc(cmdlist_len);
 		data = (t_pipex_data){cmdlist, cmdlist_len, pipematrix,
-			env, envp};
+			env};
 		pipex(&data);
 		free_pipes(pipematrix, cmdlist_len - 1);
 	}

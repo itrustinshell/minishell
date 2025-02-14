@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 15:38:29 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/14 15:38:53 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 /* Inizializza la struttura t_cmd
@@ -24,14 +36,12 @@ t_cmd	*new_cmd(unsigned int argc)
 	return (cmd);
 }
 
-
-
 /* Inizializza la struttura t_redir */
-void redirinit(t_redir *node)
+void	redirinit(t_redir *node)
 {
 	node->type = 0;
-    node->file = NULL;
-    node->delimiter = NULL;
-    node->heredoclist = NULL;
-    node->next = NULL;
+	node->file = NULL;
+	node->delimiter = NULL;
+	node->heredoclist = NULL;
+	node->next = NULL;
 }

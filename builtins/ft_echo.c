@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 21:06:54 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 14:35:43 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:52:01 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	handle_echo_n(int argc, char **argv)
 }
 
 /* Handle echo $? case */
-void	handle_echo_exit_code()
+void	handle_echo_exit_code(void)
 {
 	printf("%d", g_exit);
 }
@@ -47,16 +47,10 @@ void	handle_echo_default(int argc, char **argv)
 	i = 1;
 	while (i < argc - 1)
 	{
-		if (argv[i][0] == '$' && argv[i][1] == '?')
-			printf("%d ", g_exit);
-		else
-			printf("%s ", argv[i]);
+		printf("%s ", argv[i]);
 		i++;
 	}
-	if (argv[i][0] == '$' && argv[i][1] == '?')
-		printf("%d\n", g_exit);
-	else
-		printf("%s\n", argv[i]);
+	printf("%s\n", argv[i]);
 }
 
 /* Main echo function */
@@ -64,8 +58,6 @@ int	ft_echo(int argc, char **argv)
 {
 	if (argv[1] && strcmp(argv[1], "-n") == 0)
 		handle_echo_n(argc, argv);
-	else if (argc == 2 && strcmp(argv[1], "$?") == 0)
-		handle_echo_exit_code();
 	else
 		handle_echo_default(argc, argv);
 	return (1);

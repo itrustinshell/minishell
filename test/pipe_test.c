@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe_test.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 15:33:36 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/14 15:48:43 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 /* Funzione per stampare gli argomenti di una lista di comandi */
@@ -30,7 +42,7 @@ void	test_stampa_args(t_cmd *commandlist)
 void	print_list(t_cmd *commandlist)
 {
 	t_cmd	*current;
-	int			a;
+	int		a;
 
 	printf("i'm printing command list\n");
 	current = commandlist;
@@ -43,19 +55,18 @@ void	print_list(t_cmd *commandlist)
 	}
 }
 
-/* Funzione di debug per stampare comandi, argomenti e redirazioni */
+/* Funzione di debug per stampare comandi, argomenti e redirazioni 
 void	printlist(t_cmd *cmdlist)
 {
-	t_cmd	*tmp_cmdlist;
+	t_cmd		*tmp_cmdlist;
 	t_redir		*tmp_redirlist;
 	int			m;
 
-	printf("\nDEBUG: STO STAMPANDO LA LISTA DI COMANDI CON ARGOMENTI E REDIRECTION\n");
+	printf("\nDEBUG: printing list of cmd and redir\n");
 	m = 0;
 	tmp_cmdlist = cmdlist;
 	while (tmp_cmdlist)
 	{
-		//printf("ecco il comando: %s\n", tmp_cmdlist->cmd);
 		if (tmp_cmdlist->args)
 		{
 			printf("ecco gli argomenti di %s:\n", tmp_cmdlist->cmd);
@@ -69,7 +80,9 @@ void	printlist(t_cmd *cmdlist)
 			tmp_redirlist = tmp_cmdlist->redirlist;
 			while (tmp_redirlist)
 			{
-				if (tmp_redirlist->type == INPUT_REDIRECTION || tmp_redirlist->type == OUTPUT_REDIRECTION || tmp_redirlist->type == APPEND_REDIRECTION)
+				if (tmp_redirlist->type == INPUT_REDIRECTION
+					|| tmp_redirlist->type == OUTPUT_REDIRECTION
+					|| tmp_redirlist->type == APPEND_REDIRECTION)
 				{
 					if (tmp_redirlist->type == INPUT_REDIRECTION)
 						printf("inputredir: ");
@@ -91,5 +104,5 @@ void	printlist(t_cmd *cmdlist)
 			printf("non ci sono redir\n");
 		tmp_cmdlist = tmp_cmdlist->next;
 	}
-	printf("DEBUG: HO TERMINATO DI STAMPARE LISTA, ARGOMENTI E RELATIVE REDIRECTIONS\n\n");
 }
+*/

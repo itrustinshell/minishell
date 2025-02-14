@@ -6,7 +6,7 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:09:14 by dpalmese          #+#    #+#             */
-/*   Updated: 2025/02/09 14:57:31 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:29:43 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	print_redir(void *redir_node)
 	printf("%s\n", ((t_redir *)redir_node)->file);
 }
 
-BOOL	is_valid_arg_char(char c)
+t_bool	is_valid_arg_char(char c)
 {
 	return (!ft_isspace(c) && !ft_strchr("|<>\"\'$", c));
 }

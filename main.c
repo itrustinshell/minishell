@@ -1,17 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 12:21:45 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/14 16:47:53 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <signal.h>
-#include<readline/history.h>
 
-
-/* 
+/*
 PROBLEMATICHE RISCONTRATE
-- nel tentativo di fixare echo $? mi sono accorto che $PATH non stampa tutto il PATH
+ - se premo piu volte tab parte un ls.
+ - tra i singoli apici viene gestito $? e non deve accadere questp
+ -
+
+
+
+
+- nel tentativo di fixare echo $? mi sono 
+accorto che $PATH non stampa tutto il PATH
 - con gli apici doppi si rompe (sono riconosciute le pipe)
 - con gli apici singoli si rompe
-- le variabili $ non sono espanse nei doppi apici (non viene restituito alcun token)
+- le variabili $ non sono espanse nei 
+doppi apici (non viene restituito alcun token)
 - aaa:se premo piu volte tab mi fa ls
 - non ho provato unset $PATH
-- quando faccio cd .. e poi torno indientro non esegue piu redirection e vompgni bella
+- quando faccio cd .. e poi torno indientro non 
+esegue piu redirection e vompgni bella
 */
 
 /*
@@ -20,13 +39,13 @@ TODO:
 - strcmp
 - atoi
 - isdigit
+
 */
 
-static int g_signal_received = 0;
+static int	g_signal_received = 0;
+int			g_exit = 0;
 
-int g_exit = 0;
-
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	(void)sig;
 	g_signal_received = 1;
@@ -36,120 +55,73 @@ void handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void handle_sigquit(int sig)
+void	handle_sigquit(int sig)
 {
 	(void)sig;
 	g_signal_received = 2;
 }
 
-void setup_signals(void)
+void	setup_signals(void)
 {
-	struct sigaction sa_int;
-	struct sigaction sa_quit;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
 
-	// Setup SIGINT (Ctrl-C)
 	sa_int.sa_handler = handle_sigint;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
-
-	// Setup SIGQUIT (Ctrl-\)
 	sa_quit.sa_handler = handle_sigquit;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-char	*create_prompt(void)
+int	core_shell(char *inputstr, t_cmd *cmdlist, t_env **env)
 {
-    char	*cwd;
-    char	*cwd_mod;
-    int		len;
-
-    cwd = getcwd(NULL, 0);
-    if (!cwd)
-        return (NULL);
-    len = ft_strlen(cwd);
-    cwd_mod = malloc(len + 3);
-    if (!cwd_mod)
-    {
-        free(cwd);
-        return (NULL);
-    }
-    strcpy(cwd_mod, cwd);
-    strcat(cwd_mod, " :");
-    free(cwd);
-    return (cwd_mod);
+	if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0)
+	{
+		cmdlist = parse_input(inputstr);
+		if (cmdlist)
+		{
+			executor(cmdlist, env);
+			free_cmd(cmdlist);
+			cmdlist = NULL;
+			if (g_signal_received == 2)
+			{
+				printf("Quit (core dumped)\n");
+				g_exit = 131;
+				return (0);
+			}
+		}
+	}
+	return (1);
 }
 
-void	prompt(char **inputstr)
-{
-    char	*cwd_mod;
-
-    cwd_mod = create_prompt();
-    if (!cwd_mod)
-        return ;
-    *inputstr = readline(cwd_mod);
-  	free(cwd_mod);
-	if (!*inputstr)
-		return ;
-	if (**inputstr)
-    	add_history(*inputstr); 
-}
-
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*inputstr;
 	t_cmd	*cmdlist;
 	t_env	*env;
-	
-	(void)envp;
-	(void)argc;
-	(void)argv;
-	env = NULL;
+
+	unused_param(argc, argv);
+	cmdlist = NULL;
 	env = envcpy(envp);
 	setup_signals();
-
 	while (1)
 	{
 		g_signal_received = 0;
 		inputstr = NULL;
-
 		prompt(&inputstr);
-
-		if (!inputstr) // Se readline riceve EOF
+		if (!inputstr)
 		{
 			printf("\nexit\n");
-			break;
+			break ;
 		}
-		if (inputstr[0] != '\0' && isspace(inputstr[0]) == 0) // Ignore empty lines
-		{
-			cmdlist = parse_input(inputstr);
-			if (cmdlist)
-			{
-				executor(cmdlist, &env, envp);
-				free_cmd(cmdlist); //tolti a causa di double free
-				cmdlist = NULL;	
-
-				if (g_signal_received == 2)  // If SIGQUIT was received
-				{
-					printf("Quit (core dumped)\n");
-					g_exit = 131;
-					break;
-				}
-				
-			}
-		}
-		free(inputstr); 
-		inputstr = NULL;
-		//free_cmdlist(cmdlist);
-	}
-	if (inputstr) // risolve memoryleaks
+		if (core_shell(inputstr, cmdlist, &env) == 0)
+			break ;
 		free(inputstr);
-	if (cmdlist) //risolve memoryleaks
-		free_cmd(cmdlist);
-	if (env)
-		free_envlist(env);
+	}
+	last_free(inputstr, cmdlist, env);
 	rl_clear_history();
 	return (g_exit);
 }

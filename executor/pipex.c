@@ -6,15 +6,14 @@
 /*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:46:22 by largenzi          #+#    #+#             */
-/*   Updated: 2025/02/09 19:01:53 by largenzi         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:58:07 by largenzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 /*Execute builtins or external command*/
-void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
-			char **envp)
+void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist)
 {
 	char	**envlist;
 
@@ -22,7 +21,6 @@ void	ft_execve(t_cmd *tmp_cmdlist, t_env *genvlist,
 		return ;
 	tmp_cmdlist->path = get_cmdpath(tmp_cmdlist->cmd);
 	envlist = litoma(genvlist);
-	(void)envp;
 	execve(tmp_cmdlist->path, tmp_cmdlist->args, envlist);
 }
 
@@ -46,7 +44,7 @@ void	handle_child_process(t_pipex_data *data, t_cmd *tmp_cmdlist, int i,
 		exit(1);
 	pipeclose(data->pipematrix, data->cmdlist_len);
 	env = data->env;
-	ft_execve(tmp_cmdlist, *env, data->envp);
+	ft_execve(tmp_cmdlist, *env);
 	exit(1);
 }
 
@@ -91,12 +89,6 @@ int	pipex(t_pipex_data *data)
 	tmp_cmdlist = data->cmdlist;
 	if (!tmp_cmdlist)
 		return (0);
-	//AAAAAAAAAAA NON BISOGNA CANCELLARE QUESTA QUI SOTTO...DA IMPLEMENTARE EVENTUALMENTE ESCLUDENDO LA RICERCA QUANDO CI SONO BUILTIN O VEDI MEGLIO CODICE
-	// if (check_cmdpath(data->cmdlist) == 0)
-	// {
-	// 	printf("Hei!! Command not found :) \n");
-	// 	return (0);
-	// }
 	i = -1;
 	while (++i < data->cmdlist_len)
 	{
@@ -109,7 +101,6 @@ int	pipex(t_pipex_data *data)
 	while (i < data->cmdlist_len)
 	{
 		wait(&status);
-		//*(data)->exit_code = WEXITSTATUS(status);
 		g_exit = WEXITSTATUS(status);
 		i++;
 	}

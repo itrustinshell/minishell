@@ -1,22 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: largenzi <largenzi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 15:39:57 by largenzi          #+#    #+#             */
+/*   Updated: 2025/02/14 15:47:10 by largenzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-
-int	listlen(t_cmd *list)
-{
-	int			i;
-	t_cmd	*current;
-
-	if (list == NULL)
-		return (0);
-	current = list;
-	i = 0;
-	while (current->next)
-	{
-		current = current->next;
-		i++;
-	}
-	i++;
-	return (i);
-}
 
 int	listlenredir(t_redir *list)
 {
@@ -81,12 +75,10 @@ void	listappend_redir(t_redir *node, t_redir **list)
 	{
 		*list = node;
 		(*list)->next = NULL;
-		//(*list)->prev = NULL;
 	}
 	else
 	{
 		last_node = find_last_cmdnode_redir(*list);
-		//node->prev = last_node;
 		last_node->next = node;
 		node->next = NULL;
 	}
