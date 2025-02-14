@@ -1,29 +1,19 @@
 {
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Debug Minishell",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/minishell",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/minishell",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Abilita pretty-printing per gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Imposta Disassembly Flavor su Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
-        }
+      {
+        "name": "Debug C Program",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/minishell",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+      }
     ]
-}
+  }
+  
